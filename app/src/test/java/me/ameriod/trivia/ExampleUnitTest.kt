@@ -1,4 +1,4 @@
-package me.ameriod.triva
+package me.ameriod.trivia
 
 import org.junit.Test
 

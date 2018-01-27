@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">triva</string>
+    <string name="app_name">Trivia</string>
+
+    <string name="filter_btn_start">Start</string>
 </resources>
