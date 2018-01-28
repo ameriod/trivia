@@ -25,6 +25,7 @@ class FilterController(args: Bundle) : Controller(args), View.OnClickListener,
     private val adapter : FilterDifficultlyAdapter by lazy {
         FilterDifficultlyAdapter(activity!!, listOf("Any", "Easy", "Medium", "Hard"))
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_filter, container, false)
         v.filterBtnStart.setOnClickListener(this)
