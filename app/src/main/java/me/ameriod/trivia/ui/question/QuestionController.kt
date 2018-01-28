@@ -5,7 +5,7 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import com.bluelinelabs.conductor.Controller
 import kotlinx.android.synthetic.main.controller_question.view.*
@@ -25,13 +25,16 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener 
         val v = inflater.inflate(R.layout.controller_question, container, false)
         v.questionTv.text = Html.fromHtml(question.question)
 
+        val layoutParams = RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
+                RadioGroup.LayoutParams.WRAP_CONTENT)
+
         for (i in answers.indices) {
             val answer = answers[i]
-            val radio = RadioButton(v.context)
+            val radio = QuestionRadioButton(v.context)
             // set the id to the index
             radio.id = i
             radio.text = Html.fromHtml(answer)
-            v.questionGroup.addView(radio)
+            v.questionGroup.addView(radio, layoutParams)
         }
 
         v.questionBtnNext.setText(if (last) R.string.questions_btn_finish else R.string.questions_btn_next_question)
