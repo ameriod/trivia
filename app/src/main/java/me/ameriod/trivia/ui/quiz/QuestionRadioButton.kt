@@ -3,13 +3,14 @@ package me.ameriod.trivia.ui.quiz
 import android.content.Context
 import android.graphics.Color
 import android.support.v4.content.ContextCompat
-import android.widget.RadioButton
+import android.support.v7.widget.AppCompatRadioButton
 import me.ameriod.trivia.R
 
-class QuestionRadioButton : RadioButton {
+class QuestionRadioButton : AppCompatRadioButton {
 
     constructor(context: Context) : super(context) {
         buttonDrawable = null
+        setTextAppearance(context, R.style.TextAppearance_AppCompat_Medium)
     }
 
     override fun setChecked(checked: Boolean) {

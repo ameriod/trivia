@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="@dimen/question_padding_hor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             tools:text="Where did the pineapple plant originate?" />
 
     </android.support.v7.widget.CardView>

@@ -17,4 +17,8 @@
     <string name="questions_back_btn_positive">Exit</string>
     <string name="questions_back_btn_negative">Back To Quiz</string>
 
+    <string name="filter_number">Number of Questions</string>
+    <string name="filter_difficulty">Difficulty</string>
+    <string name="filter_category">Category</string>
+
 </resources>

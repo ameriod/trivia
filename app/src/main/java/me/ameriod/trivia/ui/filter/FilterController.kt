@@ -2,9 +2,12 @@ package me.ameriod.trivia.ui.filter
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import com.bluelinelabs.conductor.Controller
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -19,6 +22,49 @@ class FilterController(args: Bundle) : Controller(args), View.OnClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_filter, container, false)
         v.filterBtnStart.setOnClickListener(this)
+        v.filterCount.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                // un-zero index
+                if (fromUser) {
+                    v.filterCountEt.setText((progress + 1).toString())
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                // no op
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                // no op
+            }
+        })
+        v.filterCountEt.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // no op
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // no op
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                var input = 1
+                if (s.isNotEmpty()) {
+                    input = s.toString().toInt()
+                }
+                if (input <= 0) {
+                    input = 1
+                } else if (input > 50) {
+                    input = 50
+                }
+                // set the progress
+                v.filterCount.postDelayed({
+                    v.filterCount.progress = input - 1
+                }, 0)
+
+
+            }
+        })
         return v
     }
 
