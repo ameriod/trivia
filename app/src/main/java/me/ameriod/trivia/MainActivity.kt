@@ -3,15 +3,10 @@ package me.ameriod.trivia
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.bluelinelabs.conductor.Router
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import me.ameriod.trivia.api.TriviaRepository
-import timber.log.Timber
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.RouterTransaction
 import kotlinx.android.synthetic.main.activity_main.*
 import me.ameriod.trivia.ui.filter.FilterController
-import me.ameriod.trivia.ui.question.QuestionController
 
 
 class MainActivity : AppCompatActivity() {

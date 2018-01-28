@@ -10,7 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.controller_filter.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.TriviaRepository
-import me.ameriod.trivia.ui.question.QuestionsActivity
+import me.ameriod.trivia.ui.quiz.QuizActivity
 import timber.log.Timber
 
 class FilterController(args: Bundle) : Controller(args), View.OnClickListener {
@@ -33,7 +33,7 @@ class FilterController(args: Bundle) : Controller(args), View.OnClickListener {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
-                    startActivity(QuestionsActivity.getLaunchIntent(activity!!, response.results))
+                    startActivity(QuizActivity.getLaunchIntent(activity!!, response.results))
                 }, { throwable ->
                     Timber.e(throwable, "Error")
                 })

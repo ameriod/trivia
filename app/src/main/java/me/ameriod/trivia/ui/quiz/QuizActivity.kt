@@ -1,4 +1,4 @@
-package me.ameriod.trivia.ui.question
+package me.ameriod.trivia.ui.quiz
 
 import android.content.Context
 import android.content.Intent
@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.Question
 
-class QuestionsActivity : AppCompatActivity(), QuestionController.OnQuestionAnsweredListener {
+class QuizActivity : AppCompatActivity(), QuestionController.OnQuestionAnsweredListener {
 
     private lateinit var router: Router
     private lateinit var questions: List<Question>
@@ -22,7 +22,7 @@ class QuestionsActivity : AppCompatActivity(), QuestionController.OnQuestionAnsw
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_questions)
+        setContentView(R.layout.activity_quiz)
 
         questions = intent.getParcelableArrayListExtra(QUESTIONS)
 
@@ -77,7 +77,7 @@ class QuestionsActivity : AppCompatActivity(), QuestionController.OnQuestionAnsw
 
         fun getLaunchIntent(context: Context,
                             questions: List<Question>): Intent =
-                Intent(context, QuestionsActivity::class.java)
+                Intent(context, QuizActivity::class.java)
                         .putExtra(QUESTIONS, ArrayList(questions))
 
     }

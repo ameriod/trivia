@@ -1,4 +1,4 @@
-package me.ameriod.trivia.ui.question
+package me.ameriod.trivia.ui.quiz
 
 import android.content.Context
 import android.graphics.Color

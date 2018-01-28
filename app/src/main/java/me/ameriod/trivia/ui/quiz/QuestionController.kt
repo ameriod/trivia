@@ -1,4 +1,4 @@
-package me.ameriod.trivia.ui.question
+package me.ameriod.trivia.ui.quiz
 
 import android.os.Bundle
 import android.text.Html
@@ -12,7 +12,8 @@ import kotlinx.android.synthetic.main.controller_question.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.Question
 
-class QuestionController(args: Bundle) : Controller(args), View.OnClickListener {
+class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
+        RadioGroup.OnCheckedChangeListener {
 
     private val question: Question = args.getParcelable(QUESTION)
     private val answers: List<String> by lazy {
@@ -20,6 +21,7 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener 
     }
     private val last = args.getBoolean(LAST)
     private var listener: OnQuestionAnsweredListener? = null
+    private var checkedPosition = -1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_question, container, false)
@@ -34,13 +36,26 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener 
             // set the id to the index
             radio.id = i
             radio.text = Html.fromHtml(answer)
+            radio.isChecked = i == checkedPosition
             v.questionGroup.addView(radio, layoutParams)
         }
+        v.questionGroup.setOnCheckedChangeListener(this)
 
         v.questionBtnNext.setText(if (last) R.string.questions_btn_finish else R.string.questions_btn_next_question)
         v.questionBtnNext.setOnClickListener(this)
 
         return v
+    }
+
+    override fun onSaveViewState(view: View, outState: Bundle) {
+        super.onSaveViewState(view, outState)
+        outState.putInt(OUT_CHECKED_POSITION, checkedPosition)
+        view.questionGroup.check(checkedPosition)
+    }
+
+    override fun onRestoreViewState(view: View, savedViewState: Bundle) {
+        super.onRestoreViewState(view, savedViewState)
+        checkedPosition = savedViewState.getInt(OUT_CHECKED_POSITION, -1)
     }
 
     override fun onAttach(view: View) {
@@ -51,6 +66,10 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener 
     override fun onDetach(view: View) {
         super.onDetach(view)
         listener = null
+    }
+
+    override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
+        checkedPosition = checkedId
     }
 
     override fun onClick(v: View) {
@@ -77,6 +96,8 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener 
 
         private const val QUESTION = "question"
         private const val LAST = "last"
+
+        private const val OUT_CHECKED_POSITION = "out_checked_position"
 
         @JvmStatic
         fun newInstance(question: Question,
