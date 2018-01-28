@@ -3,24 +3,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp">
 
-    <TextView
-        android:id="@+id/questionTv"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Where did the pineapple plant originate?" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
 
-    <RadioGroup
-        android:id="@+id/questionGroup"
+        <TextView
+            android:id="@+id/questionTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            tools:text="Where did the pineapple plant originate?" />
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:orientation="vertical" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
+
+        <RadioGroup
+            android:id="@+id/questionGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </android.support.v7.widget.CardView>
 
     <Button
         android:id="@+id/questionBtnNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         tools:text="Next" />
+
 </LinearLayout>
