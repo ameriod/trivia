@@ -26,15 +26,6 @@ class MainActivity : AppCompatActivity() {
         if (!router.hasRootController()) {
             router.setRoot(RouterTransaction.with(FilterController.newInstance()))
         }
-
-        TriviaRepository().getQuestions()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    Timber.d("response: $response")
-                }, { throwable ->
-                    Timber.e(throwable, "Error")
-                })
     }
 
     override fun onBackPressed() {

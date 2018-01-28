@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Trivia</string>
 
-    <string name="filter_btn_start">Start</string>
+    <string name="filter_btn_start">Start Quiz</string>
+
+    <string name="questions_btn_next_question">Next Question</string>
+    <string name="questions_btn_finish">Finish</string>
+    <string name="questions_error_required">Please Answer the Question</string>
+
+    <string name="questions_back_dialog_title">Cancel Quiz</string>
+    <string name="questions_back_dialog_message">Do you want to exit this quiz?</string>
+    <string name="questions_back_btn_positive">Exit</string>
+    <string name="questions_back_btn_negative">Back To Quiz</string>
+
 </resources>

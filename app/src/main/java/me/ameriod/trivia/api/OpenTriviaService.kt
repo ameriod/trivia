@@ -7,6 +7,9 @@ import me.ameriod.trivia.api.response.ResponseToken
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+/**
+ * API from https://opentdb.com/
+ */
 interface OpenTriviaService {
 
     @GET("/api_token.php")

@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import io.reactivex.Observable
 import me.ameriod.trivia.api.response.Category
 import me.ameriod.trivia.api.response.ResponseQuestions
+import me.ameriod.trivia.ui.filter.QuizFilter
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -38,11 +39,8 @@ class TriviaRepository {
         retrofit.create(OpenTriviaService::class.java)
     }
 
-    fun getQuestions(amount: Int = 10,
-                     token: String? = null,
-                     difficulty: String? = null,
-                     category: String? = null): Observable<ResponseQuestions> =
-            service.getQuestions()
+    fun getQuestions(filter: QuizFilter): Observable<ResponseQuestions> =
+            service.getQuestions(filter.count, filter.difficulty, filter.category?.id)
 
     fun getApiToken(): Observable<String> = service.getApiToken()
             .map { response ->

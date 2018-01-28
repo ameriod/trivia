@@ -36,15 +36,6 @@ data class Question(@Expose
     }
 
     /**
-     * [Type]
-     */
-    val type: Type = Type.valueOf(String(apiType.toCharArray()
-            .map { char ->
-                char.toUpperCase()
-            }
-            .toCharArray()))
-
-    /**
      * Tells if the selected answer is correct
      */
     fun isCorrect(answer: String) = answer == correctAnswer
