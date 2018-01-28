@@ -8,7 +8,7 @@ import me.ameriod.trivia.R
 
 class QuestionRadioButton : RadioButton {
 
-    constructor(context: Context?) : super(context) {
+    constructor(context: Context) : super(context) {
         buttonDrawable = null
     }
 

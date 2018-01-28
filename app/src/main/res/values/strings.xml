@@ -3,6 +3,11 @@
 
     <string name="filter_btn_start">Start Quiz</string>
 
+    <plurals name="quiz_progress">
+        <item quantity="one">Question: %1$d / %2$d</item>
+        <item quantity="other">Questions: %1$d / %2$d</item>
+    </plurals>
+
     <string name="questions_btn_next_question">Next Question</string>
     <string name="questions_btn_finish">Finish</string>
     <string name="questions_error_required">Please Answer the Question</string>

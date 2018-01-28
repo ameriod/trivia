@@ -30,9 +30,12 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
         val layoutParams = RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
                 RadioGroup.LayoutParams.WRAP_CONTENT)
 
+        val padding = v.resources.getDimensionPixelOffset(R.dimen.question_padding_vert)
+
         for (i in answers.indices) {
             val answer = answers[i]
             val radio = QuestionRadioButton(v.context)
+            radio.setPadding(padding, 0, padding, 0)
             // set the id to the index
             radio.id = i
             radio.text = Html.fromHtml(answer)

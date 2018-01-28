@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="question_padding_vert">8dp</dimen>
+    <dimen name="question_padding_hor">16dp</dimen>
+</resources>

@@ -4,21 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingEnd="16dp"
-    android:paddingStart="16dp">
+    android:paddingEnd="@dimen/question_padding_hor"
+    android:paddingStart="@dimen/question_padding_hor">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginBottom="@dimen/question_padding_vert"
+        android:layout_marginTop="@dimen/question_padding_vert">
 
         <TextView
             android:id="@+id/questionTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="16dp"
+            android:padding="@dimen/question_padding_hor"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             tools:text="Where did the pineapple plant originate?" />
 
@@ -27,16 +27,23 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginBottom="@dimen/question_padding_vert"
+        android:layout_marginTop="@dimen/question_padding_vert">
 
         <RadioGroup
             android:id="@+id/questionGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:divider="@android:color/darker_gray"
+            android:orientation="vertical"
+            android:showDividers="middle" />
 
     </android.support.v7.widget.CardView>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0dip"
+        android:layout_weight="1" />
 
     <Button
         android:id="@+id/questionBtnNext"
