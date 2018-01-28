@@ -7,7 +7,9 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.SeekBar
+import android.widget.Spinner
 import com.bluelinelabs.conductor.Controller
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -17,11 +19,17 @@ import me.ameriod.trivia.api.TriviaRepository
 import me.ameriod.trivia.ui.quiz.QuizActivity
 import timber.log.Timber
 
-class FilterController(args: Bundle) : Controller(args), View.OnClickListener {
+class FilterController(args: Bundle) : Controller(args), View.OnClickListener,
+        AdapterView.OnItemSelectedListener {
 
+    private val adapter : FilterDifficultlyAdapter by lazy {
+        FilterDifficultlyAdapter(activity!!, listOf("Any", "Easy", "Medium", "Hard"))
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_filter, container, false)
         v.filterBtnStart.setOnClickListener(this)
+
+        // Setup the seek bar
         v.filterCount.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 // un-zero index
@@ -38,6 +46,7 @@ class FilterController(args: Bundle) : Controller(args), View.OnClickListener {
                 // no op
             }
         })
+
         v.filterCountEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 // no op
@@ -65,7 +74,21 @@ class FilterController(args: Bundle) : Controller(args), View.OnClickListener {
 
             }
         })
+
+        // difficulty
+        v.filterDifficultySpinner.adapter = adapter
+        v.filterDifficultySpinner.onItemSelectedListener = this
+
         return v
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        // no op
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val difficulty = adapter.getItem(position)
+
     }
 
     override fun onClick(v: View) {
