@@ -22,6 +22,7 @@ class QuizActivity : AppCompatActivity(), QuestionController.OnQuestionAnsweredL
     private lateinit var answers: MutableList<String>
     private var position: Int = 0
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
@@ -36,7 +37,8 @@ class QuizActivity : AppCompatActivity(), QuestionController.OnQuestionAnsweredL
 
         router = Conductor.attachRouter(this, changeHandler, savedInstanceState)
         if (!router.hasRootController()) {
-            router.setRoot(RouterTransaction.with(QuestionController.newInstance(questions[0], isLastQuestion())))
+            router.setRoot(RouterTransaction
+                    .with(QuestionController.newInstance(questions[0], isLastQuestion())))
         }
         updateProgress()
     }
@@ -73,7 +75,8 @@ class QuizActivity : AppCompatActivity(), QuestionController.OnQuestionAnsweredL
                     .putExtra(RESULT, results))
             finish()
         } else {
-            router.replaceTopController(RouterTransaction.with(QuestionController.newInstance(questions[position], isLastQuestion()))
+            router.replaceTopController(RouterTransaction
+                    .with(QuestionController.newInstance(questions[position], isLastQuestion()))
                     .popChangeHandler(HorizontalChangeHandler())
                     .pushChangeHandler(HorizontalChangeHandler()))
         }
@@ -82,7 +85,8 @@ class QuizActivity : AppCompatActivity(), QuestionController.OnQuestionAnsweredL
     private fun updateProgress() {
         val answeredQuestions = answers.size + 1
         val questionCount = questions.size
-        quizProgress.text = resources.getQuantityString(R.plurals.quiz_progress, questionCount, answeredQuestions, questionCount)
+        quizProgress.text = resources.getQuantityString(R.plurals.quiz_progress, questionCount,
+                answeredQuestions, questionCount)
     }
 
     private fun isLastQuestion(): Boolean {

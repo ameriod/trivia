@@ -1,5 +1,6 @@
 package me.ameriod.trivia.ui.filter
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,22 +25,31 @@ class FilterController(args: Bundle) : Controller(args), View.OnClickListener {
     override fun onClick(v: View) {
         val view = view!!
         when (v) {
-            view.filterBtnStart -> startQuestions()
+            view.filterBtnStart -> startQuestions(v)
         }
     }
 
-    private fun startQuestions() {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE) {
+            // TODO clear filters
+        }
+    }
+
+    private fun startQuestions(view: View) {
         TriviaRepository().getQuestions(QuizFilter(10, null, null))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
-                    startActivity(QuizActivity.getLaunchIntent(activity!!, response.results))
+                    startActivityForResult(QuizActivity.getLaunchIntent(view.context, response.results), REQUEST_CODE)
                 }, { throwable ->
                     Timber.e(throwable, "Error")
                 })
     }
 
     companion object {
+        const val REQUEST_CODE = 1000
+
         @JvmStatic
         fun newInstance() = FilterController(Bundle.EMPTY)
     }
