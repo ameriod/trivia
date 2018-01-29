@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import me.ameriod.trivia.R
+import me.ameriod.trivia.api.response.Difficulty
 
-class FilterDifficultlyAdapter(context: Context,
-                               private val items: List<String>) : BaseAdapter() {
+class FilterDifficultyAdapter(context: Context,
+                              private var items: List<Difficulty> = listOf()) : BaseAdapter() {
 
     private val layoutInflater = LayoutInflater.from(context)
 
@@ -24,16 +25,21 @@ class FilterDifficultlyAdapter(context: Context,
             viewHolder = view.tag as ViewHolder
         }
 
-        viewHolder.tv.text = getItem(position)
+        viewHolder.tv.text = getItem(position).display
 
         return view!!
     }
 
-    override fun getItem(position: Int): String = items[position]
+    override fun getItem(position: Int): Difficulty = items[position]
 
     override fun getItemId(position: Int): Long = 0
 
     override fun getCount(): Int = items.size
+
+    fun setItems(items: List<Difficulty>) {
+        this.items = items
+        notifyDataSetChanged()
+    }
 
     private inner class ViewHolder(view: View) {
         val tv: TextView = view as TextView

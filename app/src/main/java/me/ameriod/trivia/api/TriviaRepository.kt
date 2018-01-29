@@ -1,8 +1,11 @@
 package me.ameriod.trivia.api
 
+import android.content.Context
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
+import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.Category
+import me.ameriod.trivia.api.response.Difficulty
 import me.ameriod.trivia.api.response.ResponseQuestions
 import me.ameriod.trivia.ui.filter.QuizFilter
 import okhttp3.OkHttpClient
@@ -13,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 
 
-class TriviaRepository {
+class TriviaRepository(val context: Context) {
 
     private val service: OpenTriviaService by lazy {
         val logging = HttpLoggingInterceptor({ message ->
@@ -40,7 +43,7 @@ class TriviaRepository {
     }
 
     fun getQuestions(filter: QuizFilter): Observable<ResponseQuestions> =
-            service.getQuestions(filter.count, filter.difficulty, filter.category?.id)
+            service.getQuestions(filter.count, filter.difficulty.display, filter.category.id)
 
     fun getApiToken(): Observable<String> = service.getApiToken()
             .map { response ->
@@ -49,6 +52,15 @@ class TriviaRepository {
 
     fun getCategories(): Observable<List<Category>> = service.getCategories()
             .map { response ->
-                response.triviaCategories
+                val categories = response.triviaCategories.toMutableList()
+                // add all
+                categories.add(0, Category.getAll(context))
+                categories
             }
+
+    fun getDifficulties(): Observable<List<Difficulty>> = Observable.just(listOf(
+            Difficulty(context.getString(R.string.filter_difficulty_all), null),
+            Difficulty(context.getString(R.string.filter_difficulty_easy), "easy"),
+            Difficulty(context.getString(R.string.filter_difficulty_medium), "medium"),
+            Difficulty(context.getString(R.string.filter_difficulty_hard), "hard")))
 }

@@ -9,21 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.SeekBar
-import android.widget.Spinner
-import com.bluelinelabs.conductor.Controller
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.controller_filter.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.TriviaRepository
+import me.ameriod.trivia.api.response.Difficulty
+import me.ameriod.trivia.ui.TriviaLifecycleController
 import me.ameriod.trivia.ui.quiz.QuizActivity
 import timber.log.Timber
 
-class FilterController(args: Bundle) : Controller(args), View.OnClickListener,
+class FilterController(args: Bundle) : TriviaLifecycleController(args), View.OnClickListener,
         AdapterView.OnItemSelectedListener {
 
-    private val adapter : FilterDifficultlyAdapter by lazy {
-        FilterDifficultlyAdapter(activity!!, listOf("Any", "Easy", "Medium", "Hard"))
+    private val adapter: FilterDifficultyAdapter by lazy {
+        FilterDifficultyAdapter(activity!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
@@ -71,8 +71,6 @@ class FilterController(args: Bundle) : Controller(args), View.OnClickListener,
                 v.filterCount.postDelayed({
                     v.filterCount.progress = input - 1
                 }, 0)
-
-
             }
         })
 
@@ -107,14 +105,14 @@ class FilterController(args: Bundle) : Controller(args), View.OnClickListener,
     }
 
     private fun startQuestions(view: View) {
-        TriviaRepository().getQuestions(QuizFilter(10, null, null))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    startActivityForResult(QuizActivity.getLaunchIntent(view.context, response.results), REQUEST_CODE)
-                }, { throwable ->
-                    Timber.e(throwable, "Error")
-                })
+//        TriviaRepository(activity!!.applicationContext).getQuestions(QuizFilter(10, null, null))
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ response ->
+//                    startActivityForResult(QuizActivity.getLaunchIntent(view.context, response.results), REQUEST_CODE)
+//                }, { throwable ->
+//                    Timber.e(throwable, "Error")
+//                })
     }
 
     companion object {

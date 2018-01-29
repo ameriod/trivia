@@ -3,14 +3,15 @@ package me.ameriod.trivia.ui.filter
 import android.os.Parcel
 import android.os.Parcelable
 import me.ameriod.trivia.api.response.Category
+import me.ameriod.trivia.api.response.Difficulty
 
-data class QuizFilter(val count: Int,
-                      val difficulty: String?,
-                      val category: Category?) : Parcelable {
+data class QuizFilter(val count: Int = 10,
+                      val difficulty: Difficulty,
+                      val category: Category) : Parcelable {
 
     constructor(source: Parcel) : this(
             source.readInt(),
-            source.readString(),
+            source.readParcelable<Difficulty>(Difficulty::class.java.classLoader),
             source.readParcelable<Category>(Category::class.java.classLoader)
     )
 
@@ -18,7 +19,7 @@ data class QuizFilter(val count: Int,
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeInt(count)
-        writeString(difficulty)
+        writeParcelable(difficulty, 0)
         writeParcelable(category, 0)
     }
 

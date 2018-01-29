@@ -3,6 +3,13 @@
 
     <string name="filter_btn_start">Start Quiz</string>
 
+    <string name="filter_difficulty_all">All</string>
+    <string name="filter_difficulty_easy">Easy</string>
+    <string name="filter_difficulty_medium">Medium</string>
+    <string name="filter_difficulty_hard">Hard</string>
+
+    <string name="filter_category_all">All</string>
+
     <plurals name="quiz_progress">
         <item quantity="one">Question: %1$d / %2$d</item>
         <item quantity="other">Questions: %1$d / %2$d</item>
