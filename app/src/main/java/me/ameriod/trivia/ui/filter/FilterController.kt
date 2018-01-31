@@ -8,25 +8,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Filter
 import android.widget.SeekBar
+import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.controller_filter.view.*
+import me.ameriod.lib.mvp.view.MvpController
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.TriviaRepository
 import me.ameriod.trivia.api.response.Difficulty
+import me.ameriod.trivia.api.response.Question
 import me.ameriod.trivia.ui.TriviaLifecycleController
 import me.ameriod.trivia.ui.quiz.QuizActivity
 import timber.log.Timber
 
-class FilterController(args: Bundle) : TriviaLifecycleController(args), View.OnClickListener,
-        AdapterView.OnItemSelectedListener {
+class FilterController(args: Bundle) : MvpController<FilterContract.View, FilterContract.Presenter>(args), View.OnClickListener,
+        AdapterView.OnItemSelectedListener, FilterContract.View {
 
     private val adapter: FilterDifficultyAdapter by lazy {
         FilterDifficultyAdapter(activity!!)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
+    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_filter, container, false)
         v.filterBtnStart.setOnClickListener(this)
 
@@ -81,38 +85,47 @@ class FilterController(args: Bundle) : TriviaLifecycleController(args), View.OnC
         return v
     }
 
+    override fun setFilter(filter: QuizFilter) {
+        val v = view!!
+        v.filterCountEt.setText(filter.count)
+        v.filterDifficultySpinner.setSelection(adapter.getPositionForItem(filter.difficulty))
+    }
+
     override fun onNothingSelected(parent: AdapterView<*>?) {
         // no op
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val difficulty = adapter.getItem(position)
-
+        getPresenter().setDifficulty(adapter.getItem(position))
     }
 
     override fun onClick(v: View) {
         val view = view!!
         when (v) {
-            view.filterBtnStart -> startQuestions(v)
+            view.filterBtnStart -> getPresenter().getQuestions()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE) {
-            // TODO clear filters
+            getPresenter().resetFilter()
         }
     }
 
-    private fun startQuestions(view: View) {
-//        TriviaRepository(activity!!.applicationContext).getQuestions(QuizFilter(10, null, null))
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({ response ->
-//                    startActivityForResult(QuizActivity.getLaunchIntent(view.context, response.results), REQUEST_CODE)
-//                }, { throwable ->
-//                    Timber.e(throwable, "Error")
-//                })
+    override fun setQuestions(items: List<Question>) {
+        startActivityForResult(QuizActivity.getLaunchIntent(activity!!, items), REQUEST_CODE)
+    }
+
+    override fun createPresenter(): FilterContract.Presenter =
+            FilterPresenter.newInstance(applicationContext!!)
+
+    override fun displayError(error: String) {
+       Toast.makeText(activity!!, error, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showProgress(show: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     companion object {

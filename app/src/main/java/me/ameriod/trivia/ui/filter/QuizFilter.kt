@@ -1,5 +1,6 @@
 package me.ameriod.trivia.ui.filter
 
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import me.ameriod.trivia.api.response.Category
@@ -24,6 +25,12 @@ data class QuizFilter(val count: Int = 10,
     }
 
     companion object {
+
+        @JvmStatic
+        fun createDefault(context: Context): QuizFilter {
+            return QuizFilter(10, Difficulty.createDefault(context), Category.getAll(context))
+        }
+
         @JvmField
         val CREATOR: Parcelable.Creator<QuizFilter> = object : Parcelable.Creator<QuizFilter> {
             override fun createFromParcel(source: Parcel): QuizFilter = QuizFilter(source)

@@ -36,6 +36,11 @@ class FilterDifficultyAdapter(context: Context,
 
     override fun getCount(): Int = items.size
 
+    fun getPositionForItem(item: Difficulty): Int {
+        val index = items.lastIndexOf(item)
+        return if (index < 0) 0 else index
+    }
+
     fun setItems(items: List<Difficulty>) {
         this.items = items
         notifyDataSetChanged()

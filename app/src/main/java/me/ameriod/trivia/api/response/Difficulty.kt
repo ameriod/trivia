@@ -1,7 +1,9 @@
 package me.ameriod.trivia.api.response
 
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import me.ameriod.trivia.R
 
 data class Difficulty(val display: String,
                       val value: String?) : Parcelable {
@@ -19,6 +21,9 @@ data class Difficulty(val display: String,
     }
 
     companion object {
+        @JvmStatic
+        fun createDefault(context: Context) =
+                Difficulty(context.getString(R.string.filter_difficulty_all), null)
 
         @JvmField
         val CREATOR: Parcelable.Creator<Difficulty> = object : Parcelable.Creator<Difficulty> {

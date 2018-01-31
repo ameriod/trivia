@@ -59,7 +59,7 @@ class TriviaRepository(val context: Context) {
             }
 
     fun getDifficulties(): Observable<List<Difficulty>> = Observable.just(listOf(
-            Difficulty(context.getString(R.string.filter_difficulty_all), null),
+            Difficulty.createDefault(context),
             Difficulty(context.getString(R.string.filter_difficulty_easy), "easy"),
             Difficulty(context.getString(R.string.filter_difficulty_medium), "medium"),
             Difficulty(context.getString(R.string.filter_difficulty_hard), "hard")))
