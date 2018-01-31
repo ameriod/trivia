@@ -54,6 +54,7 @@
                         android:inputType="numberSigned"
                         android:maxEms="2"
                         android:maxLength="2"
+                        android:imeOptions="actionDone"
                         android:minEms="2"
                         tools:text="10" />
 

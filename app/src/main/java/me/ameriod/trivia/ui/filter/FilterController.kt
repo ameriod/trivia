@@ -125,6 +125,7 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         getPresenter().setDifficulty(filterAdapter.getItem(position))
+        dropKeyboard()
     }
 
     override fun onClick(v: View) {
@@ -138,6 +139,7 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
         val category = categoryAdapter.getItem(position)
         categoryAdapter.setSelectedCategory(category)
         getPresenter().setCategory(category)
+        dropKeyboard()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
