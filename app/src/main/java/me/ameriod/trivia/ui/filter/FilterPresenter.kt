@@ -3,9 +3,9 @@ package me.ameriod.trivia.ui.filter
 import android.content.Context
 import android.os.Bundle
 import me.ameriod.lib.mvp.Mvp
-import me.ameriod.lib.mvp.R
 import me.ameriod.lib.mvp.presenter.rx2.BasePresenterRx2
 import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
+import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.Category
 import me.ameriod.trivia.api.response.Difficulty
 import timber.log.Timber
