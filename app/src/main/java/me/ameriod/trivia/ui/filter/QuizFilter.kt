@@ -28,7 +28,7 @@ data class QuizFilter(val count: Int = 10,
 
         @JvmStatic
         fun createDefault(context: Context): QuizFilter {
-            return QuizFilter(10, Difficulty.createDefault(context), Category.getAll(context))
+            return QuizFilter(10, Difficulty.createDefault(context), Category.createAll(context))
         }
 
         @JvmField

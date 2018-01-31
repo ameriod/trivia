@@ -28,7 +28,7 @@ data class Category(@Expose
     companion object {
 
         @JvmStatic
-        fun getAll(context: Context) : Category  {
+        fun createAll(context: Context) : Category  {
             return Category(context.getString(R.string.filter_category_all), null)
         }
 

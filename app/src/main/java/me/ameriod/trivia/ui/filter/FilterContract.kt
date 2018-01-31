@@ -12,7 +12,9 @@ class FilterContract {
 
         fun setQuestions(items: List<Question>)
 
-        fun setFilter(filter: QuizFilter)
+        fun setFilter(categories: List<Category>,
+                      difficulties: List<Difficulty>,
+                      filter: QuizFilter)
 
     }
 
@@ -32,6 +34,12 @@ class FilterContract {
     }
 
     interface Interactor {
+
         fun getQuestions(filter: QuizFilter): Observable<List<Question>>
+
+        fun getDifficulties() : Observable<List<Difficulty>>
+
+        fun getCategories() : Observable<List<Category>>
+
     }
 }

@@ -1,4 +1,4 @@
-package me.ameriod.trivia.ui.categories
+package me.ameriod.trivia.ui.filter
 
 import android.content.Context
 import android.support.v7.util.DiffUtil
@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.Category
 
-class CategoriesAdapter(context: Context,
-                        private val clickListener: OnItemClickListener) : RecyclerView.Adapter<CategoryViewHolder>() {
+class CategoryAdapter(context: Context,
+                      private val clickListener: OnItemClickListener) : RecyclerView.Adapter<CategoryViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClicked(view: View, position: Int)
@@ -18,14 +18,16 @@ class CategoriesAdapter(context: Context,
 
     private val layoutInflater = LayoutInflater.from(context)
     private var items = listOf<Category>()
+    private var selectedCategory: Category? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CategoryViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder =
             CategoryViewHolder(layoutInflater.inflate(R.layout.category_item, parent, false), clickListener)
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: CategoryViewHolder?, position: Int) {
-        holder?.bind(items[position])
+    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
+        val category = items[position]
+        holder.bind(category, category == selectedCategory)
     }
 
     fun getItem(position: Int) = items[position]
@@ -38,6 +40,24 @@ class CategoriesAdapter(context: Context,
         // calculate the diff
         DiffUtil.calculateDiff(DiffCallback(newItems, oldItems))
                 .dispatchUpdatesTo(this)
+    }
+
+    fun setSelectedCategory(newCategory: Category) {
+        if (items.isNotEmpty() || selectedCategory != newCategory) {
+            val oldPosition = items.indexOf(selectedCategory)
+            val newPosition = items.indexOf(newCategory)
+            // set the new category
+            this.selectedCategory = newCategory
+            if (oldPosition >= 0) {
+                notifyItemChanged(oldPosition)
+            }
+            if (newPosition >= 0) {
+                notifyItemChanged(newPosition)
+            }
+        }
+        if (selectedCategory == null) {
+            this.selectedCategory = newCategory
+        }
     }
 
     private inner class DiffCallback(private val newItems: List<Category>,

@@ -29,10 +29,26 @@ class FilterPresenter(private val defaultFilter: QuizFilter,
     }
 
     override fun getFilter() {
-        getView().setFilter(quizFilter)
+        getView().showProgress(true)
+        addDisposable(interactor.getDifficulties()
+                .flatMap { difficulties ->
+                    interactor.getCategories()
+                            .map { categories ->
+                                categories to difficulties
+                            }
+                }
+                .compose(scheduler.schedule())
+                .subscribe({ pair ->
+                    getView().setFilter(pair.first, pair.second, quizFilter)
+                    getView().showProgress(false)
+                }, { throwable ->
+                    getView().displayError(errorHandler.onError(throwable))
+                }))
+
     }
 
     override fun getQuestions() {
+        getView().showProgress(true)
         addDisposable(interactor.getQuestions(quizFilter)
                 .compose(scheduler.schedule())
                 .subscribe({ questions ->
@@ -40,7 +56,6 @@ class FilterPresenter(private val defaultFilter: QuizFilter,
                     getView().setQuestions(questions)
                 }, { throwable ->
                     getView().displayError(errorHandler.onError(throwable))
-                    getView().showProgress(false)
                 }))
     }
 
@@ -50,7 +65,6 @@ class FilterPresenter(private val defaultFilter: QuizFilter,
             return
         }
         quizFilter = QuizFilter(quizFilter.count, difficulty, quizFilter.category)
-        getFilter()
     }
 
     override fun setCount(count: Int) {
@@ -58,7 +72,6 @@ class FilterPresenter(private val defaultFilter: QuizFilter,
             return
         }
         quizFilter = QuizFilter(count, quizFilter.difficulty, quizFilter.category)
-        getFilter()
     }
 
     override fun setCategory(category: Category) {
@@ -66,7 +79,6 @@ class FilterPresenter(private val defaultFilter: QuizFilter,
             return
         }
         quizFilter = QuizFilter(quizFilter.count, quizFilter.difficulty, category)
-        getFilter()
     }
 
     override fun resetFilter() {

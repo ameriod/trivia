@@ -2,44 +2,59 @@ package me.ameriod.trivia.ui.filter
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.Filter
 import android.widget.SeekBar
-import android.widget.Toast
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.controller_filter.view.*
 import me.ameriod.lib.mvp.view.MvpController
 import me.ameriod.trivia.R
-import me.ameriod.trivia.api.TriviaRepository
+import me.ameriod.trivia.api.response.Category
 import me.ameriod.trivia.api.response.Difficulty
 import me.ameriod.trivia.api.response.Question
-import me.ameriod.trivia.ui.TriviaLifecycleController
 import me.ameriod.trivia.ui.quiz.QuizActivity
-import timber.log.Timber
 
 class FilterController(args: Bundle) : MvpController<FilterContract.View, FilterContract.Presenter>(args), View.OnClickListener,
-        AdapterView.OnItemSelectedListener, FilterContract.View {
+        AdapterView.OnItemSelectedListener, FilterContract.View, CategoryAdapter.OnItemClickListener {
 
-    private val adapter: FilterDifficultyAdapter by lazy {
+    var snackbar: Snackbar? = null
+
+    private val filterAdapter: FilterDifficultyAdapter by lazy {
         FilterDifficultyAdapter(activity!!)
+    }
+
+    private val categoryAdapter: CategoryAdapter by lazy {
+        CategoryAdapter(activity!!, this)
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_filter, container, false)
         v.filterBtnStart.setOnClickListener(this)
+        v.filterDifficultySpinner.adapter = filterAdapter
+        v.filterDifficultySpinner.onItemSelectedListener = this
 
+        v.filterCategoriesRecycler.layoutManager = LinearLayoutManager(v.context)
+        v.filterCategoriesRecycler.addItemDecoration(DividerItemDecoration(v.context,
+                DividerItemDecoration.VERTICAL))
+        v.filterCategoriesRecycler.adapter = categoryAdapter
+
+        return v
+    }
+
+    override fun onPostCreateView(view: View, container: ViewGroup) {
+        super.onPostCreateView(view, container)
         // Setup the seek bar
-        v.filterCount.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        view.filterCount.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 // un-zero index
                 if (fromUser) {
-                    v.filterCountEt.setText((progress + 1).toString())
+                    view.filterCountEt.setText((progress + 1).toString())
                 }
             }
 
@@ -52,7 +67,7 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
             }
         })
 
-        v.filterCountEt.addTextChangedListener(object : TextWatcher {
+        view.filterCountEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 // no op
             }
@@ -72,23 +87,29 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
                     input = 50
                 }
                 // set the progress
-                v.filterCount.postDelayed({
-                    v.filterCount.progress = input - 1
+                view.filterCount.postDelayed({
+                    view.filterCount.progress = input - 1
                 }, 0)
+
+                getPresenter().setCount(input)
             }
         })
-
-        // difficulty
-        v.filterDifficultySpinner.adapter = adapter
-        v.filterDifficultySpinner.onItemSelectedListener = this
-
-        return v
     }
 
-    override fun setFilter(filter: QuizFilter) {
+    override fun setFilter(categories: List<Category>, difficulties: List<Difficulty>, filter: QuizFilter) {
+        categoryAdapter.setSelectedCategory(filter.category)
+        categoryAdapter.setItems(categories)
+
+        filterAdapter.setItems(difficulties)
+
         val v = view!!
-        v.filterCountEt.setText(filter.count)
-        v.filterDifficultySpinner.setSelection(adapter.getPositionForItem(filter.difficulty))
+        v.filterCountEt.setText(filter.count.toString())
+        v.filterDifficultySpinner.setSelection(filterAdapter.getPositionForItem(filter.difficulty))
+    }
+
+    override fun onAttach(view: View) {
+        super.onAttach(view)
+        getPresenter().getFilter()
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -96,7 +117,7 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        getPresenter().setDifficulty(adapter.getItem(position))
+        getPresenter().setDifficulty(filterAdapter.getItem(position))
     }
 
     override fun onClick(v: View) {
@@ -104,6 +125,12 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
         when (v) {
             view.filterBtnStart -> getPresenter().getQuestions()
         }
+    }
+
+    override fun onItemClicked(view: View, position: Int) {
+        val category = categoryAdapter.getItem(position)
+        categoryAdapter.setSelectedCategory(category)
+        getPresenter().setCategory(category)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -121,11 +148,17 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
             FilterPresenter.newInstance(applicationContext!!)
 
     override fun displayError(error: String) {
-       Toast.makeText(activity!!, error, Toast.LENGTH_SHORT).show()
+        snackbar = Snackbar.make(view!!, error, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.filter_retry) { _ ->
+                    if (filterAdapter.isEmpty) getPresenter().getFilter() else getPresenter().getQuestions()
+                }
+        snackbar!!.show()
     }
 
     override fun showProgress(show: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        view?.filterLoading?.visibility = if (show) View.VISIBLE else View.GONE
+        snackbar?.dismiss()
+        snackbar = null
     }
 
     companion object {

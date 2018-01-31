@@ -8,7 +8,8 @@
     <string name="filter_difficulty_medium">Medium</string>
     <string name="filter_difficulty_hard">Hard</string>
 
-    <string name="filter_api_error">Error getting quiz. Please try again.</string>
+    <string name="filter_api_error">Error please try again.</string>
+    <string name="filter_retry">Retry</string>
 
     <string name="filter_category_all">All</string>
 

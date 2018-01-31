@@ -4,6 +4,8 @@ import android.content.Context
 import io.reactivex.Observable
 import me.ameriod.trivia.TriviaApplication
 import me.ameriod.trivia.api.TriviaRepository
+import me.ameriod.trivia.api.response.Category
+import me.ameriod.trivia.api.response.Difficulty
 import me.ameriod.trivia.api.response.Question
 
 class FilterInteractor(private val repository: TriviaRepository) : FilterContract.Interactor {
@@ -16,4 +18,10 @@ class FilterInteractor(private val repository: TriviaRepository) : FilterContrac
                     .map { response ->
                         response.results
                     }
+
+    override fun getDifficulties(): Observable<List<Difficulty>> =
+            repository.getDifficulties()
+
+    override fun getCategories(): Observable<List<Category>> =
+            repository.getCategories()
 }

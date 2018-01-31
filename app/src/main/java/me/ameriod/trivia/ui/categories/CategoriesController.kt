@@ -10,12 +10,13 @@ import com.bluelinelabs.conductor.Controller
 import kotlinx.android.synthetic.main.controller_categories.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.Category
+import me.ameriod.trivia.ui.filter.CategoryAdapter
 
-class CategoriesController(args: Bundle) : Controller(args), CategoriesAdapter.OnItemClickListener {
+class CategoriesController(args: Bundle) : Controller(args), CategoryAdapter.OnItemClickListener {
 
 
-    private val adapter: CategoriesAdapter by lazy {
-        CategoriesAdapter(activity!!, this)
+    private val adapter: CategoryAdapter by lazy {
+        CategoryAdapter(activity!!, this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
