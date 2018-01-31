@@ -43,7 +43,7 @@ class TriviaRepository(val context: Context) {
     }
 
     fun getQuestions(filter: QuizFilter): Observable<ResponseQuestions> =
-            service.getQuestions(filter.count, filter.difficulty.value, filter.category.id)
+            service.getQuestions(filter.count, filter.difficulty.value, filter.category.id, null)
 
     fun getApiToken(): Observable<String> = service.getApiToken()
             .map { response ->

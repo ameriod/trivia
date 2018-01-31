@@ -10,6 +10,7 @@
 
     <string name="filter_api_error">Error please try again.</string>
     <string name="filter_retry">Retry</string>
+    <string name="filter_no_more">No More Questions</string>
 
     <string name="filter_category_all">All</string>
 

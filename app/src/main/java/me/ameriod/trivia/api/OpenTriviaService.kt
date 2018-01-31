@@ -20,7 +20,7 @@ interface OpenTriviaService {
 
     @GET("/api.php")
     fun getQuestions(@Query("amount") amount: Int = 10,
-                     @Query("token") token: String? = null,
                      @Query("difficulty") difficulty: String? = null,
-                     @Query("category") category: String? = null): Observable<ResponseQuestions>
+                     @Query("category") category: String? = null,
+                     @Query("token") token: String? = null): Observable<ResponseQuestions>
 }

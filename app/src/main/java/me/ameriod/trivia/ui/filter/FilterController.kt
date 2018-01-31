@@ -1,5 +1,6 @@
 package me.ameriod.trivia.ui.filter
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -10,6 +11,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.SeekBar
 import kotlinx.android.synthetic.main.controller_filter.view.*
@@ -19,6 +21,7 @@ import me.ameriod.trivia.api.response.Category
 import me.ameriod.trivia.api.response.Difficulty
 import me.ameriod.trivia.api.response.Question
 import me.ameriod.trivia.ui.quiz.QuizActivity
+
 
 class FilterController(args: Bundle) : MvpController<FilterContract.View, FilterContract.Presenter>(args), View.OnClickListener,
         AdapterView.OnItemSelectedListener, FilterContract.View, CategoryAdapter.OnItemClickListener {
@@ -54,7 +57,9 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 // un-zero index
                 if (fromUser) {
-                    view.filterCountEt.setText((progress + 1).toString())
+                    val display = (progress + 1).toString()
+                    view.filterCountEt.setText(display)
+                    view.filterCountEt.setSelection(display.length)
                 }
             }
 
@@ -103,7 +108,9 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
         filterAdapter.setItems(difficulties)
 
         val v = view!!
-        v.filterCountEt.setText(filter.count.toString())
+        val display = filter.count.toString()
+        v.filterCountEt.setText(display)
+        v.filterCountEt.setSelection(display.length)
         v.filterDifficultySpinner.setSelection(filterAdapter.getPositionForItem(filter.difficulty))
     }
 
@@ -137,11 +144,16 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE) {
             getPresenter().resetFilter()
+            dropKeyboard()
         }
     }
 
     override fun setQuestions(items: List<Question>) {
-        startActivityForResult(QuizActivity.getLaunchIntent(activity!!, items), REQUEST_CODE)
+        if (items.isNotEmpty()) {
+            startActivityForResult(QuizActivity.getLaunchIntent(activity!!, items), REQUEST_CODE)
+        } else {
+            Snackbar.make(view!!, R.string.filter_no_more, Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     override fun createPresenter(): FilterContract.Presenter =
@@ -159,6 +171,11 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
         view?.filterLoading?.visibility = if (show) View.VISIBLE else View.GONE
         snackbar?.dismiss()
         snackbar = null
+    }
+
+    private fun dropKeyboard() {
+        val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view!!.windowToken, 0)
     }
 
     companion object {
