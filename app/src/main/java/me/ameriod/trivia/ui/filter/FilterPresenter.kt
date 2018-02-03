@@ -6,8 +6,8 @@ import me.ameriod.lib.mvp.Mvp
 import me.ameriod.lib.mvp.presenter.rx2.BasePresenterRx2
 import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
 import me.ameriod.trivia.R
-import me.ameriod.trivia.api.response.Category
-import me.ameriod.trivia.api.response.Difficulty
+import me.ameriod.trivia.api.response.OtCategory
+import me.ameriod.trivia.api.response.OtDifficulty
 import timber.log.Timber
 
 class FilterPresenter(private val defaultFilter: Filter,
@@ -17,8 +17,8 @@ class FilterPresenter(private val defaultFilter: Filter,
         BasePresenterRx2<FilterContract.View>(schedulerRx2, errorHandler), FilterContract.Presenter {
 
     private var quizFilter: Filter = defaultFilter
-    private var categories: List<Category> = emptyList()
-    private var difficulties: List<Difficulty> = emptyList()
+    private var categories: List<OtCategory> = emptyList()
+    private var difficulties: List<OtDifficulty> = emptyList()
 
     override fun saveState(outState: Bundle) {
         super.saveState(outState)
@@ -61,7 +61,7 @@ class FilterPresenter(private val defaultFilter: Filter,
 
     override fun getQuestions() {
         getView().showProgress(true)
-        addDisposable(interactor.getQuestions(quizFilter)
+        addDisposable(interactor.getQuiz(quizFilter)
                 .compose(scheduler.schedule())
                 .subscribe({ quiz ->
                     getView().showProgress(false)
@@ -72,7 +72,7 @@ class FilterPresenter(private val defaultFilter: Filter,
     }
 
 
-    override fun setDifficulty(difficulty: Difficulty) {
+    override fun setDifficulty(difficulty: OtDifficulty) {
         if (quizFilter.difficulty == difficulty) {
             return
         }
@@ -86,7 +86,7 @@ class FilterPresenter(private val defaultFilter: Filter,
         quizFilter.count = count
     }
 
-    override fun setCategory(category: Category) {
+    override fun setCategory(category: OtCategory) {
         if (quizFilter.category == category) {
             return
         }

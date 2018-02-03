@@ -3,17 +3,17 @@ package me.ameriod.trivia.ui.filter
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-import me.ameriod.trivia.api.response.Category
-import me.ameriod.trivia.api.response.Difficulty
+import me.ameriod.trivia.api.response.OtCategory
+import me.ameriod.trivia.api.response.OtDifficulty
 
 data class Filter(var count: Int = 10,
-                  var difficulty: Difficulty,
-                  var category: Category) : Parcelable {
+                  var difficulty: OtDifficulty,
+                  var category: OtCategory) : Parcelable {
 
     constructor(source: Parcel) : this(
             source.readInt(),
-            source.readParcelable<Difficulty>(Difficulty::class.java.classLoader),
-            source.readParcelable<Category>(Category::class.java.classLoader)
+            source.readParcelable<OtDifficulty>(OtDifficulty::class.java.classLoader),
+            source.readParcelable<OtCategory>(OtCategory::class.java.classLoader)
     )
 
     override fun describeContents() = 0
@@ -28,7 +28,7 @@ data class Filter(var count: Int = 10,
 
         @JvmStatic
         fun createDefault(context: Context): Filter {
-            return Filter(10, Difficulty.createDefault(context), Category.createAll(context))
+            return Filter(10, OtDifficulty.createDefault(context), OtCategory.createAll(context))
         }
 
         @JvmField

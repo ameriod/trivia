@@ -10,7 +10,6 @@ import android.widget.Toast
 import com.bluelinelabs.conductor.Controller
 import kotlinx.android.synthetic.main.controller_question.view.*
 import me.ameriod.trivia.R
-import me.ameriod.trivia.api.response.Question
 import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 
@@ -31,7 +30,7 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_question, container, false)
-        v.questionTv.text = Html.fromHtml(question.question)
+        v.questionTv.text = Html.fromHtml(question.text)
 
 
         v.questionBtnNext.setText(if (last) R.string.questions_btn_finish else R.string.questions_btn_next_question)
@@ -93,7 +92,7 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
 
     companion object {
 
-        private const val QUESTION = "question"
+        private const val QUESTION = "text"
         private const val LAST = "last"
 
         private const val OUT_SELECTED_ANSWER = "out_selected_answer"

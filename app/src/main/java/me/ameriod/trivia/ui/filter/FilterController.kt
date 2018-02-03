@@ -17,8 +17,8 @@ import android.widget.SeekBar
 import kotlinx.android.synthetic.main.controller_filter.view.*
 import me.ameriod.lib.mvp.view.MvpController
 import me.ameriod.trivia.R
-import me.ameriod.trivia.api.response.Category
-import me.ameriod.trivia.api.response.Difficulty
+import me.ameriod.trivia.api.response.OtCategory
+import me.ameriod.trivia.api.response.OtDifficulty
 import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.quiz.Quiz
@@ -34,8 +34,8 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
         DifficultyAdapter(activity!!)
     }
 
-    private val categoryAdapter: TriviaBaseAdapter<Category> by lazy {
-        TriviaBaseAdapter<Category>(activity!!, this)
+    private val categoryAdapter: TriviaBaseAdapter<OtCategory> by lazy {
+        TriviaBaseAdapter<OtCategory>(activity!!, this)
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
@@ -104,12 +104,12 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
     }
 
 
-    override fun setCategories(categories: List<Category>, selectedItem: Category) {
+    override fun setCategories(categories: List<OtCategory>, selectedItem: OtCategory) {
         categoryAdapter.setItems(categories)
         categoryAdapter.setSingleSelected(selectedItem)
     }
 
-    override fun setDifficulties(difficulties: List<Difficulty>, selectedItem: Difficulty) {
+    override fun setDifficulties(difficulties: List<OtDifficulty>, selectedItem: OtDifficulty) {
         difficultyAdapter.setItems(difficulties)
         view!!.filterDifficultySpinner.setSelection(difficultyAdapter.getPositionForItem(selectedItem))
     }

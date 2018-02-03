@@ -2,8 +2,8 @@ package me.ameriod.trivia.ui.filter
 
 import io.reactivex.Observable
 import me.ameriod.lib.mvp.Mvp
-import me.ameriod.trivia.api.response.Category
-import me.ameriod.trivia.api.response.Difficulty
+import me.ameriod.trivia.api.response.OtCategory
+import me.ameriod.trivia.api.response.OtDifficulty
 import me.ameriod.trivia.ui.quiz.Quiz
 
 class FilterContract {
@@ -14,19 +14,19 @@ class FilterContract {
 
         fun setQuestionCount(count: String)
 
-        fun setCategories(categories: List<Category>, selectedItem: Category)
+        fun setCategories(categories: List<OtCategory>, selectedItem: OtCategory)
 
-        fun setDifficulties(difficulties: List<Difficulty>, selectedItem: Difficulty)
+        fun setDifficulties(difficulties: List<OtDifficulty>, selectedItem: OtDifficulty)
 
     }
 
     interface Presenter : Mvp.Presenter<View> {
 
-        fun setDifficulty(difficulty: Difficulty)
+        fun setDifficulty(difficulty: OtDifficulty)
 
         fun setCount(count: Int)
 
-        fun setCategory(category: Category)
+        fun setCategory(category: OtCategory)
 
         fun getFilter()
 
@@ -37,11 +37,11 @@ class FilterContract {
 
     interface Interactor {
 
-        fun getQuestions(filter: Filter): Observable<Quiz>
+        fun getQuiz(filter: Filter): Observable<Quiz>
 
-        fun getDifficulties(): Observable<List<Difficulty>>
+        fun getDifficulties(): Observable<List<OtDifficulty>>
 
-        fun getCategories(): Observable<List<Category>>
+        fun getCategories(): Observable<List<OtCategory>>
 
     }
 }

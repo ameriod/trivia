@@ -12,13 +12,13 @@ import me.ameriod.trivia.ui.adapter.TriviaAdapterItem
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.filter.CategoryViewHolder
 
-data class Category(@Expose
-                    @SerializedName("name")
-                    val name: String,
-                    @Expose
-                    @SerializedName("id")
-                    val id: String? = null,
-                    var selected: Boolean = false) : Parcelable, TriviaAdapterItem {
+data class OtCategory(@Expose
+                      @SerializedName("name")
+                      val name: String,
+                      @Expose
+                      @SerializedName("id")
+                      val id: String? = null,
+                      var selected: Boolean = false) : Parcelable, TriviaAdapterItem {
 
     override fun createViewHolder(inflater: LayoutInflater, parent: ViewGroup?, attachToRoot: Boolean): TriviaBaseViewHolder<*> {
         return CategoryViewHolder(inflater.inflate(R.layout.category_item, parent, attachToRoot))
@@ -44,14 +44,14 @@ data class Category(@Expose
 
     companion object {
         @JvmStatic
-        fun createAll(context: Context): Category {
-            return Category(context.getString(R.string.filter_category_all), null, true)
+        fun createAll(context: Context): OtCategory {
+            return OtCategory(context.getString(R.string.filter_category_all), null, true)
         }
 
         @JvmField
-        val CREATOR: Parcelable.Creator<Category> = object : Parcelable.Creator<Category> {
-            override fun createFromParcel(source: Parcel): Category = Category(source)
-            override fun newArray(size: Int): Array<Category?> = arrayOfNulls(size)
+        val CREATOR: Parcelable.Creator<OtCategory> = object : Parcelable.Creator<OtCategory> {
+            override fun createFromParcel(source: Parcel): OtCategory = OtCategory(source)
+            override fun newArray(size: Int): Array<OtCategory?> = arrayOfNulls(size)
         }
     }
 }

@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import me.ameriod.trivia.R
-import me.ameriod.trivia.api.response.Difficulty
+import me.ameriod.trivia.api.response.OtDifficulty
 
 class DifficultyAdapter(context: Context,
-                        private var items: List<Difficulty> = listOf()) : BaseAdapter() {
+                        private var items: List<OtDifficulty> = listOf()) : BaseAdapter() {
 
     private val layoutInflater = LayoutInflater.from(context)
 
@@ -30,18 +30,18 @@ class DifficultyAdapter(context: Context,
         return view!!
     }
 
-    override fun getItem(position: Int): Difficulty = items[position]
+    override fun getItem(position: Int): OtDifficulty = items[position]
 
     override fun getItemId(position: Int): Long = 0
 
     override fun getCount(): Int = items.size
 
-    fun getPositionForItem(item: Difficulty): Int {
+    fun getPositionForItem(item: OtDifficulty): Int {
         val index = items.lastIndexOf(item)
         return if (index < 0) 0 else index
     }
 
-    fun setItems(items: List<Difficulty>) {
+    fun setItems(items: List<OtDifficulty>) {
         this.items = items
         notifyDataSetChanged()
     }

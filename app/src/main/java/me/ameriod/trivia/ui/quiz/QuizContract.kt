@@ -1,8 +1,8 @@
 package me.ameriod.trivia.ui.quiz
 
 import me.ameriod.lib.mvp.Mvp
-import me.ameriod.trivia.api.response.Question
 import me.ameriod.trivia.ui.quiz.question.Answer
+import me.ameriod.trivia.ui.quiz.question.Question
 
 class QuizContract {
 

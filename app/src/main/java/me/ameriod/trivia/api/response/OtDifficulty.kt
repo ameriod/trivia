@@ -5,8 +5,8 @@ import android.os.Parcel
 import android.os.Parcelable
 import me.ameriod.trivia.R
 
-data class Difficulty(val display: String,
-                      val value: String?) : Parcelable {
+data class OtDifficulty(val display: String,
+                        val value: String?) : Parcelable {
 
     constructor(source: Parcel) : this(
             source.readString(),
@@ -23,12 +23,12 @@ data class Difficulty(val display: String,
     companion object {
         @JvmStatic
         fun createDefault(context: Context) =
-                Difficulty(context.getString(R.string.filter_difficulty_all), null)
+                OtDifficulty(context.getString(R.string.filter_difficulty_all), null)
 
         @JvmField
-        val CREATOR: Parcelable.Creator<Difficulty> = object : Parcelable.Creator<Difficulty> {
-            override fun createFromParcel(source: Parcel): Difficulty = Difficulty(source)
-            override fun newArray(size: Int): Array<Difficulty?> = arrayOfNulls(size)
+        val CREATOR: Parcelable.Creator<OtDifficulty> = object : Parcelable.Creator<OtDifficulty> {
+            override fun createFromParcel(source: Parcel): OtDifficulty = OtDifficulty(source)
+            override fun newArray(size: Int): Array<OtDifficulty?> = arrayOfNulls(size)
         }
     }
 }

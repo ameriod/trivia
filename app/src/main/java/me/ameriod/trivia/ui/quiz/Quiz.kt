@@ -2,8 +2,8 @@ package me.ameriod.trivia.ui.quiz
 
 import android.os.Parcel
 import android.os.Parcelable
-import me.ameriod.trivia.api.response.Question
 import me.ameriod.trivia.ui.quiz.question.Answer
+import me.ameriod.trivia.ui.quiz.question.Question
 
 data class Quiz(private val questions: List<Question>,
                 private val answers: MutableList<Answer> = mutableListOf(),
@@ -17,8 +17,8 @@ data class Quiz(private val questions: List<Question>,
 
     fun getNextQuestion(): Question {
         position++
-        if (position > answers.size) throw IllegalAccessException("Error need to call setAnswer before getting the next question")
-        if (isQuizDone()) throw IllegalAccessException("Error on last question, you need to check....")
+        if (position > answers.size) throw IllegalAccessException("Error need to call setAnswer before getting the next text")
+        if (isQuizDone()) throw IllegalAccessException("Error on last text, you need to check....")
         return questions[position]
     }
 
