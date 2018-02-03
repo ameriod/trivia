@@ -20,8 +20,8 @@ data class Category(@Expose
                     val id: String? = null,
                     var selected: Boolean = false) : Parcelable, TriviaAdapterItem {
 
-    override fun createViewHolder(inflater: LayoutInflater, parent: ViewGroup?, viewType: Int): TriviaBaseViewHolder<*> {
-        return CategoryViewHolder(inflater.inflate(R.layout.category_item, parent, false))
+    override fun createViewHolder(inflater: LayoutInflater, parent: ViewGroup?, attachToRoot: Boolean): TriviaBaseViewHolder<*> {
+        return CategoryViewHolder(inflater.inflate(R.layout.category_item, parent, attachToRoot))
     }
 
     override fun getViewType(): Int = R.layout.category_item

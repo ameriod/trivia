@@ -1,64 +1,55 @@
 package me.ameriod.trivia.ui.quiz.question
 
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioGroup
-import android.widget.Toast
 import com.bluelinelabs.conductor.Controller
 import kotlinx.android.synthetic.main.controller_question.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.Question
+import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
+import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 
 class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
-        RadioGroup.OnCheckedChangeListener {
+        TriviaBaseAdapter.OnItemClickListener {
 
     private val question: Question = args.getParcelable(QUESTION)
-    private val answers: List<String> by lazy {
-        question.answers
+    private val adapter: TriviaBaseAdapter<QuizAnswer> by lazy {
+        TriviaBaseAdapter<QuizAnswer>(activity!!, this)
     }
+    private val answers: List<QuizAnswer> by lazy {
+        question.answers.map { answer ->
+            QuizAnswer(answer, question.isCorrect(answer), false)
+        }
+    }
+
     private val last = args.getBoolean(LAST)
     private var listener: OnQuestionAnsweredListener? = null
-    private var checkedPosition = -1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_question, container, false)
         v.questionTv.text = Html.fromHtml(question.question)
 
-        val layoutParams = RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
-                RadioGroup.LayoutParams.WRAP_CONTENT)
-
-        val padding = v.resources.getDimensionPixelOffset(R.dimen.question_padding_vert)
-
-        for (i in answers.indices) {
-            val answer = answers[i]
-            val radio = QuestionRadioButton(v.context)
-            radio.setPadding(padding, 0, padding, 0)
-            // set the id to the index
-            radio.id = i
-            radio.text = Html.fromHtml(answer)
-            radio.isChecked = i == checkedPosition
-            v.questionGroup.addView(radio, layoutParams)
-        }
-        v.questionGroup.setOnCheckedChangeListener(this)
 
         v.questionBtnNext.setText(if (last) R.string.questions_btn_finish else R.string.questions_btn_next_question)
         v.questionBtnNext.setOnClickListener(this)
+
+        v.questionAnswersRecycler.layoutManager = LinearLayoutManager(v.context)
+        v.questionAnswersRecycler.adapter = adapter
+        adapter.setItems(answers)
 
         return v
     }
 
     override fun onSaveViewState(view: View, outState: Bundle) {
         super.onSaveViewState(view, outState)
-        outState.putInt(OUT_CHECKED_POSITION, checkedPosition)
-        view.questionGroup.check(checkedPosition)
     }
 
     override fun onRestoreViewState(view: View, savedViewState: Bundle) {
         super.onRestoreViewState(view, savedViewState)
-        checkedPosition = savedViewState.getInt(OUT_CHECKED_POSITION, -1)
     }
 
     override fun onAttach(view: View) {
@@ -71,22 +62,24 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
         listener = null
     }
 
-    override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-        checkedPosition = checkedId
-    }
 
     override fun onClick(v: View) {
         val view = view!!
         when (v) {
             view.questionBtnNext -> {
-                val checkedPosition = view.questionGroup.checkedRadioButtonId
-                if (checkedPosition >= 0) {
-                    listener?.onQuestionAnswered(answers[checkedPosition], question)
-                } else {
-                    Toast.makeText(view.context, R.string.questions_error_required, Toast.LENGTH_SHORT).show()
-                }
+                // val checkedPosition = view.questionGroup.checkedRadioButtonId
+//                if (checkedPosition >= 0) {
+//                    listener?.onQuestionAnswered(answers[checkedPosition], question)
+//                } else {
+//                    Toast.makeText(view.context, R.string.questions_error_required, Toast.LENGTH_SHORT).show()
+//                }
             }
         }
+    }
+
+    override fun onItemClicked(vh: TriviaBaseViewHolder<*>, position: Int) {
+        val answer = adapter.getItem(position)
+        adapter.setSingleSelected(answer)
     }
 
     interface OnQuestionAnsweredListener {

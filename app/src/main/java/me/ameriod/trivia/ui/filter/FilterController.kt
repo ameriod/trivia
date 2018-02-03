@@ -34,8 +34,8 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
         DifficultyAdapter(activity!!)
     }
 
-    private val categoryAdapter: CategoryAdapter by lazy {
-        CategoryAdapter(activity!!, this)
+    private val categoryAdapter: TriviaBaseAdapter<Category> by lazy {
+        TriviaBaseAdapter<Category>(activity!!, this)
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
