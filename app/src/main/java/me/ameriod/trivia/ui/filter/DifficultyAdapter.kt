@@ -9,8 +9,8 @@ import android.widget.TextView
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.Difficulty
 
-class FilterDifficultyAdapter(context: Context,
-                              private var items: List<Difficulty> = listOf()) : BaseAdapter() {
+class DifficultyAdapter(context: Context,
+                        private var items: List<Difficulty> = listOf()) : BaseAdapter() {
 
     private val layoutInflater = LayoutInflater.from(context)
 

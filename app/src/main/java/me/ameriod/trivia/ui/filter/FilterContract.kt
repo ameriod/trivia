@@ -5,16 +5,19 @@ import me.ameriod.lib.mvp.Mvp
 import me.ameriod.trivia.api.response.Category
 import me.ameriod.trivia.api.response.Difficulty
 import me.ameriod.trivia.api.response.Question
+import me.ameriod.trivia.ui.quiz.Quiz
 
 class FilterContract {
 
     interface View : Mvp.View {
 
-        fun setQuestions(items: List<Question>)
+        fun setQuiz(quiz: Quiz)
 
-        fun setFilter(categories: List<Category>,
-                      difficulties: List<Difficulty>,
-                      filter: QuizFilter)
+        fun setQuestionCount(count: String)
+
+        fun setCategories(categories: List<Category>, selectedItem: Category)
+
+        fun setDifficulties(difficulties: List<Difficulty>, selectedItem: Difficulty)
 
     }
 
@@ -35,11 +38,11 @@ class FilterContract {
 
     interface Interactor {
 
-        fun getQuestions(filter: QuizFilter): Observable<List<Question>>
+        fun getQuestions(filter: QuizFilter): Observable<Quiz>
 
-        fun getDifficulties() : Observable<List<Difficulty>>
+        fun getDifficulties(): Observable<List<Difficulty>>
 
-        fun getCategories() : Observable<List<Category>>
+        fun getCategories(): Observable<List<Category>>
 
     }
 }

@@ -9,5 +9,5 @@ interface TriviaAdapterItem {
 
     fun getViewType(): Int
 
-    fun getRecylcerItemId(): String
+    fun getRecyclerItemId(): String
 }

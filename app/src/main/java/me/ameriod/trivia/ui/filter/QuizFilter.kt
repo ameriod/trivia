@@ -6,9 +6,9 @@ import android.os.Parcelable
 import me.ameriod.trivia.api.response.Category
 import me.ameriod.trivia.api.response.Difficulty
 
-data class QuizFilter(val count: Int = 10,
-                      val difficulty: Difficulty,
-                      val category: Category) : Parcelable {
+data class QuizFilter(var count: Int = 10,
+                      var difficulty: Difficulty,
+                      var category: Category) : Parcelable {
 
     constructor(source: Parcel) : this(
             source.readInt(),
