@@ -13,7 +13,7 @@ class FilterInteractor(private val repository: TriviaRepository) : FilterContrac
     constructor(context: Context) :
             this((context.applicationContext as TriviaApplication).repository)
 
-    override fun getQuestions(filter: QuizFilter): Observable<Quiz> =
+    override fun getQuestions(filter: Filter): Observable<Quiz> =
             repository.getQuestions(filter)
                     .map { response ->
                         Quiz(response.results)

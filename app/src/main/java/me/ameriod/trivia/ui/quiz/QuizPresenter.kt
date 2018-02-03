@@ -4,18 +4,13 @@ import android.os.Bundle
 import me.ameriod.lib.mvp.Mvp
 import me.ameriod.lib.mvp.presenter.rx2.BasePresenterRx2
 import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
+import me.ameriod.trivia.ui.quiz.question.Answer
 import timber.log.Timber
 
 class QuizPresenter(private var quiz: Quiz,
-                    schedulerRx2: IObservableSchedulerRx2 = IObservableSchedulerRx2.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN,
-                    errorHandler: Mvp.ErrorHandler = object : Mvp.ErrorHandler {
-                        override fun onError(e: Throwable): String {
-                            Timber.e(e, " Error with quiz")
-                            return ""
-                        }
-                    }) :
+                    schedulerRx2: IObservableSchedulerRx2,
+                    errorHandler: Mvp.ErrorHandler) :
         BasePresenterRx2<QuizContract.View>(schedulerRx2, errorHandler), QuizContract.Presenter {
-
 
     override fun restoreState(savedState: Bundle) {
         super.restoreState(savedState)
@@ -31,7 +26,7 @@ class QuizPresenter(private var quiz: Quiz,
         getQuestion(true)
     }
 
-    override fun getNextQuestion(answer: String) {
+    override fun getNextQuestion(answer: Answer) {
         quiz.setAnswer(answer)
         getQuestion(false)
     }
@@ -49,5 +44,13 @@ class QuizPresenter(private var quiz: Quiz,
 
     companion object {
         private const val OUT_STATE = "out_quiz"
+
+        fun newInstance(quiz: Quiz) = QuizPresenter(quiz, IObservableSchedulerRx2.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN,
+                object : Mvp.ErrorHandler {
+                    override fun onError(e: Throwable): String {
+                        Timber.e(e, "Error with quiz")
+                        return ""
+                    }
+                })
     }
 }

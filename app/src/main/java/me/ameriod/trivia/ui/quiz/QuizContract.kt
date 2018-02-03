@@ -2,6 +2,7 @@ package me.ameriod.trivia.ui.quiz
 
 import me.ameriod.lib.mvp.Mvp
 import me.ameriod.trivia.api.response.Question
+import me.ameriod.trivia.ui.quiz.question.Answer
 
 class QuizContract {
 
@@ -14,7 +15,7 @@ class QuizContract {
     }
 
     interface Presenter : Mvp.Presenter<View> {
-        fun getNextQuestion(answer: String)
+        fun getNextQuestion(answer: Answer)
 
         fun getInitialQuestion()
     }

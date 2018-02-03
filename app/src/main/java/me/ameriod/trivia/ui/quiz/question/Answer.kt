@@ -8,9 +8,9 @@ import me.ameriod.trivia.R
 import me.ameriod.trivia.ui.adapter.TriviaAdapterItem
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 
-data class QuizAnswer(val display: String,
-                      val correct: Boolean,
-                      var selected: Boolean) : Parcelable, TriviaAdapterItem {
+data class Answer(val display: String,
+                  val correct: Boolean,
+                  var selected: Boolean) : Parcelable, TriviaAdapterItem {
 
     constructor(source: Parcel) : this(
             source.readString(),
@@ -27,10 +27,12 @@ data class QuizAnswer(val display: String,
     }
 
     companion object {
+        val EMPTY = Answer("", false, false)
+
         @JvmField
-        val CREATOR: Parcelable.Creator<QuizAnswer> = object : Parcelable.Creator<QuizAnswer> {
-            override fun createFromParcel(source: Parcel): QuizAnswer = QuizAnswer(source)
-            override fun newArray(size: Int): Array<QuizAnswer?> = arrayOfNulls(size)
+        val CREATOR: Parcelable.Creator<Answer> = object : Parcelable.Creator<Answer> {
+            override fun createFromParcel(source: Parcel): Answer = Answer(source)
+            override fun newArray(size: Int): Array<Answer?> = arrayOfNulls(size)
         }
     }
 

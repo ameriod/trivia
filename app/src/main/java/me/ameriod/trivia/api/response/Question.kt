@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import me.ameriod.trivia.ui.quiz.question.Answer
 
 data class Question(@Expose
                     @SerializedName("category")
@@ -27,12 +28,15 @@ data class Question(@Expose
     /**
      * Gets the answers in a randomized order
      */
-    val answers: List<String> by lazy {
+    val answers: List<Answer> by lazy {
         val choices = mutableListOf<String>()
         choices.add(correctAnswer)
         choices.addAll(incorrectAnswers)
         choices.shuffle()
-        choices
+        choices.map { answer ->
+            Answer(answer, isCorrect(answer), false)
+        }
+
     }
 
     /**

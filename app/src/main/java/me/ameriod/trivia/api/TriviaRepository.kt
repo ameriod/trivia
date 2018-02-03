@@ -7,7 +7,7 @@ import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.Category
 import me.ameriod.trivia.api.response.Difficulty
 import me.ameriod.trivia.api.response.ResponseQuestions
-import me.ameriod.trivia.ui.filter.QuizFilter
+import me.ameriod.trivia.ui.filter.Filter
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -42,7 +42,7 @@ class TriviaRepository(val context: Context) {
         retrofit.create(OpenTriviaService::class.java)
     }
 
-    fun getQuestions(filter: QuizFilter): Observable<ResponseQuestions> =
+    fun getQuestions(filter: Filter): Observable<ResponseQuestions> =
             service.getQuestions(filter.count, filter.difficulty.value, filter.category.id, null)
 
     fun getApiToken(): Observable<String> = service.getApiToken()

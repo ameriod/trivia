@@ -3,18 +3,12 @@ package me.ameriod.trivia.ui.quiz
 import android.os.Parcel
 import android.os.Parcelable
 import me.ameriod.trivia.api.response.Question
+import me.ameriod.trivia.ui.quiz.question.Answer
 
 data class Quiz(private val questions: List<Question>,
-                private val answers: MutableList<String> = mutableListOf(),
+                private val answers: MutableList<Answer> = mutableListOf(),
                 private var position: Int = 0,
                 private val startTime: Long = System.currentTimeMillis()) : Parcelable {
-
-    constructor(source: Parcel) : this(
-            source.createTypedArrayList(Question.CREATOR),
-            source.createStringArrayList(),
-            source.readInt()
-    )
-
     fun getCurrentQuestion(): Question = questions[position]
 
     fun isLastQuestion(): Boolean = answers.size == questions.size - 1
@@ -36,16 +30,24 @@ data class Quiz(private val questions: List<Question>,
         return questions.size
     }
 
-    fun setAnswer(answer: String) {
+    fun setAnswer(answer: Answer) {
         answers.add(answer)
     }
+
+    constructor(source: Parcel) : this(
+            source.createTypedArrayList(Question.CREATOR),
+            source.createTypedArrayList(Answer.CREATOR),
+            source.readInt(),
+            source.readLong()
+    )
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeTypedList(questions)
-        writeStringList(answers)
+        writeTypedList(answers)
         writeInt(position)
+        writeLong(startTime)
     }
 
     companion object {

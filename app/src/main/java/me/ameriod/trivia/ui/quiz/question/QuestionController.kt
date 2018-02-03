@@ -18,15 +18,13 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
         TriviaBaseAdapter.OnItemClickListener {
 
     private val question: Question = args.getParcelable(QUESTION)
-    private val adapter: TriviaBaseAdapter<QuizAnswer> by lazy {
-        TriviaBaseAdapter<QuizAnswer>(activity!!, this)
+    private val adapter: TriviaBaseAdapter<Answer> by lazy {
+        TriviaBaseAdapter<Answer>(activity!!, this)
     }
-    private val answers: List<QuizAnswer> by lazy {
-        question.answers.map { answer ->
-            QuizAnswer(answer, question.isCorrect(answer), false)
-        }
+    private val answers: List<Answer> by lazy {
+        question.answers
     }
-    private var selected: QuizAnswer? = null
+    private var selectedAnswer: Answer = Answer.EMPTY
 
     private val last = args.getBoolean(LAST)
     private var listener: OnQuestionAnsweredListener? = null
@@ -41,9 +39,7 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
 
         v.questionAnswersRecycler.layoutManager = LinearLayoutManager(v.context)
         v.questionAnswersRecycler.adapter = adapter
-        if (selected != null) {
-            adapter.setSingleSelected(selected!!)
-        }
+        adapter.setSingleSelected(selectedAnswer)
         adapter.setItems(answers)
 
         return v
@@ -51,12 +47,12 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
 
     override fun onSaveViewState(view: View, outState: Bundle) {
         super.onSaveViewState(view, outState)
-        outState.putParcelable(OUT_SELECTED_ANSWER, selected)
+        outState.putParcelable(OUT_SELECTED_ANSWER, selectedAnswer)
     }
 
     override fun onRestoreViewState(view: View, savedViewState: Bundle) {
         super.onRestoreViewState(view, savedViewState)
-        selected = savedViewState.getParcelable(OUT_SELECTED_ANSWER)
+        selectedAnswer = savedViewState.getParcelable(OUT_SELECTED_ANSWER)
     }
 
     override fun onAttach(view: View) {
@@ -69,15 +65,14 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
         listener = null
     }
 
-
     override fun onClick(v: View) {
         val view = view!!
         when (v) {
             view.questionBtnNext -> {
-                if (selected == null) {
+                if (selectedAnswer == Answer.EMPTY) {
                     Toast.makeText(view.context, R.string.questions_error_required, Toast.LENGTH_SHORT).show()
                 } else {
-                    listener?.onQuestionAnswered(selected!!.display, question)
+                    listener?.onQuestionAnswered(selectedAnswer, question)
                 }
             }
         }
@@ -88,12 +83,12 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
         answers.forEach { item ->
             item.selected = answer.display == item.display
         }
-        selected = answer
+        selectedAnswer = answer
         adapter.setSingleSelected(answer)
     }
 
     interface OnQuestionAnsweredListener {
-        fun onQuestionAnswered(answer: String, question: Question)
+        fun onQuestionAnswered(answer: Answer, question: Question)
     }
 
     companion object {

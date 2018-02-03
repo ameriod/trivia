@@ -8,9 +8,9 @@ import kotlinx.android.synthetic.main.answer_item.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 
-class AnswerViewHolder(view: View) : TriviaBaseViewHolder<QuizAnswer>(view), View.OnClickListener {
+class AnswerViewHolder(view: View) : TriviaBaseViewHolder<Answer>(view), View.OnClickListener {
 
-    override fun bindItem(item: QuizAnswer) {
+    override fun bindItem(item: Answer) {
         itemView.answerTv.text = Html.fromHtml(item.display)
         if (item.selected) {
             itemView.answerTv.setTextColor(Color.WHITE)

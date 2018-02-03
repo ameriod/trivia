@@ -4,7 +4,6 @@ import io.reactivex.Observable
 import me.ameriod.lib.mvp.Mvp
 import me.ameriod.trivia.api.response.Category
 import me.ameriod.trivia.api.response.Difficulty
-import me.ameriod.trivia.api.response.Question
 import me.ameriod.trivia.ui.quiz.Quiz
 
 class FilterContract {
@@ -38,7 +37,7 @@ class FilterContract {
 
     interface Interactor {
 
-        fun getQuestions(filter: QuizFilter): Observable<Quiz>
+        fun getQuestions(filter: Filter): Observable<Quiz>
 
         fun getDifficulties(): Observable<List<Difficulty>>
 

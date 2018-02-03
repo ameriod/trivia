@@ -6,9 +6,9 @@ import android.os.Parcelable
 import me.ameriod.trivia.api.response.Category
 import me.ameriod.trivia.api.response.Difficulty
 
-data class QuizFilter(var count: Int = 10,
-                      var difficulty: Difficulty,
-                      var category: Category) : Parcelable {
+data class Filter(var count: Int = 10,
+                  var difficulty: Difficulty,
+                  var category: Category) : Parcelable {
 
     constructor(source: Parcel) : this(
             source.readInt(),
@@ -27,14 +27,14 @@ data class QuizFilter(var count: Int = 10,
     companion object {
 
         @JvmStatic
-        fun createDefault(context: Context): QuizFilter {
-            return QuizFilter(10, Difficulty.createDefault(context), Category.createAll(context))
+        fun createDefault(context: Context): Filter {
+            return Filter(10, Difficulty.createDefault(context), Category.createAll(context))
         }
 
         @JvmField
-        val CREATOR: Parcelable.Creator<QuizFilter> = object : Parcelable.Creator<QuizFilter> {
-            override fun createFromParcel(source: Parcel): QuizFilter = QuizFilter(source)
-            override fun newArray(size: Int): Array<QuizFilter?> = arrayOfNulls(size)
+        val CREATOR: Parcelable.Creator<Filter> = object : Parcelable.Creator<Filter> {
+            override fun createFromParcel(source: Parcel): Filter = Filter(source)
+            override fun newArray(size: Int): Array<Filter?> = arrayOfNulls(size)
         }
     }
 }

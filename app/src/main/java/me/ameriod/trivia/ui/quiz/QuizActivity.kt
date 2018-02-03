@@ -15,6 +15,7 @@ import me.ameriod.lib.mvp.view.MvpAppCompatActivity
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.Question
 import me.ameriod.trivia.ui.quiz.question.QuestionController
+import me.ameriod.trivia.ui.quiz.question.Answer
 
 class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presenter>(),
         QuizContract.View, QuestionController.OnQuestionAnsweredListener {
@@ -32,7 +33,7 @@ class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presen
         getPresenter().getInitialQuestion()
     }
 
-    override fun createPresenter() = QuizPresenter(intent.getParcelableExtra(QUIZ))
+    override fun createPresenter() = QuizPresenter.newInstance(intent.getParcelableExtra(QUIZ))
 
     override fun displayError(error: String) {
         // no op
@@ -79,7 +80,7 @@ class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presen
                 .show()
     }
 
-    override fun onQuestionAnswered(answer: String, question: Question) {
+    override fun onQuestionAnswered(answer: Answer, question: Question) {
         getPresenter().getNextQuestion(answer)
     }
 

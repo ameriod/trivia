@@ -10,13 +10,13 @@ import me.ameriod.trivia.api.response.Category
 import me.ameriod.trivia.api.response.Difficulty
 import timber.log.Timber
 
-class FilterPresenter(private val defaultFilter: QuizFilter,
+class FilterPresenter(private val defaultFilter: Filter,
                       private val interactor: FilterContract.Interactor,
                       schedulerRx2: IObservableSchedulerRx2,
                       errorHandler: Mvp.ErrorHandler) :
         BasePresenterRx2<FilterContract.View>(schedulerRx2, errorHandler), FilterContract.Presenter {
 
-    private var quizFilter: QuizFilter = defaultFilter
+    private var quizFilter: Filter = defaultFilter
     private var categories: List<Category> = emptyList()
     private var difficulties: List<Difficulty> = emptyList()
 
@@ -114,7 +114,7 @@ class FilterPresenter(private val defaultFilter: QuizFilter,
 
         private const val OUT_FILTER = "out_filter"
 
-        fun newInstance(context: Context) = FilterPresenter(QuizFilter.createDefault(context),
+        fun newInstance(context: Context) = FilterPresenter(Filter.createDefault(context),
                 FilterInteractor(context), IObservableSchedulerRx2.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN,
                 object : Mvp.ErrorHandler {
                     override fun onError(e: Throwable): String {
