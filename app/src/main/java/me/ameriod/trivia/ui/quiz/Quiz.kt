@@ -6,7 +6,8 @@ import me.ameriod.trivia.api.response.Question
 
 data class Quiz(private val questions: List<Question>,
                 private val answers: MutableList<String> = mutableListOf(),
-                private var position: Int = 0) : Parcelable {
+                private var position: Int = 0,
+                private val startTime: Long = System.currentTimeMillis()) : Parcelable {
 
     constructor(source: Parcel) : this(
             source.createTypedArrayList(Question.CREATOR),

@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_quiz.*
 import me.ameriod.lib.mvp.view.MvpAppCompatActivity
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.Question
+import me.ameriod.trivia.ui.quiz.question.QuestionController
 
 class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presenter>(),
         QuizContract.View, QuestionController.OnQuestionAnsweredListener {

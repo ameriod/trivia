@@ -1,4 +1,4 @@
-package me.ameriod.trivia.ui.quiz
+package me.ameriod.trivia.ui.quiz.question
 
 import android.os.Bundle
 import android.text.Html
@@ -78,16 +78,14 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
     override fun onClick(v: View) {
         val view = view!!
         when (v) {
-            view.questionBtnNext -> onNextClicked(view)
-        }
-    }
-
-    private fun onNextClicked(view: View) {
-        val checkedPosition = view.questionGroup.checkedRadioButtonId
-        if (checkedPosition >= 0) {
-            listener?.onQuestionAnswered(answers[checkedPosition], question)
-        } else {
-            Toast.makeText(view.context, R.string.questions_error_required, Toast.LENGTH_SHORT).show()
+            view.questionBtnNext -> {
+                val checkedPosition = view.questionGroup.checkedRadioButtonId
+                if (checkedPosition >= 0) {
+                    listener?.onQuestionAnswered(answers[checkedPosition], question)
+                } else {
+                    Toast.makeText(view.context, R.string.questions_error_required, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

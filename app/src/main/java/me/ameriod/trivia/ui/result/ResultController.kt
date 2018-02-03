@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
 import me.ameriod.trivia.R
+import me.ameriod.trivia.ui.quiz.Quiz
 
 class ResultController(args: Bundle) : Controller(args) {
 
-    val result: QuizResult = args.getParcelable(RESULT)
+    val result: Quiz = args.getParcelable(RESULT)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_result, container, false)
@@ -21,9 +22,9 @@ class ResultController(args: Bundle) : Controller(args) {
         private const val RESULT = "result"
 
         @JvmStatic
-        fun newInstance(result: QuizResult): ResultController {
+        fun newInstance(finished: Quiz): ResultController {
             val args = Bundle()
-            args.putParcelable(RESULT, result)
+            args.putParcelable(RESULT, finished)
             return ResultController(args)
         }
     }
