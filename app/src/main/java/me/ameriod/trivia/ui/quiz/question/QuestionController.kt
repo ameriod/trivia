@@ -6,6 +6,7 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bluelinelabs.conductor.Controller
 import kotlinx.android.synthetic.main.controller_question.view.*
 import me.ameriod.trivia.R
@@ -25,6 +26,7 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
             QuizAnswer(answer, question.isCorrect(answer), false)
         }
     }
+    private var selected: QuizAnswer? = null
 
     private val last = args.getBoolean(LAST)
     private var listener: OnQuestionAnsweredListener? = null
@@ -39,6 +41,9 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
 
         v.questionAnswersRecycler.layoutManager = LinearLayoutManager(v.context)
         v.questionAnswersRecycler.adapter = adapter
+        if (selected != null) {
+            adapter.setSingleSelected(selected!!)
+        }
         adapter.setItems(answers)
 
         return v
@@ -46,10 +51,12 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
 
     override fun onSaveViewState(view: View, outState: Bundle) {
         super.onSaveViewState(view, outState)
+        outState.putParcelable(OUT_SELECTED_ANSWER, selected)
     }
 
     override fun onRestoreViewState(view: View, savedViewState: Bundle) {
         super.onRestoreViewState(view, savedViewState)
+        selected = savedViewState.getParcelable(OUT_SELECTED_ANSWER)
     }
 
     override fun onAttach(view: View) {
@@ -67,18 +74,21 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
         val view = view!!
         when (v) {
             view.questionBtnNext -> {
-                // val checkedPosition = view.questionGroup.checkedRadioButtonId
-//                if (checkedPosition >= 0) {
-//                    listener?.onQuestionAnswered(answers[checkedPosition], question)
-//                } else {
-//                    Toast.makeText(view.context, R.string.questions_error_required, Toast.LENGTH_SHORT).show()
-//                }
+                if (selected == null) {
+                    Toast.makeText(view.context, R.string.questions_error_required, Toast.LENGTH_SHORT).show()
+                } else {
+                    listener?.onQuestionAnswered(selected!!.display, question)
+                }
             }
         }
     }
 
     override fun onItemClicked(vh: TriviaBaseViewHolder<*>, position: Int) {
         val answer = adapter.getItem(position)
+        answers.forEach { item ->
+            item.selected = answer.display == item.display
+        }
+        selected = answer
         adapter.setSingleSelected(answer)
     }
 
@@ -91,7 +101,7 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
         private const val QUESTION = "question"
         private const val LAST = "last"
 
-        private const val OUT_CHECKED_POSITION = "out_checked_position"
+        private const val OUT_SELECTED_ANSWER = "out_selected_answer"
 
         @JvmStatic
         fun newInstance(question: Question,

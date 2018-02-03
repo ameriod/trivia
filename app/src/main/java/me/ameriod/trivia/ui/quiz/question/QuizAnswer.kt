@@ -10,7 +10,7 @@ import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 
 data class QuizAnswer(val display: String,
                       val correct: Boolean,
-                      var checked: Boolean) : Parcelable, TriviaAdapterItem {
+                      var selected: Boolean) : Parcelable, TriviaAdapterItem {
 
     constructor(source: Parcel) : this(
             source.readString(),
@@ -23,7 +23,7 @@ data class QuizAnswer(val display: String,
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeString(display)
         writeInt((if (correct) 1 else 0))
-        writeInt((if (checked) 1 else 0))
+        writeInt((if (selected) 1 else 0))
     }
 
     companion object {
