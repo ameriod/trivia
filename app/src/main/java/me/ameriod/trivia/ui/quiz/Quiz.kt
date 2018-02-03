@@ -14,16 +14,29 @@ data class Quiz(private val questions: List<Question>,
             source.readInt()
     )
 
-    fun getCurrentQuestion() : Question = questions[position]
+    fun getCurrentQuestion(): Question = questions[position]
 
-    fun isLastQuestion() : Boolean = position > questions.size
+    fun isLastQuestion(): Boolean = answers.size == questions.size - 1
 
-    fun isQuizDone() : Boolean = position >- questions.size
+    fun isQuizDone(): Boolean = answers.size == questions.size
 
-    fun getNextQuestion() : Question {
-        if (isLastQuestion())
+    fun getNextQuestion(): Question {
         position++
-        return  questions[0]
+        if (position > answers.size) throw IllegalAccessException("Error need to call setAnswer before getting the next question")
+        if (isQuizDone()) throw IllegalAccessException("Error on last question, you need to check....")
+        return questions[position]
+    }
+
+    fun getCurrentPosition(): Int {
+        return position + 1
+    }
+
+    fun getNumberOfQuestions(): Int {
+        return questions.size
+    }
+
+    fun setAnswer(answer: String) {
+        answers.add(answer)
     }
 
     override fun describeContents() = 0

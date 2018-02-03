@@ -20,6 +20,7 @@ import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.Category
 import me.ameriod.trivia.api.response.Difficulty
 import me.ameriod.trivia.api.response.Question
+import me.ameriod.trivia.ui.quiz.Quiz
 import me.ameriod.trivia.ui.quiz.QuizActivity
 
 
@@ -152,7 +153,7 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
 
     override fun setQuestions(items: List<Question>) {
         if (items.isNotEmpty()) {
-            startActivityForResult(QuizActivity.getLaunchIntent(activity!!, items), REQUEST_CODE)
+            startActivityForResult(QuizActivity.getLaunchIntent(activity!!, Quiz(items)), REQUEST_CODE)
         } else {
             Snackbar.make(view!!, R.string.filter_no_more, Snackbar.LENGTH_SHORT).show()
         }
