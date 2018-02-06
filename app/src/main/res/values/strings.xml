@@ -19,10 +19,6 @@
         <item quantity="other">Questions: %1$d / %2$d</item>
     </plurals>
 
-    <string name="questions_btn_next_question">Next Question</string>
-    <string name="questions_btn_finish">Finish</string>
-    <string name="questions_error_required">Please Answer the Question</string>
-
     <string name="questions_back_dialog_title">Exit Quiz</string>
     <string name="questions_back_dialog_message">Do you want to exit this quiz?</string>
     <string name="questions_back_btn_positive">Exit</string>

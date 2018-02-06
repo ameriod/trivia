@@ -12,9 +12,11 @@ class AnswerViewHolder(view: View) : TriviaBaseViewHolder<Answer>(view), View.On
 
     override fun bindItem(item: Answer) {
         itemView.answerTv.text = Html.fromHtml(item.display)
-        if (item.selected) {
+        if (item.selected || item.showCorrect) {
             itemView.answerTv.setTextColor(Color.WHITE)
-            itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorAccent))
+            itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, if (item.correct)
+                R.color.colorCorrectAnswer else R.color.colorIncorrectAnswer))
+
         } else {
             itemView.answerTv.setTextColor(Color.BLACK)
             itemView.setBackgroundColor(Color.WHITE)

@@ -30,15 +30,4 @@
         android:layout_height="0dip"
         android:layout_weight="1" />
 
-    <Button
-        android:id="@+id/questionBtnNext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/question_padding_vert"
-        android:layout_marginEnd="@dimen/question_padding_hor"
-        android:layout_marginStart="@dimen/question_padding_hor"
-        android:layout_marginTop="@dimen/question_padding_vert"
-        tools:text="Next" />
-
 </LinearLayout>

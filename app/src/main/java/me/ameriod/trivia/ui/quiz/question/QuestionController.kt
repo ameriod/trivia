@@ -6,19 +6,17 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bluelinelabs.conductor.Controller
 import kotlinx.android.synthetic.main.controller_question.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 
-class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
-        TriviaBaseAdapter.OnItemClickListener {
+class QuestionController(args: Bundle) : Controller(args), TriviaBaseAdapter.OnItemClickListener {
 
     private val question: Question = args.getParcelable(QUESTION)
-    private val adapter: TriviaBaseAdapter<Answer> by lazy {
-        TriviaBaseAdapter<Answer>(activity!!, this)
+    private val adapter: AnswerAdapter by lazy {
+        AnswerAdapter(activity!!, this)
     }
     private val answers: List<Answer> by lazy {
         question.answers
@@ -33,25 +31,12 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
         v.questionTv.text = Html.fromHtml(question.text)
 
 
-        v.questionBtnNext.setText(if (last) R.string.questions_btn_finish else R.string.questions_btn_next_question)
-        v.questionBtnNext.setOnClickListener(this)
-
         v.questionAnswersRecycler.layoutManager = LinearLayoutManager(v.context)
         v.questionAnswersRecycler.adapter = adapter
         adapter.setSingleSelected(selectedAnswer)
         adapter.setItems(answers)
 
         return v
-    }
-
-    override fun onSaveViewState(view: View, outState: Bundle) {
-        super.onSaveViewState(view, outState)
-        outState.putParcelable(OUT_SELECTED_ANSWER, selectedAnswer)
-    }
-
-    override fun onRestoreViewState(view: View, savedViewState: Bundle) {
-        super.onRestoreViewState(view, savedViewState)
-        selectedAnswer = savedViewState.getParcelable(OUT_SELECTED_ANSWER)
     }
 
     override fun onAttach(view: View) {
@@ -64,26 +49,22 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
         listener = null
     }
 
-    override fun onClick(v: View) {
-        val view = view!!
-        when (v) {
-            view.questionBtnNext -> {
-                if (selectedAnswer == Answer.EMPTY) {
-                    Toast.makeText(view.context, R.string.questions_error_required, Toast.LENGTH_SHORT).show()
-                } else {
-                    listener?.onQuestionAnswered(selectedAnswer, question)
-                }
-            }
-        }
-    }
-
     override fun onItemClicked(vh: TriviaBaseViewHolder<*>, position: Int) {
-        val answer = adapter.getItem(position)
-        answers.forEach { item ->
-            item.selected = answer.display == item.display
+        // disable clicking if already answered
+        if (selectedAnswer != Answer.EMPTY) {
+            return
         }
+
+        val answer = adapter.getItem(position)
+        answer.selected = true
         selectedAnswer = answer
         adapter.setSingleSelected(answer)
+        adapter.showCorrectAnswer()
+
+        // move on to the next question, delay so user can see what they selected
+        vh.itemView.postDelayed({
+            listener?.onQuestionAnswered(selectedAnswer, question)
+        }, ANSWER_MOVE_DELAY)
     }
 
     interface OnQuestionAnsweredListener {
@@ -92,10 +73,10 @@ class QuestionController(args: Bundle) : Controller(args), View.OnClickListener,
 
     companion object {
 
+        private const val ANSWER_MOVE_DELAY = 700L
+
         private const val QUESTION = "text"
         private const val LAST = "last"
-
-        private const val OUT_SELECTED_ANSWER = "out_selected_answer"
 
         @JvmStatic
         fun newInstance(question: Question,

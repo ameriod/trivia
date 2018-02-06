@@ -10,7 +10,8 @@ import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 
 data class Answer(val display: String,
                   val correct: Boolean,
-                  var selected: Boolean) : Parcelable, TriviaAdapterItem {
+                  var selected: Boolean,
+                  var showCorrect: Boolean = false) : Parcelable, TriviaAdapterItem {
 
     constructor(source: Parcel) : this(
             source.readString(),

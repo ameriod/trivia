@@ -6,9 +6,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
-class TriviaBaseAdapter<T : TriviaAdapterItem>(context: Context,
-                                               private val onItemClickListener: OnItemClickListener? = null,
-                                               private val onItemLongClickListener: TriviaBaseAdapter.OnItemLongClickListener? = null) :
+open class TriviaBaseAdapter<T : TriviaAdapterItem>(context: Context,
+                                                    private val onItemClickListener: OnItemClickListener? = null,
+                                                    private val onItemLongClickListener: TriviaBaseAdapter.OnItemLongClickListener? = null) :
         RecyclerView.Adapter<TriviaBaseViewHolder<T>>() {
 
     interface OnItemClickListener {
@@ -43,6 +43,10 @@ class TriviaBaseAdapter<T : TriviaAdapterItem>(context: Context,
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun getSelectedItem(): T? = selectedItem
+
+    fun getItems(): List<T> = items
 
     fun getItem(position: Int): T = items[position]
 
