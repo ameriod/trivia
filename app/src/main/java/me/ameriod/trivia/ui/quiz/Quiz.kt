@@ -8,7 +8,7 @@ import me.ameriod.trivia.ui.quiz.question.Question
 data class Quiz(private val questions: List<Question>,
                 private val answers: MutableList<Answer> = mutableListOf(),
                 private var position: Int = 0,
-                private val startTime: Long = System.currentTimeMillis()) : Parcelable {
+                val startTime: Long = System.currentTimeMillis()) : Parcelable {
     fun getCurrentQuestion(): Question = questions[position]
 
     fun isLastQuestion(): Boolean = answers.size == questions.size - 1

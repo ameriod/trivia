@@ -12,12 +12,16 @@ class QuizContract {
         fun setProgress(currentPosition: Int, total: Int)
 
         fun setCompletedQuiz(quiz: Quiz)
+
+        fun onTimeUpdated(formattedTime: String)
     }
 
     interface Presenter : Mvp.Presenter<View> {
         fun getNextQuestion(answer: Answer)
 
         fun getInitialQuestion()
+
+        fun startQuizTimer()
     }
 
 }

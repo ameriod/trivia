@@ -31,6 +31,7 @@ class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presen
         title = null
         router = Conductor.attachRouter(this, changeHandler, savedInstanceState)
         getPresenter().getInitialQuestion()
+        getPresenter().startQuizTimer()
     }
 
     override fun createPresenter() = QuizPresenter.newInstance(intent.getParcelableExtra(QUIZ))
@@ -41,6 +42,10 @@ class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presen
 
     override fun showProgress(show: Boolean) {
         // no op
+    }
+
+    override fun onTimeUpdated(formattedTime: String) {
+        quizTimer.text = formattedTime
     }
 
     override fun setCurrentQuestion(question: Question, isLastQuestion: Boolean) {

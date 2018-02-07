@@ -73,7 +73,7 @@ class QuestionController(args: Bundle) : Controller(args), TriviaBaseAdapter.OnI
 
     companion object {
 
-        private const val ANSWER_MOVE_DELAY = 700L
+        private const val ANSWER_MOVE_DELAY = 1000L
 
         private const val QUESTION = "text"
         private const val LAST = "last"

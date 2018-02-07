@@ -1,11 +1,14 @@
 package me.ameriod.trivia.ui.quiz
 
 import android.os.Bundle
+import io.reactivex.Observable
 import me.ameriod.lib.mvp.Mvp
 import me.ameriod.lib.mvp.presenter.rx2.BasePresenterRx2
 import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
 import me.ameriod.trivia.ui.quiz.question.Answer
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
+
 
 class QuizPresenter(private var quiz: Quiz,
                     schedulerRx2: IObservableSchedulerRx2,
@@ -40,6 +43,26 @@ class QuizPresenter(private var quiz: Quiz,
             view.setProgress(quiz.getCurrentPosition(), quiz.getNumberOfQuestions())
             view.setCurrentQuestion(question, quiz.isLastQuestion())
         }
+    }
+
+    override fun startQuizTimer() {
+        getView().onTimeUpdated(getFormattedTime())
+        addDisposable(Observable.interval(1, TimeUnit.SECONDS)
+                .compose(scheduler.schedule())
+                .map { _ ->
+                    // ticking every second, but use the quiz start time, already saved in the bundle
+                    getFormattedTime()
+                }
+                .subscribe({ formatted ->
+                    getView().onTimeUpdated(formatted)
+                }, { throwable ->
+                    Timber.e(throwable, "Error with quiz timer")
+                }))
+    }
+
+    fun getFormattedTime(): String {
+        val totalTime = (System.currentTimeMillis() - quiz.startTime) / 1000
+        return String.format("%02d:%02d", totalTime % 3600 / 60, totalTime % 60)
     }
 
     companion object {
