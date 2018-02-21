@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
@@ -16,6 +17,8 @@ import me.ameriod.trivia.R
 import me.ameriod.trivia.ui.quiz.question.Answer
 import me.ameriod.trivia.ui.quiz.question.Question
 import me.ameriod.trivia.ui.quiz.question.QuestionController
+import me.ameriod.trivia.ui.result.Result
+import me.ameriod.trivia.ui.result.ResultActivity
 
 class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presenter>(),
         QuizContract.View, QuestionController.OnQuestionAnsweredListener {
@@ -66,9 +69,10 @@ class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presen
                 currentPosition, total)
     }
 
-    override fun setCompletedQuiz(quiz: Quiz) {
-        setResult(Activity.RESULT_OK, Intent().putExtra(RESULT, quiz))
-        finish()
+    override fun setCompletedQuiz(result: Result) {
+        startActivity(ResultActivity.getLaunchIntent(this, result))
+        setResult(Activity.RESULT_OK, Intent().putExtra(RESULT, result))
+        ActivityCompat.finishAfterTransition(this)
     }
 
     override fun onBackPressed() {

@@ -4,6 +4,8 @@ import android.os.Parcel
 import android.os.Parcelable
 import me.ameriod.trivia.ui.quiz.question.Answer
 import me.ameriod.trivia.ui.quiz.question.Question
+import me.ameriod.trivia.ui.result.Result
+import me.ameriod.trivia.ui.result.ResultItem
 
 data class Quiz(private val questions: List<Question>,
                 private val answers: MutableList<Answer> = mutableListOf(),
@@ -32,6 +34,25 @@ data class Quiz(private val questions: List<Question>,
 
     fun setAnswer(answer: Answer) {
         answers.add(answer)
+    }
+
+    fun toResult(): Result {
+        val date = System.currentTimeMillis()
+        val totalTime = date - startTime
+        val results = questions.mapIndexed { index, question ->
+            val answer = answers[index]
+            ResultItem(question.text, answer.display, question.answers
+                    .filter { check ->
+                        check.correct
+                    }
+                    .map { correct ->
+                        correct.display
+                    }, answer.correct)
+        }
+        val total = results.size
+        val correct = results.filter { result -> result.isCorrect }.size
+        val incorrect = total - correct
+        return Result(results, total, correct, incorrect, totalTime, date)
     }
 
     constructor(source: Parcel) : this(

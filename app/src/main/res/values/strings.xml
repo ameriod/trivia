@@ -28,4 +28,7 @@
     <string name="filter_difficulty">Difficulty</string>
     <string name="filter_category">Category</string>
 
+    <string name="result_btn_done">Done</string>
+    <string name="result_title">Result: %1$d%</string>
+
 </resources>

@@ -5,16 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
+import kotlinx.android.synthetic.main.controller_result.view.*
 import me.ameriod.trivia.R
-import me.ameriod.trivia.ui.quiz.Quiz
 
 class ResultController(args: Bundle) : Controller(args) {
 
-    val result: Quiz = args.getParcelable(RESULT)
+    val result: Result = args.getParcelable(RESULT)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_result, container, false)
-
+        v.resultBtnDone.setOnClickListener { _ -> activity?.finish() }
         return v
     }
 
@@ -22,9 +22,9 @@ class ResultController(args: Bundle) : Controller(args) {
         private const val RESULT = "result"
 
         @JvmStatic
-        fun newInstance(finished: Quiz): ResultController {
+        fun newInstance(result: Result): ResultController {
             val args = Bundle()
-            args.putParcelable(RESULT, finished)
+            args.putParcelable(RESULT, result)
             return ResultController(args)
         }
     }

@@ -24,6 +24,8 @@
 
         <activity android:name=".ui.quiz.QuizActivity" />
 
+        <activity android:name=".ui.result.ResultActivity" />
+
     </application>
 
 </manifest>
