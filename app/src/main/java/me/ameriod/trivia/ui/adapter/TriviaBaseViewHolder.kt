@@ -5,16 +5,8 @@ import android.view.View
 
 abstract class TriviaBaseViewHolder<in T : TriviaAdapterItem>(view: View) : RecyclerView.ViewHolder(view) {
 
-    protected var clickListener: TriviaBaseAdapter.OnItemClickListener? = null
-    protected var longClickListener: TriviaBaseAdapter.OnItemLongClickListener? = null
-
-    fun setItemClickListener(itemClickListener: TriviaBaseAdapter.OnItemClickListener?) {
-        this.clickListener = itemClickListener
-    }
-
-    fun setItemLongClickListener(itemLongClickListener: TriviaBaseAdapter.OnItemLongClickListener?) {
-        this.longClickListener = itemLongClickListener
-    }
+    var clickListener: TriviaBaseAdapter.OnItemClickListener? = null
+    var longClickListener: TriviaBaseAdapter.OnItemLongClickListener? = null
 
     @Suppress("UNCHECKED_CAST")
     fun bindView(item: TriviaAdapterItem) {
@@ -24,7 +16,6 @@ abstract class TriviaBaseViewHolder<in T : TriviaAdapterItem>(view: View) : Recy
     protected abstract fun bindItem(item: T)
 
     open fun unbindView() {
-        this.clickListener = null
-        this.longClickListener = null
+        // no op, override to impl
     }
 }

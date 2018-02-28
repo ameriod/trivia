@@ -2,8 +2,14 @@ package me.ameriod.trivia.ui.result
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import me.ameriod.trivia.R
+import me.ameriod.trivia.ui.adapter.TriviaAdapterItem
+import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
+import me.ameriod.trivia.ui.result.recycler.ResultItemViewHolder
 
 class ResultItem(@Expose
                  @SerializedName("question")
@@ -13,10 +19,24 @@ class ResultItem(@Expose
                  val selectedAnswer: String,
                  @Expose
                  @SerializedName("correctAnswers")
-                 val correctAnswers: List<String>,
+                 private val correctAnswersList: List<String>,
                  @Expose
                  @SerializedName("correct")
-                 val isCorrect: Boolean) : Parcelable {
+                 val isCorrect: Boolean) : Parcelable, TriviaAdapterItem {
+
+    val correctAnswers: String by lazy(LazyThreadSafetyMode.NONE) {
+        var display = ""
+        correctAnswersList.map { display = it + "\n" }
+        display.trim()
+    }
+
+    override fun createViewHolder(inflater: LayoutInflater, parent: ViewGroup?, attachToRoot: Boolean): TriviaBaseViewHolder<*> =
+            ResultItemViewHolder(inflater.inflate(R.layout.result_item, parent, false))
+
+    override fun getViewType() = R.layout.result_item
+
+    override fun getRecyclerItemId() = questionText
+
     constructor(source: Parcel) : this(
             source.readString(),
             source.readString(),
@@ -29,7 +49,7 @@ class ResultItem(@Expose
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeString(questionText)
         writeString(selectedAnswer)
-        writeStringList(correctAnswers)
+        writeStringList(mutableListOf(correctAnswers))
         writeInt((if (isCorrect) 1 else 0))
     }
 

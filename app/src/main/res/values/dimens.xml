@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="filter_padding_vert">8dp</dimen>
+    <dimen name="filter_padding_hor">16dp</dimen>
+
     <dimen name="question_padding_vert">8dp</dimen>
     <dimen name="question_padding_hor">16dp</dimen>
     <dimen name="question_padding_question_to_answers">32dp</dimen>
+
+    <dimen name="result_padding_vert">8dp</dimen>
+    <dimen name="result_padding_hor">16dp</dimen>
+
+    <dimen name="result_chart_height">260dp</dimen>
 </resources>

@@ -5,9 +5,10 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/resultRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="true"
+        android:clipToPadding="false"
         android:paddingBottom="56dp" />
 
     <Button
@@ -15,9 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="@dimen/result_padding_vert"
+        android:layout_marginEnd="@dimen/result_padding_hor"
+        android:layout_marginStart="@dimen/result_padding_hor"
+        android:layout_marginTop="@dimen/result_padding_vert"
         android:text="@string/result_btn_done" />
 </FrameLayout>

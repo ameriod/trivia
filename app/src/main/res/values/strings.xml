@@ -29,6 +29,8 @@
     <string name="filter_category">Category</string>
 
     <string name="result_btn_done">Done</string>
-    <string name="result_title">Result: %1$d%</string>
+    <string name="result_title">Result: %1$s / %2$s</string>
+    <string name="result_correct">Correct</string>
+    <string name="result_incorrect">Incorrect</string>
 
 </resources>
