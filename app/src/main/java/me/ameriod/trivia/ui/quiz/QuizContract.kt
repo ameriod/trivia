@@ -3,6 +3,7 @@ package me.ameriod.trivia.ui.quiz
 import me.ameriod.lib.mvp.Mvp
 import me.ameriod.trivia.ui.quiz.question.Answer
 import me.ameriod.trivia.ui.quiz.question.Question
+import me.ameriod.trivia.ui.result.Result
 
 class QuizContract {
 
@@ -11,7 +12,7 @@ class QuizContract {
 
         fun setProgress(currentPosition: Int, total: Int)
 
-        fun setCompletedQuiz(quiz: Quiz)
+        fun setCompletedQuiz(result: Result)
 
         fun onTimeUpdated(formattedTime: String)
     }

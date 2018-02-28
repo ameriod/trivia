@@ -11,7 +11,8 @@
         android:layout_marginBottom="@dimen/question_padding_vert"
         android:layout_marginEnd="@dimen/question_padding_hor"
         android:layout_marginStart="@dimen/question_padding_hor"
-        android:layout_marginTop="@dimen/question_padding_vert">
+        android:layout_marginTop="@dimen/question_padding_vert"
+        android:background="@color/question_card_color">
 
         <TextView
             android:id="@+id/questionTv"
@@ -19,7 +20,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="@dimen/question_padding_hor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textAppearance="@style/Text.Large"
             tools:text="Where did the pineapple plant originate?" />
 
     </android.support.v7.widget.CardView>

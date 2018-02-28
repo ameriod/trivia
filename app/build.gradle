@@ -42,6 +42,8 @@ dependencies {
 
     implementation 'com.jakewharton.timber:timber:4.6.0'
 
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"

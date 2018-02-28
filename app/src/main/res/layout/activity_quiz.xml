@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/Text.Inverse"
             tools:text="Question: 1 / 10" />
 
 
@@ -30,7 +30,7 @@
             android:layout_marginEnd="@dimen/question_padding_hor"
             android:layout_marginStart="@dimen/question_padding_hor"
             android:drawableEnd="@drawable/ic_timer"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/Text.Inverse"
             tools:text="00:11" />
 
     </android.support.v7.widget.Toolbar>

@@ -15,4 +15,34 @@
         <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
+    <style name="FilterItem">
+        <item name="android:paddingTop">@dimen/filter_padding_vert</item>
+        <item name="android:paddingBottom">@dimen/filter_padding_vert</item>
+        <item name="android:paddingEnd">@dimen/filter_padding_hor</item>
+        <item name="android:paddingStart">@dimen/filter_padding_hor</item>
+    </style>
+
+    <style name="ResultItem">
+        <item name="android:paddingTop">@dimen/result_padding_vert</item>
+        <item name="android:paddingBottom">@dimen/result_padding_vert</item>
+        <item name="android:paddingEnd">@dimen/result_padding_hor</item>
+        <item name="android:paddingStart">@dimen/result_padding_hor</item>
+    </style>
+
+    <style name="Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+
+    <style name="Text.Inverse" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/text_color_inverse</item>
+    </style>
+
+    <style name="Text.Large" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+
+    <style name="Text.Large.Inverse" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textColor">@color/text_color_inverse</item>
+    </style>
+
 </resources>

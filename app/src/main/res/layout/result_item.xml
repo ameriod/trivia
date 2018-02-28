@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ResultItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/resultTvQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Text"
+        tools:text="Here is a question?" />
+
+    <TextView
+        android:id="@+id/resultTvSelectedAnswer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Text"
+        android:textColor="@color/incorrect_answer"
+        tools:text="Selected Answer that is incorrect" />
+
+    <TextView
+        android:id="@+id/resultTvCorrectAnswer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Text"
+        android:textColor="@color/correct_answer"
+        tools:text="Correct answer" />
+</LinearLayout>

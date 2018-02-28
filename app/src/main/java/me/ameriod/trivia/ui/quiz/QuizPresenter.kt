@@ -37,7 +37,7 @@ class QuizPresenter(private var quiz: Quiz,
     private fun getQuestion(isInitial: Boolean) {
         val view = getView()
         if (quiz.isQuizDone()) {
-            view.setCompletedQuiz(quiz)
+            view.setCompletedQuiz(quiz.toResult())
         } else {
             val question = if (isInitial) quiz.getCurrentQuestion() else quiz.getNextQuestion()
             view.setProgress(quiz.getCurrentPosition(), quiz.getNumberOfQuestions())

@@ -32,8 +32,8 @@ open class TriviaBaseAdapter<T : TriviaAdapterItem>(context: Context,
                     .createViewHolder(inflater, parent, false) as TriviaBaseViewHolder<T>
 
     override fun onBindViewHolder(holder: TriviaBaseViewHolder<T>, position: Int) {
-        holder.setItemClickListener(onItemClickListener)
-        holder.setItemLongClickListener(onItemLongClickListener)
+        holder.clickListener = onItemClickListener
+        holder.longClickListener = onItemLongClickListener
         holder.bindView(items[position])
     }
 

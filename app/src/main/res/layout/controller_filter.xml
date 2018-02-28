@@ -6,9 +6,9 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
-        android:background="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:elevation="0dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -17,22 +17,22 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <LinearLayout
+                style="@style/FilterItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_number"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/Text" />
 
                 <LinearLayout
-                    android:paddingBottom="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/filter_padding_vert">
 
                     <SeekBar
                         android:id="@+id/filterCount"
@@ -51,10 +51,10 @@
                         android:background="@null"
                         android:digits="0123456789"
                         android:gravity="center"
+                        android:imeOptions="actionDone"
                         android:inputType="numberSigned"
                         android:maxEms="2"
                         android:maxLength="2"
-                        android:imeOptions="actionDone"
                         android:minEms="2"
                         tools:text="10" />
 
@@ -64,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_difficulty"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/Text" />
 
                 <Spinner
                     android:id="@+id/filterDifficultySpinner"
@@ -75,27 +75,34 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/filter_category"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/Text" />
 
             </LinearLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <Button
-        android:id="@+id/filterBtnStart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="@string/filter_btn_start" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/filterCategoriesRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="true"
-        android:paddingBottom="48dp"
+        android:clipToPadding="false"
+        android:paddingBottom="60dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+    <FrameLayout
+        style="@style/FilterItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <Button
+            android:id="@+id/filterBtnStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_btn_start" />
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/filterLoading"
