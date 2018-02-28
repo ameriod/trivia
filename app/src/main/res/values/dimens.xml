@@ -3,4 +3,5 @@
 
     <dimen name="question_padding_vert">8dp</dimen>
     <dimen name="question_padding_hor">16dp</dimen>
+    <dimen name="question_padding_question_to_answers">32dp</dimen>
 </resources>

@@ -4,10 +4,10 @@ import android.content.Context
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
 import me.ameriod.trivia.R
-import me.ameriod.trivia.api.response.Category
-import me.ameriod.trivia.api.response.Difficulty
-import me.ameriod.trivia.api.response.ResponseQuestions
-import me.ameriod.trivia.ui.filter.QuizFilter
+import me.ameriod.trivia.api.response.OtCategory
+import me.ameriod.trivia.api.response.OtDifficulty
+import me.ameriod.trivia.ui.filter.Filter
+import me.ameriod.trivia.ui.quiz.Quiz
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 
 
-class TriviaRepository(val context: Context) {
+class OpenTriviaRepository(val context: Context) {
 
     private val service: OpenTriviaService by lazy {
         val logging = HttpLoggingInterceptor({ message ->
@@ -42,25 +42,30 @@ class TriviaRepository(val context: Context) {
         retrofit.create(OpenTriviaService::class.java)
     }
 
-    fun getQuestions(filter: QuizFilter): Observable<ResponseQuestions> =
+    fun getQuiz(filter: Filter): Observable<Quiz> =
             service.getQuestions(filter.count, filter.difficulty.value, filter.category.id, null)
+                    .map { response ->
+                        Quiz(response.results.map { question ->
+                            question.convert()
+                        })
+                    }
 
     fun getApiToken(): Observable<String> = service.getApiToken()
             .map { response ->
                 response.token
             }
 
-    fun getCategories(): Observable<List<Category>> = service.getCategories()
+    fun getCategories(): Observable<List<OtCategory>> = service.getCategories()
             .map { response ->
                 val categories = response.triviaCategories.toMutableList()
                 // add all
-                categories.add(0, Category.createAll(context))
+                categories.add(0, OtCategory.createAll(context))
                 categories
             }
 
-    fun getDifficulties(): Observable<List<Difficulty>> = Observable.just(listOf(
-            Difficulty.createDefault(context),
-            Difficulty(context.getString(R.string.filter_difficulty_easy), "easy"),
-            Difficulty(context.getString(R.string.filter_difficulty_medium), "medium"),
-            Difficulty(context.getString(R.string.filter_difficulty_hard), "hard")))
+    fun getDifficulties(): Observable<List<OtDifficulty>> = Observable.just(listOf(
+            OtDifficulty.createDefault(context),
+            OtDifficulty(context.getString(R.string.filter_difficulty_easy), "easy"),
+            OtDifficulty(context.getString(R.string.filter_difficulty_medium), "medium"),
+            OtDifficulty(context.getString(R.string.filter_difficulty_hard), "hard")))
 }

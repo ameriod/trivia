@@ -17,30 +17,31 @@ import android.widget.SeekBar
 import kotlinx.android.synthetic.main.controller_filter.view.*
 import me.ameriod.lib.mvp.view.MvpController
 import me.ameriod.trivia.R
-import me.ameriod.trivia.api.response.Category
-import me.ameriod.trivia.api.response.Difficulty
-import me.ameriod.trivia.api.response.Question
+import me.ameriod.trivia.api.response.OtCategory
+import me.ameriod.trivia.api.response.OtDifficulty
+import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
+import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.quiz.Quiz
 import me.ameriod.trivia.ui.quiz.QuizActivity
 
 
 class FilterController(args: Bundle) : MvpController<FilterContract.View, FilterContract.Presenter>(args), View.OnClickListener,
-        AdapterView.OnItemSelectedListener, FilterContract.View, CategoryAdapter.OnItemClickListener {
+        AdapterView.OnItemSelectedListener, FilterContract.View, TriviaBaseAdapter.OnItemClickListener {
 
     var snackbar: Snackbar? = null
 
-    private val filterAdapter: FilterDifficultyAdapter by lazy {
-        FilterDifficultyAdapter(activity!!)
+    private val difficultyAdapter: DifficultyAdapter by lazy {
+        DifficultyAdapter(activity!!)
     }
 
-    private val categoryAdapter: CategoryAdapter by lazy {
-        CategoryAdapter(activity!!, this)
+    private val categoryAdapter: TriviaBaseAdapter<OtCategory> by lazy {
+        TriviaBaseAdapter<OtCategory>(activity!!, this)
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_filter, container, false)
         v.filterBtnStart.setOnClickListener(this)
-        v.filterDifficultySpinner.adapter = filterAdapter
+        v.filterDifficultySpinner.adapter = difficultyAdapter
         v.filterDifficultySpinner.onItemSelectedListener = this
 
         v.filterCategoriesRecycler.layoutManager = LinearLayoutManager(v.context)
@@ -102,17 +103,22 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
         })
     }
 
-    override fun setFilter(categories: List<Category>, difficulties: List<Difficulty>, filter: QuizFilter) {
-        categoryAdapter.setSelectedCategory(filter.category)
+
+    override fun setCategories(categories: List<OtCategory>, selectedItem: OtCategory) {
         categoryAdapter.setItems(categories)
+        categoryAdapter.setSingleSelected(selectedItem)
+    }
 
-        filterAdapter.setItems(difficulties)
+    override fun setDifficulties(difficulties: List<OtDifficulty>, selectedItem: OtDifficulty) {
+        difficultyAdapter.setItems(difficulties)
+        view!!.filterDifficultySpinner.setSelection(difficultyAdapter.getPositionForItem(selectedItem))
+    }
 
+    override fun setQuestionCount(count: String) {
         val v = view!!
-        val display = filter.count.toString()
-        v.filterCountEt.setText(display)
-        v.filterCountEt.setSelection(display.length)
-        v.filterDifficultySpinner.setSelection(filterAdapter.getPositionForItem(filter.difficulty))
+        // the edit text will set the seek bar
+        v.filterCountEt.setText(count)
+        v.filterCountEt.setSelection(count.length)
     }
 
     override fun onAttach(view: View) {
@@ -125,7 +131,7 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        getPresenter().setDifficulty(filterAdapter.getItem(position))
+        getPresenter().setDifficulty(difficultyAdapter.getItem(position))
         dropKeyboard()
     }
 
@@ -136,9 +142,9 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
         }
     }
 
-    override fun onItemClicked(view: View, position: Int) {
+    override fun onItemClicked(vh: TriviaBaseViewHolder<*>, position: Int) {
         val category = categoryAdapter.getItem(position)
-        categoryAdapter.setSelectedCategory(category)
+        categoryAdapter.setSingleSelected(category)
         getPresenter().setCategory(category)
         dropKeyboard()
     }
@@ -151,11 +157,11 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
         }
     }
 
-    override fun setQuestions(items: List<Question>) {
-        if (items.isNotEmpty()) {
-            startActivityForResult(QuizActivity.getLaunchIntent(activity!!, Quiz(items)), REQUEST_CODE)
-        } else {
+    override fun setQuiz(quiz: Quiz) {
+        if (quiz.isQuizDone()) {
             Snackbar.make(view!!, R.string.filter_no_more, Snackbar.LENGTH_SHORT).show()
+        } else {
+            startActivityForResult(QuizActivity.getLaunchIntent(activity!!, quiz), REQUEST_CODE)
         }
     }
 
@@ -165,7 +171,7 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
     override fun displayError(error: String) {
         snackbar = Snackbar.make(view!!, error, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.filter_retry) { _ ->
-                    if (filterAdapter.isEmpty) getPresenter().getFilter() else getPresenter().getQuestions()
+                    if (difficultyAdapter.isEmpty) getPresenter().getFilter() else getPresenter().getQuestions()
                 }
         snackbar!!.show()
     }

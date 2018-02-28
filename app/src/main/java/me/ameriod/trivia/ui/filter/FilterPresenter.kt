@@ -6,17 +6,19 @@ import me.ameriod.lib.mvp.Mvp
 import me.ameriod.lib.mvp.presenter.rx2.BasePresenterRx2
 import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
 import me.ameriod.trivia.R
-import me.ameriod.trivia.api.response.Category
-import me.ameriod.trivia.api.response.Difficulty
+import me.ameriod.trivia.api.response.OtCategory
+import me.ameriod.trivia.api.response.OtDifficulty
 import timber.log.Timber
 
-class FilterPresenter(private val defaultFilter: QuizFilter,
+class FilterPresenter(private val defaultFilter: Filter,
                       private val interactor: FilterContract.Interactor,
                       schedulerRx2: IObservableSchedulerRx2,
                       errorHandler: Mvp.ErrorHandler) :
         BasePresenterRx2<FilterContract.View>(schedulerRx2, errorHandler), FilterContract.Presenter {
 
-    private var quizFilter: QuizFilter = defaultFilter
+    private var quizFilter: Filter = defaultFilter
+    private var categories: List<OtCategory> = emptyList()
+    private var difficulties: List<OtDifficulty> = emptyList()
 
     override fun saveState(outState: Bundle) {
         super.saveState(outState)
@@ -29,67 +31,90 @@ class FilterPresenter(private val defaultFilter: QuizFilter,
     }
 
     override fun getFilter() {
-        getView().showProgress(true)
-        addDisposable(interactor.getDifficulties()
-                .flatMap { difficulties ->
-                    interactor.getCategories()
-                            .map { categories ->
-                                categories to difficulties
-                            }
-                }
-                .compose(scheduler.schedule())
-                .subscribe({ pair ->
-                    getView().setFilter(pair.first, pair.second, quizFilter)
-                    getView().showProgress(false)
-                }, { throwable ->
-                    getView().displayError(errorHandler.onError(throwable))
-                }))
+        if (difficulties.isEmpty() || categories.isEmpty()) {
+            getView().showProgress(true)
+            addDisposable(interactor.getDifficulties()
+                    .flatMap { difficulties ->
+                        interactor.getCategories()
+                                .map { categories ->
+                                    categories to difficulties
+                                }
+                    }
+                    .compose(scheduler.schedule())
+                    .subscribe({ pair ->
+                        this.categories = pair.first
+                        getView().setCategories(pair.first, quizFilter.category)
+                        this.difficulties = pair.second
+                        getView().setDifficulties(pair.second, quizFilter.difficulty)
+                        getView().setQuestionCount(quizFilter.count.toString())
+                        getView().showProgress(false)
+                    }, { throwable ->
+                        getView().displayError(errorHandler.onError(throwable))
+                    }))
+        } else {
+            getView().setCategories(categories, quizFilter.category)
+            getView().setDifficulties(difficulties, quizFilter.difficulty)
+            getView().setQuestionCount(quizFilter.count.toString())
+        }
 
     }
 
     override fun getQuestions() {
         getView().showProgress(true)
-        addDisposable(interactor.getQuestions(quizFilter)
+        addDisposable(interactor.getQuiz(quizFilter)
                 .compose(scheduler.schedule())
-                .subscribe({ questions ->
+                .subscribe({ quiz ->
                     getView().showProgress(false)
-                    getView().setQuestions(questions)
+                    getView().setQuiz(quiz)
                 }, { throwable ->
                     getView().displayError(errorHandler.onError(throwable))
                 }))
     }
 
 
-    override fun setDifficulty(difficulty: Difficulty) {
+    override fun setDifficulty(difficulty: OtDifficulty) {
         if (quizFilter.difficulty == difficulty) {
             return
         }
-        quizFilter = QuizFilter(quizFilter.count, difficulty, quizFilter.category)
+        quizFilter.difficulty = difficulty
     }
 
     override fun setCount(count: Int) {
         if (quizFilter.count == count) {
             return
         }
-        quizFilter = QuizFilter(count, quizFilter.difficulty, quizFilter.category)
+        quizFilter.count = count
     }
 
-    override fun setCategory(category: Category) {
+    override fun setCategory(category: OtCategory) {
         if (quizFilter.category == category) {
             return
         }
-        quizFilter = QuizFilter(quizFilter.count, quizFilter.difficulty, category)
+        // check the right category
+        categories.map { item ->
+            item.selected = item.id == category.id
+        }
+
+        quizFilter.category = category
+
+        // update the ui with the selection
+        getView().setCategories(categories, quizFilter.category)
     }
 
     override fun resetFilter() {
+        // set defaults
         quizFilter = defaultFilter
+        difficulties = emptyList()
+        categories = emptyList()
+        // re-set
+        getFilter()
     }
 
     companion object {
 
         private const val OUT_FILTER = "out_filter"
 
-        fun newInstance(context: Context) = FilterPresenter(QuizFilter.createDefault(context),
+        fun newInstance(context: Context) = FilterPresenter(Filter.createDefault(context),
                 FilterInteractor(context), IObservableSchedulerRx2.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN,
                 object : Mvp.ErrorHandler {
                     override fun onError(e: Throwable): String {

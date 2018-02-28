@@ -2,19 +2,18 @@ package me.ameriod.trivia.ui.filter
 
 import android.graphics.Color
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.category_item.view.*
 import me.ameriod.trivia.R
-import me.ameriod.trivia.api.response.Category
+import me.ameriod.trivia.api.response.OtCategory
+import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 
-class CategoryViewHolder(itemView: View,
-                         private val clickListener: CategoryAdapter.OnItemClickListener) :
-        RecyclerView.ViewHolder(itemView), View.OnClickListener {
+class CategoryViewHolder(itemView: View) :
+        TriviaBaseViewHolder<OtCategory>(itemView), View.OnClickListener {
 
-    fun bind(category: Category, selected: Boolean) {
-        itemView.categoryTv.text = category.name
-        if (selected) {
+    override fun bindItem(item: OtCategory) {
+        itemView.categoryTv.text = item.name
+        if (item.selected) {
             itemView.categoryTv.setTextColor(Color.WHITE)
             itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorAccent))
         } else {
@@ -25,6 +24,7 @@ class CategoryViewHolder(itemView: View,
     }
 
     override fun onClick(v: View) {
-        clickListener.onItemClicked(v, adapterPosition)
+        clickListener?.onItemClicked(this, adapterPosition)
     }
+
 }

@@ -13,7 +13,9 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
 import kotlinx.android.synthetic.main.activity_quiz.*
 import me.ameriod.lib.mvp.view.MvpAppCompatActivity
 import me.ameriod.trivia.R
-import me.ameriod.trivia.api.response.Question
+import me.ameriod.trivia.ui.quiz.question.Answer
+import me.ameriod.trivia.ui.quiz.question.Question
+import me.ameriod.trivia.ui.quiz.question.QuestionController
 
 class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presenter>(),
         QuizContract.View, QuestionController.OnQuestionAnsweredListener {
@@ -29,9 +31,10 @@ class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presen
         title = null
         router = Conductor.attachRouter(this, changeHandler, savedInstanceState)
         getPresenter().getInitialQuestion()
+        getPresenter().startQuizTimer()
     }
 
-    override fun createPresenter() = QuizPresenter(intent.getParcelableExtra(QUIZ))
+    override fun createPresenter() = QuizPresenter.newInstance(intent.getParcelableExtra(QUIZ))
 
     override fun displayError(error: String) {
         // no op
@@ -39,6 +42,10 @@ class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presen
 
     override fun showProgress(show: Boolean) {
         // no op
+    }
+
+    override fun onTimeUpdated(formattedTime: String) {
+        quizTimer.text = formattedTime
     }
 
     override fun setCurrentQuestion(question: Question, isLastQuestion: Boolean) {
@@ -78,7 +85,7 @@ class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presen
                 .show()
     }
 
-    override fun onQuestionAnswered(answer: String, question: Question) {
+    override fun onQuestionAnswered(answer: Answer, question: Question) {
         getPresenter().getNextQuestion(answer)
     }
 
