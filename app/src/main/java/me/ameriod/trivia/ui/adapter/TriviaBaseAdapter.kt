@@ -27,7 +27,7 @@ open class TriviaBaseAdapter<T : TriviaAdapterItem>(context: Context,
     override fun getItemViewType(position: Int): Int = items[position].getViewType()
 
     @Suppress("UNCHECKED_CAST")
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TriviaBaseViewHolder<T> =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TriviaBaseViewHolder<T> =
             items.first { item -> item.getViewType() == viewType }
                     .createViewHolder(inflater, parent, false) as TriviaBaseViewHolder<T>
 
