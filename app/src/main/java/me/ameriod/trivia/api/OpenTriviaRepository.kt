@@ -1,9 +1,13 @@
 package me.ameriod.trivia.api
 
+import android.arch.persistence.room.Room
 import android.content.Context
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
 import me.ameriod.trivia.R
+import me.ameriod.trivia.api.db.Result
+import me.ameriod.trivia.api.db.TriviaDao
+import me.ameriod.trivia.api.db.TriviaDatabase
 import me.ameriod.trivia.api.response.OtCategory
 import me.ameriod.trivia.api.response.OtDifficulty
 import me.ameriod.trivia.ui.filter.Filter
@@ -17,6 +21,11 @@ import timber.log.Timber
 
 
 class OpenTriviaRepository(val context: Context) {
+
+    private val triviaDb = Room.databaseBuilder(context.applicationContext,
+            TriviaDatabase::class.java, "results").build()
+
+    private val triviaDao: TriviaDao = triviaDb.resultDao()
 
     private val service: OpenTriviaService by lazy {
         val logging = HttpLoggingInterceptor({ message ->
@@ -68,4 +77,13 @@ class OpenTriviaRepository(val context: Context) {
             OtDifficulty(context.getString(R.string.filter_difficulty_easy), "easy"),
             OtDifficulty(context.getString(R.string.filter_difficulty_medium), "medium"),
             OtDifficulty(context.getString(R.string.filter_difficulty_hard), "hard")))
+
+    fun saveQuizAsResult(quiz: Quiz): Observable<Long> = Observable.just(quiz)
+            .map { it.toResult() }
+            .map { triviaDao.insert(it) }
+
+    fun getResult(id: Long): Observable<Result> = triviaDao.byId(id)
+            .distinctUntilChanged()
+            .toObservable()
+
 }

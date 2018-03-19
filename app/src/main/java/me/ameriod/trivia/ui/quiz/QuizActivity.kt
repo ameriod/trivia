@@ -17,7 +17,6 @@ import me.ameriod.trivia.R
 import me.ameriod.trivia.ui.quiz.question.Answer
 import me.ameriod.trivia.ui.quiz.question.Question
 import me.ameriod.trivia.ui.quiz.question.QuestionController
-import me.ameriod.trivia.ui.result.Result
 import me.ameriod.trivia.ui.result.ResultActivity
 
 class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presenter>(),
@@ -37,7 +36,7 @@ class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presen
         getPresenter().startQuizTimer()
     }
 
-    override fun createPresenter() = QuizPresenter.newInstance(intent.getParcelableExtra(QUIZ))
+    override fun createPresenter() = QuizPresenter.newInstance(applicationContext, intent.getParcelableExtra(QUIZ))
 
     override fun displayError(error: String) {
         // no op
@@ -69,9 +68,9 @@ class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presen
                 currentPosition, total)
     }
 
-    override fun setCompletedQuiz(result: Result) {
-        startActivity(ResultActivity.getLaunchIntent(this, result))
-        setResult(Activity.RESULT_OK, Intent().putExtra(RESULT, result))
+    override fun setCompletedQuiz(resultId: Long) {
+        startActivity(ResultActivity.getLaunchIntent(this, resultId))
+        setResult(Activity.RESULT_OK, Intent().putExtra(RESULT, resultId))
         ActivityCompat.finishAfterTransition(this)
     }
 
@@ -94,7 +93,7 @@ class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presen
     }
 
     companion object {
-        const val RESULT = "result"
+        const val RESULT = "result_id"
         private const val QUIZ = "quiz"
 
         fun getLaunchIntent(context: Context,

@@ -11,24 +11,25 @@ import me.ameriod.trivia.ui.adapter.TriviaAdapterItem
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.result.recycler.ResultItemViewHolder
 
-class ResultItem(@Expose
-                 @SerializedName("question")
-                 val questionText: String,
-                 @Expose
-                 @SerializedName("answer")
-                 val selectedAnswer: String,
-                 @Expose
-                 @SerializedName("correctAnswers")
-                 private val correctAnswersList: List<String>,
-                 @Expose
-                 @SerializedName("correct")
-                 val isCorrect: Boolean) : Parcelable, TriviaAdapterItem {
+data class ResultItem(@Expose
+                      @SerializedName("question")
+                      val questionText: String,
+                      @Expose
+                      @SerializedName("answer")
+                      val selectedAnswer: String,
+                      @Expose
+                      @SerializedName("correctAnswers")
+                      private val correctAnswersList: List<String>,
+                      @Expose
+                      @SerializedName("correct")
+                      val isCorrect: Boolean) : Parcelable, TriviaAdapterItem {
 
-    val correctAnswers: String by lazy(LazyThreadSafetyMode.NONE) {
-        var display = ""
-        correctAnswersList.map { display = it + "\n" }
-        display.trim()
-    }
+    val correctAnswers: String
+        get() {
+            var display = ""
+            correctAnswersList.map { display = it + "\n" }
+            return display.trim()
+        }
 
     override fun createViewHolder(inflater: LayoutInflater, parent: ViewGroup?, attachToRoot: Boolean): TriviaBaseViewHolder<*> =
             ResultItemViewHolder(inflater.inflate(R.layout.result_item, parent, false))

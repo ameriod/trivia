@@ -41,6 +41,7 @@ dependencies {
     implementation "android.arch.lifecycle:reactivestreams:$arch_version"
 
     implementation "android.arch.persistence.room:runtime:$room_version"
+    implementation "android.arch.persistence.room:rxjava2:$room_version"
     kapt "android.arch.persistence.room:compiler:$room_version"
 
     implementation 'com.jakewharton.timber:timber:4.6.0'

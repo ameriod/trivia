@@ -22,7 +22,7 @@ class ResultActivity : AppCompatActivity() {
         router = Conductor.attachRouter(this, changeHandler, savedInstanceState)
         if (!router.hasRootController()) {
             router.setRoot(RouterTransaction.with(ResultController
-                    .newInstance(intent.getParcelableExtra(RESULT))))
+                    .newInstance(intent.getLongExtra(RESULT_ID, 0L))))
         }
     }
 
@@ -34,12 +34,12 @@ class ResultActivity : AppCompatActivity() {
 
     companion object {
 
-        private const val RESULT = "result"
+        private const val RESULT_ID = "result_id"
 
         @JvmStatic
-        fun getLaunchIntent(context: Context, result: Result): Intent =
+        fun getLaunchIntent(context: Context, resultId: Long): Intent =
                 Intent(context, ResultActivity::class.java)
-                        .putExtra(RESULT, result)
+                        .putExtra(RESULT_ID, resultId)
 
     }
 }

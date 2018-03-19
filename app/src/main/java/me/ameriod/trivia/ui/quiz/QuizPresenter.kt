@@ -1,16 +1,19 @@
 package me.ameriod.trivia.ui.quiz
 
+import android.content.Context
 import android.os.Bundle
 import io.reactivex.Observable
 import me.ameriod.lib.mvp.Mvp
 import me.ameriod.lib.mvp.presenter.rx2.BasePresenterRx2
 import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
+import me.ameriod.trivia.TriviaApplication
 import me.ameriod.trivia.ui.quiz.question.Answer
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 
 class QuizPresenter(private var quiz: Quiz,
+                    private val interactor: QuizContract.Interactor,
                     schedulerRx2: IObservableSchedulerRx2,
                     errorHandler: Mvp.ErrorHandler) :
         BasePresenterRx2<QuizContract.View>(schedulerRx2, errorHandler), QuizContract.Presenter {
@@ -37,7 +40,13 @@ class QuizPresenter(private var quiz: Quiz,
     private fun getQuestion(isInitial: Boolean) {
         val view = getView()
         if (quiz.isQuizDone()) {
-            view.setCompletedQuiz(quiz.toResult())
+            addDisposable(interactor.saveResults(quiz)
+                    .compose(scheduler.schedule())
+                    .subscribe({ resultId ->
+                        getView().setCompletedQuiz(resultId)
+                    }, { throwable ->
+                        Timber.e(throwable, "Error with saving quiz results")
+                    }))
         } else {
             val question = if (isInitial) quiz.getCurrentQuestion() else quiz.getNextQuestion()
             view.setProgress(quiz.getCurrentPosition(), quiz.getNumberOfQuestions())
@@ -68,7 +77,7 @@ class QuizPresenter(private var quiz: Quiz,
     companion object {
         private const val OUT_STATE = "out_quiz"
 
-        fun newInstance(quiz: Quiz) = QuizPresenter(quiz, IObservableSchedulerRx2.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN,
+        fun newInstance(context: Context, quiz: Quiz) = QuizPresenter(quiz, QuizInteractor((context as TriviaApplication).repository), IObservableSchedulerRx2.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN,
                 object : Mvp.ErrorHandler {
                     override fun onError(e: Throwable): String {
                         Timber.e(e, "Error with quiz")

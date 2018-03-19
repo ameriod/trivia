@@ -1,9 +1,9 @@
 package me.ameriod.trivia.ui.quiz
 
+import io.reactivex.Observable
 import me.ameriod.lib.mvp.Mvp
 import me.ameriod.trivia.ui.quiz.question.Answer
 import me.ameriod.trivia.ui.quiz.question.Question
-import me.ameriod.trivia.ui.result.Result
 
 class QuizContract {
 
@@ -12,7 +12,7 @@ class QuizContract {
 
         fun setProgress(currentPosition: Int, total: Int)
 
-        fun setCompletedQuiz(result: Result)
+        fun setCompletedQuiz(resultId: Long)
 
         fun onTimeUpdated(formattedTime: String)
     }
@@ -23,6 +23,10 @@ class QuizContract {
         fun getInitialQuestion()
 
         fun startQuizTimer()
+    }
+
+    interface Interactor {
+        fun saveResults(quiz: Quiz): Observable<Long>
     }
 
 }

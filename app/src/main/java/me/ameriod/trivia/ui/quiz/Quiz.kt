@@ -2,9 +2,9 @@ package me.ameriod.trivia.ui.quiz
 
 import android.os.Parcel
 import android.os.Parcelable
+import me.ameriod.trivia.api.db.Result
 import me.ameriod.trivia.ui.quiz.question.Answer
 import me.ameriod.trivia.ui.quiz.question.Question
-import me.ameriod.trivia.ui.result.Result
 import me.ameriod.trivia.ui.result.ResultItem
 
 data class Quiz(private val questions: List<Question>,
@@ -52,7 +52,7 @@ data class Quiz(private val questions: List<Question>,
         val total = results.size
         val correct = results.filter { result -> result.isCorrect }.size
         val incorrect = total - correct
-        return Result(results, total, correct, incorrect, totalTime, date)
+        return Result(null, Result.gson.toJson(results, Result.type), total, correct, incorrect, totalTime, date)
     }
 
     constructor(source: Parcel) : this(
