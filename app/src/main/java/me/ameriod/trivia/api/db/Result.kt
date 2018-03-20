@@ -4,8 +4,14 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import me.ameriod.trivia.R
+import me.ameriod.trivia.ui.adapter.TriviaAdapterItem
+import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
+import me.ameriod.trivia.ui.history.HistoryViewHolder
 import me.ameriod.trivia.ui.result.ResultItem
 
 @Entity(tableName = "results")
@@ -23,7 +29,7 @@ data class Result(@PrimaryKey(autoGenerate = true)
                   @ColumnInfo(name = "total_time")
                   var totalTime: Long,
                   @ColumnInfo(name = "date")
-                  var date: Long) {
+                  var date: Long) : TriviaAdapterItem {
 
     constructor() : this(null, "[]", 0, 0, 0, 0, 0)
 
@@ -36,6 +42,13 @@ data class Result(@PrimaryKey(autoGenerate = true)
     } else {
         items!!
     }
+
+    override fun createViewHolder(inflater: LayoutInflater, parent: ViewGroup?, attachToRoot: Boolean): TriviaBaseViewHolder<*> =
+            HistoryViewHolder(inflater.inflate(R.layout.history_item, parent, attachToRoot))
+
+    override fun getViewType() = R.layout.history_item
+
+    override fun getRecyclerItemId() = id.toString()
 
     companion object {
         @JvmStatic

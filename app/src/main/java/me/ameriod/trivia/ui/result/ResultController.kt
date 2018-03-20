@@ -17,6 +17,7 @@ class ResultController(args: Bundle) : MvpController<ResultContract.View, Result
     val adapter by lazy(LazyThreadSafetyMode.NONE) {
         TriviaBaseAdapter<TriviaAdapterItem>(activity!!)
     }
+    val showDone = args.getBoolean(SHOW_DONE, false)
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_result, container, false)
@@ -24,6 +25,9 @@ class ResultController(args: Bundle) : MvpController<ResultContract.View, Result
         v.resultRecycler.layoutManager = LinearLayoutManager(v.context)
         v.resultRecycler.adapter = adapter
         v.resultRecycler.addItemDecoration(DividerItemDecoration(v.context, DividerItemDecoration.VERTICAL))
+
+        v.resultBtnDone.visibility = if (showDone) View.VISIBLE else View.GONE
+        v.resultRecycler.setPadding(0, 0, 0, if (showDone) v.context.resources.getDimensionPixelOffset(R.dimen.recycler_button_bottom_padding) else 0)
         return v
     }
 
@@ -48,11 +52,13 @@ class ResultController(args: Bundle) : MvpController<ResultContract.View, Result
 
     companion object {
         private const val RESULT_ID = "result_id"
+        private const val SHOW_DONE = "show_done"
 
         @JvmStatic
-        fun newInstance(resultId: Long): ResultController {
+        fun newInstance(resultId: Long, showDone: Boolean = false): ResultController {
             val args = Bundle()
             args.putLong(RESULT_ID, resultId)
+            args.putBoolean(SHOW_DONE, showDone)
             return ResultController(args)
         }
     }

@@ -86,4 +86,8 @@ class OpenTriviaRepository(val context: Context) {
             .distinctUntilChanged()
             .toObservable()
 
+    fun getHistory(): Observable<List<Result>> = triviaDao.getAll()
+            .distinctUntilChanged()
+            .toObservable()
+
 }
