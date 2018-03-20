@@ -17,7 +17,7 @@ class ResultController(args: Bundle) : MvpController<ResultContract.View, Result
     val adapter by lazy(LazyThreadSafetyMode.NONE) {
         TriviaBaseAdapter<TriviaAdapterItem>(activity!!)
     }
-    val showDone = args.getBoolean(SHOW_DONE, false)
+    val showDone = args.getBoolean(SHOW_DONE, true)
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_result, container, false)
@@ -55,7 +55,7 @@ class ResultController(args: Bundle) : MvpController<ResultContract.View, Result
         private const val SHOW_DONE = "show_done"
 
         @JvmStatic
-        fun newInstance(resultId: Long, showDone: Boolean = false): ResultController {
+        fun newInstance(resultId: Long, showDone: Boolean = true): ResultController {
             val args = Bundle()
             args.putLong(RESULT_ID, resultId)
             args.putBoolean(SHOW_DONE, showDone)

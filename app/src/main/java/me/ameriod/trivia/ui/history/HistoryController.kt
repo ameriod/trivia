@@ -40,7 +40,7 @@ class HistoryController(args: Bundle) : MvpController<HistoryContract.View, Hist
 
     override fun onItemClicked(vh: TriviaBaseViewHolder<*>, position: Int) {
         val result = adapter.getItem(position)
-        router.pushController(RouterTransaction.with(ResultController.newInstance(result.id!!)))
+        router.pushController(RouterTransaction.with(ResultController.newInstance(result.id!!, false)))
     }
 
     override fun createPresenter() = HistoryPresenter.newInstance(applicationContext!!)

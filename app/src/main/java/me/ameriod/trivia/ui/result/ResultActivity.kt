@@ -16,7 +16,7 @@ class ResultActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.result_activity)
         setSupportActionBar(toolbar)
 
         router = Conductor.attachRouter(this, changeHandler, savedInstanceState)
