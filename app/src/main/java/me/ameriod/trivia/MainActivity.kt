@@ -8,6 +8,7 @@ import com.bluelinelabs.conductor.RouterTransaction
 import kotlinx.android.synthetic.main.activity_main.*
 import me.ameriod.trivia.ui.filter.FilterController
 import me.ameriod.trivia.ui.history.HistoryController
+import me.ameriod.trivia.ui.play.PlayController
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 when (selectedId) {
                     R.id.action_play -> {
-
+                        router.setRoot(RouterTransaction.with(PlayController.newInstance()))
                     }
                     R.id.action_history -> {
                         router.setRoot(RouterTransaction.with(HistoryController.newInstance()))
