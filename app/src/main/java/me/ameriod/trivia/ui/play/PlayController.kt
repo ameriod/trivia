@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.play_controller.view.*
 import me.ameriod.lib.mvp.view.MvpController
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.OtCategory
@@ -34,7 +35,8 @@ class PlayController(args: Bundle) : MvpController<FilterContract.View, FilterCo
     }
 
     override fun showProgress(show: Boolean) {
-        // no op
+        view?.isEnabled = !show
+        view?.playLoading?.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun setQuiz(quiz: Quiz) {
