@@ -1,7 +1,7 @@
 package me.ameriod.trivia.ui.play
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +28,7 @@ class PlayController(args: Bundle) : MvpController<FilterContract.View, FilterCo
     override fun createPresenter() = FilterPresenter.newInstance(activity!!.applicationContext)
 
     override fun displayError(error: String) {
-        Snackbar.make(view!!, error, Snackbar.LENGTH_INDEFINITE)
+        com.google.android.material.snackbar.Snackbar.make(view!!, error, com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.filter_retry) { _ ->
                     getPresenter().getQuestions()
                 }.show()
@@ -41,7 +41,7 @@ class PlayController(args: Bundle) : MvpController<FilterContract.View, FilterCo
 
     override fun setQuiz(quiz: Quiz) {
         if (quiz.isQuizDone()) {
-            Snackbar.make(view!!, R.string.filter_no_more, Snackbar.LENGTH_SHORT).show()
+            com.google.android.material.snackbar.Snackbar.make(view!!, R.string.filter_no_more, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
         } else {
             startActivity(QuizActivity.getLaunchIntent(activity!!, quiz))
         }

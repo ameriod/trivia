@@ -1,7 +1,7 @@
 package me.ameriod.trivia.ui.filter
 
 import android.graphics.Color
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.View
 import kotlinx.android.synthetic.main.category_item.view.*
 import me.ameriod.trivia.R

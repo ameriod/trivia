@@ -1,15 +1,15 @@
 package me.ameriod.trivia.ui.adapter
 
 import android.content.Context
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
 open class TriviaBaseAdapter<T : TriviaAdapterItem>(context: Context,
                                                     private val onItemClickListener: OnItemClickListener? = null,
                                                     private val onItemLongClickListener: TriviaBaseAdapter.OnItemLongClickListener? = null) :
-        RecyclerView.Adapter<TriviaBaseViewHolder<T>>() {
+        androidx.recyclerview.widget.RecyclerView.Adapter<TriviaBaseViewHolder<T>>() {
 
     interface OnItemClickListener {
         fun onItemClicked(vh: TriviaBaseViewHolder<*>, position: Int)

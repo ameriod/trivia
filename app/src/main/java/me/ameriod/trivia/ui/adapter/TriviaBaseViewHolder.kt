@@ -1,9 +1,9 @@
 package me.ameriod.trivia.ui.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
-abstract class TriviaBaseViewHolder<in T : TriviaAdapterItem>(view: View) : RecyclerView.ViewHolder(view) {
+abstract class TriviaBaseViewHolder<in T : TriviaAdapterItem>(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
 
     var clickListener: TriviaBaseAdapter.OnItemClickListener? = null
     var longClickListener: TriviaBaseAdapter.OnItemLongClickListener? = null

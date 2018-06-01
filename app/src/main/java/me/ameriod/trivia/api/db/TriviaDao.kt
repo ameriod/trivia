@@ -1,6 +1,6 @@
 package me.ameriod.trivia.api.db
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import io.reactivex.Flowable
 
 @Dao

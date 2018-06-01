@@ -3,9 +3,9 @@ package me.ameriod.trivia.ui.filter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -28,7 +28,7 @@ import me.ameriod.trivia.ui.quiz.QuizActivity
 class FilterController(args: Bundle) : MvpController<FilterContract.View, FilterContract.Presenter>(args), View.OnClickListener,
         AdapterView.OnItemSelectedListener, FilterContract.View, TriviaBaseAdapter.OnItemClickListener {
 
-    var snackbar: Snackbar? = null
+    var snackbar: com.google.android.material.snackbar.Snackbar? = null
 
     private val difficultyAdapter: DifficultyAdapter by lazy {
         DifficultyAdapter(activity!!)
@@ -44,9 +44,9 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
         v.filterDifficultySpinner.adapter = difficultyAdapter
         v.filterDifficultySpinner.onItemSelectedListener = this
 
-        v.filterCategoriesRecycler.layoutManager = LinearLayoutManager(v.context)
-        v.filterCategoriesRecycler.addItemDecoration(DividerItemDecoration(v.context,
-                DividerItemDecoration.VERTICAL))
+        v.filterCategoriesRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(v.context)
+        v.filterCategoriesRecycler.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(v.context,
+                androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
         v.filterCategoriesRecycler.adapter = categoryAdapter
 
         return v
@@ -159,7 +159,7 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
 
     override fun setQuiz(quiz: Quiz) {
         if (quiz.isQuizDone()) {
-            Snackbar.make(view!!, R.string.filter_no_more, Snackbar.LENGTH_SHORT).show()
+            com.google.android.material.snackbar.Snackbar.make(view!!, R.string.filter_no_more, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
         } else {
             startActivityForResult(QuizActivity.getLaunchIntent(activity!!, quiz), REQUEST_CODE)
         }
@@ -169,7 +169,7 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
             FilterPresenter.newInstance(applicationContext!!)
 
     override fun displayError(error: String) {
-        snackbar = Snackbar.make(view!!, error, Snackbar.LENGTH_INDEFINITE)
+        snackbar = com.google.android.material.snackbar.Snackbar.make(view!!, error, com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.filter_retry) { _ ->
                     if (difficultyAdapter.isEmpty) getPresenter().getFilter() else getPresenter().getQuestions()
                 }

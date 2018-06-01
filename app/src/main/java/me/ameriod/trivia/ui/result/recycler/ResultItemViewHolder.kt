@@ -1,6 +1,6 @@
 package me.ameriod.trivia.ui.result.recycler
 
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.text.Html
 import android.view.View
 import kotlinx.android.synthetic.main.result_item.view.*

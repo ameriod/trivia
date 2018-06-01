@@ -1,8 +1,8 @@
 package me.ameriod.trivia.ui.history
 
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,9 +23,9 @@ class HistoryController(args: Bundle) : MvpController<HistoryContract.View, Hist
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.history_controller, container, false)
-        v.historyRecycler.layoutManager = LinearLayoutManager(v.context)
+        v.historyRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(v.context)
         v.historyRecycler.adapter = adapter
-        v.historyRecycler.addItemDecoration(DividerItemDecoration(v.context, DividerItemDecoration.VERTICAL))
+        v.historyRecycler.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(v.context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
         return v
     }
 

@@ -1,7 +1,7 @@
 package me.ameriod.trivia.ui.quiz.question
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
@@ -31,7 +31,7 @@ class QuestionController(args: Bundle) : Controller(args), TriviaBaseAdapter.OnI
         v.questionTv.text = Html.fromHtml(question.text)
 
 
-        v.questionAnswersRecycler.layoutManager = LinearLayoutManager(v.context)
+        v.questionAnswersRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(v.context)
         v.questionAnswersRecycler.adapter = adapter
         adapter.setSingleSelected(selectedAnswer)
         adapter.setItems(answers)

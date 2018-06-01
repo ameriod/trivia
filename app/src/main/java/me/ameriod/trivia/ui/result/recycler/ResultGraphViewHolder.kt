@@ -1,6 +1,6 @@
 package me.ameriod.trivia.ui.result.recycler
 
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.View
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet

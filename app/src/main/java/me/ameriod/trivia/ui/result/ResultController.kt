@@ -1,8 +1,8 @@
 package me.ameriod.trivia.ui.result
 
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,9 +22,9 @@ class ResultController(args: Bundle) : MvpController<ResultContract.View, Result
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_result, container, false)
         v.resultBtnDone.setOnClickListener { _ -> activity?.finish() }
-        v.resultRecycler.layoutManager = LinearLayoutManager(v.context)
+        v.resultRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(v.context)
         v.resultRecycler.adapter = adapter
-        v.resultRecycler.addItemDecoration(DividerItemDecoration(v.context, DividerItemDecoration.VERTICAL))
+        v.resultRecycler.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(v.context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
 
         v.resultBtnDone.visibility = if (showDone) View.VISIBLE else View.GONE
         v.resultRecycler.setPadding(0, 0, 0, if (showDone) v.context.resources.getDimensionPixelOffset(R.dimen.recycler_button_bottom_padding) else 0)
