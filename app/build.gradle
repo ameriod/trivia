@@ -7,11 +7,11 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 'android-P'
+    compileSdkVersion 29
     defaultConfig {
         applicationId "me.ameriod.trivia"
         minSdkVersion 21
-        targetSdkVersion 'P'
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -27,24 +27,27 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     
     implementation 'com.github.ameriod:mvp:1.2.0-X'
 
     implementation "com.bluelinelabs:conductor:$conductor_version"
     implementation "com.bluelinelabs:conductor-support:$conductor_version"
-    implementation 'com.bluelinelabs:conductor-archlifecycle:0.1.1'
+    implementation "com.bluelinelabs:conductor-archlifecycle:$conductor_version"
 
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-alpha1'
-    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0-alpha1'
-    implementation 'androidx.lifecycle:lifecycle-reactivestreams:2.0.0-alpha1'
+    implementation "androidx.lifecycle:lifecycle-extensions:$arch_version"
+    kapt "androidx.lifecycle:lifecycle-compiler:$arch_version"
 
-    implementation 'androidx.room:room-runtime:2.0.0-alpha1'
-    implementation 'androidx.room:room-rxjava2:2.0.0-alpha1'
-    kapt 'androidx.room:room-compiler:2.0.0-alpha1'
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
-    implementation 'com.jakewharton.timber:timber:4.6.0'
+    implementation "org.koin:koin-android:$koin"
+    implementation "org.koin:koin-android-viewmodel:$koin"
+
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
@@ -54,10 +57,12 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
-    implementation 'androidx.appcompat:appcompat:1.0.0-alpha1'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0-alpha1'
-    implementation 'androidx.cardview:cardview:1.0.0-alpha1'
-    implementation 'com.google.android.material:material:1.0.0-alpha1'
+    implementation 'androidx.core:core-ktx:1.0.2'
+
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.13.0'
@@ -66,6 +71,6 @@ dependencies {
     testImplementation 'androidx.arch.core:core-testing:2.0.0-alpha1'
     testImplementation 'androidx.room:room-testing:2.0.0-alpha1'
 
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }

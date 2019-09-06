@@ -1,10 +1,8 @@
 package me.ameriod.trivia.ui.history
 
-import android.content.Context
 import me.ameriod.lib.mvp.Mvp
 import me.ameriod.lib.mvp.presenter.rx2.BasePresenterRx2
 import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
-import me.ameriod.trivia.TriviaApplication
 import timber.log.Timber
 
 class HistoryPresenter(private val interactor: HistoryContract.Interactor,
@@ -21,14 +19,4 @@ class HistoryPresenter(private val interactor: HistoryContract.Interactor,
                 }))
     }
 
-    companion object {
-        fun newInstance(context: Context) = HistoryPresenter(HistoryInteractor((context as TriviaApplication).repository),
-                IObservableSchedulerRx2.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN,
-                object : Mvp.ErrorHandler {
-                    override fun onError(e: Throwable): String {
-                        Timber.e(e, "Error with history")
-                        return ""
-                    }
-                })
-    }
 }

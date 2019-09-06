@@ -12,8 +12,8 @@ import timber.log.Timber
 class ResultPresenter(private val interactor: ResultContract.Interactor,
                       schedulerRx2: IObservableSchedulerRx2,
                       errorHandler: Mvp.ErrorHandler) : BasePresenterRx2<ResultContract.View>(schedulerRx2, errorHandler), ResultContract.Presenter {
-    override fun getResult() {
-        addDisposable(interactor.getResult()
+    override fun getResult(resultId: Long) {
+        addDisposable(interactor.getResult(resultId)
                 .map { result ->
                     val items = mutableListOf<TriviaAdapterItem>()
                     items.add(ResultGraphItem(result.totalQuestions, result.correctQuestions, result.incorrectQuestions))
@@ -28,15 +28,4 @@ class ResultPresenter(private val interactor: ResultContract.Interactor,
                 }))
     }
 
-    companion object {
-
-        fun newInstance(context: Context, id: Long) = ResultPresenter(ResultInteractor(id, (context as TriviaApplication).repository),
-                IObservableSchedulerRx2.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN,
-                object : Mvp.ErrorHandler {
-                    override fun onError(e: Throwable): String {
-                        Timber.e(e, "Error with results")
-                        return ""
-                    }
-                })
-    }
 }

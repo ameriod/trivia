@@ -1,17 +1,17 @@
 package me.ameriod.trivia.ui.play
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.play_controller.view.*
 import me.ameriod.lib.mvp.view.MvpController
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.OtCategory
 import me.ameriod.trivia.api.response.OtDifficulty
+import me.ameriod.trivia.di.get
 import me.ameriod.trivia.ui.filter.FilterContract
-import me.ameriod.trivia.ui.filter.FilterPresenter
 import me.ameriod.trivia.ui.quiz.Quiz
 import me.ameriod.trivia.ui.quiz.QuizActivity
 
@@ -25,10 +25,9 @@ class PlayController(args: Bundle) : MvpController<FilterContract.View, FilterCo
         return v
     }
 
-    override fun createPresenter() = FilterPresenter.newInstance(activity!!.applicationContext)
-
+    override fun createPresenter(): FilterContract.Presenter = get()
     override fun displayError(error: String) {
-        com.google.android.material.snackbar.Snackbar.make(view!!, error, com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(view!!, error, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.filter_retry) { _ ->
                     getPresenter().getQuestions()
                 }.show()
@@ -41,7 +40,7 @@ class PlayController(args: Bundle) : MvpController<FilterContract.View, FilterCo
 
     override fun setQuiz(quiz: Quiz) {
         if (quiz.isQuizDone()) {
-            com.google.android.material.snackbar.Snackbar.make(view!!, R.string.filter_no_more, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(view!!, R.string.filter_no_more, Snackbar.LENGTH_SHORT).show()
         } else {
             startActivity(QuizActivity.getLaunchIntent(activity!!, quiz))
         }

@@ -6,6 +6,8 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.htmlEncode
+import androidx.core.text.parseAsHtml
 import com.bluelinelabs.conductor.Controller
 import kotlinx.android.synthetic.main.controller_question.view.*
 import me.ameriod.trivia.R
@@ -14,7 +16,7 @@ import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 
 class QuestionController(args: Bundle) : Controller(args), TriviaBaseAdapter.OnItemClickListener {
 
-    private val question: Question = args.getParcelable(QUESTION)
+    private val question: Question = args.getParcelable(QUESTION) ?: throw IllegalArgumentException("Error need to pass in a question")
     private val adapter: AnswerAdapter by lazy {
         AnswerAdapter(activity!!, this)
     }
@@ -28,10 +30,10 @@ class QuestionController(args: Bundle) : Controller(args), TriviaBaseAdapter.OnI
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_question, container, false)
-        v.questionTv.text = Html.fromHtml(question.text)
+        v.questionTv.text = question.text.parseAsHtml()
 
 
-        v.questionAnswersRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(v.context)
+        v.questionAnswersRecycler.layoutManager = LinearLayoutManager(v.context)
         v.questionAnswersRecycler.adapter = adapter
         adapter.setSingleSelected(selectedAnswer)
         adapter.setItems(answers)

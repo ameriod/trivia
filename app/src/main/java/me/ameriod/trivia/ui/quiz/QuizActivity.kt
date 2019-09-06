@@ -5,8 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.app.ActivityCompat
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
@@ -18,6 +18,8 @@ import me.ameriod.trivia.ui.quiz.question.Answer
 import me.ameriod.trivia.ui.quiz.question.Question
 import me.ameriod.trivia.ui.quiz.question.QuestionController
 import me.ameriod.trivia.ui.result.ResultActivity
+import org.koin.android.ext.android.get
+import org.koin.core.parameter.parametersOf
 
 class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presenter>(),
         QuizContract.View, QuestionController.OnQuestionAnsweredListener {
@@ -36,7 +38,11 @@ class QuizActivity : MvpAppCompatActivity<QuizContract.View, QuizContract.Presen
         getPresenter().startQuizTimer()
     }
 
-    override fun createPresenter() = QuizPresenter.newInstance(applicationContext, intent.getParcelableExtra(QUIZ))
+    override fun createPresenter(): QuizContract.Presenter {
+        val quiz = intent.getParcelableExtra<Quiz>(QUIZ)
+                ?: throw IllegalArgumentException("Error need to pass in a quiz")
+        return get { parametersOf(quiz) }
+    }
 
     override fun displayError(error: String) {
         // no op

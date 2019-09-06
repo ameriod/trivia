@@ -47,9 +47,9 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.selectedItemId = selectedMenuId
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(OUT_SELECTED, selectedMenuId)
+        outState.putInt(OUT_SELECTED, selectedMenuId)
     }
 
     override fun onBackPressed() {

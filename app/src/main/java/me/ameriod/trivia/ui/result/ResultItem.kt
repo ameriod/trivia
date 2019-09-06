@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 import me.ameriod.trivia.R
 import me.ameriod.trivia.ui.adapter.TriviaAdapterItem
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.result.recycler.ResultItemViewHolder
 
+@Parcelize
 data class ResultItem(@Expose
                       @SerializedName("question")
                       val questionText: String,
@@ -38,27 +40,4 @@ data class ResultItem(@Expose
 
     override fun getRecyclerItemId() = questionText
 
-    constructor(source: Parcel) : this(
-            source.readString(),
-            source.readString(),
-            source.createStringArrayList(),
-            1 == source.readInt()
-    )
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeString(questionText)
-        writeString(selectedAnswer)
-        writeStringList(mutableListOf(correctAnswers))
-        writeInt((if (isCorrect) 1 else 0))
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<ResultItem> = object : Parcelable.Creator<ResultItem> {
-            override fun createFromParcel(source: Parcel): ResultItem = ResultItem(source)
-            override fun newArray(size: Int): Array<ResultItem?> = arrayOfNulls(size)
-        }
-    }
 }

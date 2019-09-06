@@ -12,11 +12,11 @@ class ResultContract {
     }
 
     interface Presenter : Mvp.Presenter<View> {
-        fun getResult()
+        fun getResult(resultId: Long)
     }
 
     interface Interactor {
-        fun getResult(): Observable<Result>
+        fun getResult(resultId: Long): Observable<Result>
     }
 
 }

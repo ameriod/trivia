@@ -27,7 +27,7 @@ class FilterPresenter(private val defaultFilter: Filter,
 
     override fun restoreState(savedState: Bundle) {
         super.restoreState(savedState)
-        quizFilter = savedState.getParcelable(OUT_FILTER)
+        quizFilter = savedState.getParcelable(OUT_FILTER) ?: defaultFilter
     }
 
     override fun getFilter() {
@@ -111,16 +111,6 @@ class FilterPresenter(private val defaultFilter: Filter,
     }
 
     companion object {
-
-        private const val OUT_FILTER = "out_filter"
-
-        fun newInstance(context: Context) = FilterPresenter(Filter.createDefault(context),
-                FilterInteractor(context), IObservableSchedulerRx2.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN,
-                object : Mvp.ErrorHandler {
-                    override fun onError(e: Throwable): String {
-                        Timber.e(e, "Error loading questions for the filter params")
-                        return context.getString(R.string.filter_api_error)
-                    }
-                })
+        private const val OUT_FILTER = "out_state_filter"
     }
 }

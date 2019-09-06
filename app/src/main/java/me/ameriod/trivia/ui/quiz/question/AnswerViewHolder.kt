@@ -3,6 +3,8 @@ package me.ameriod.trivia.ui.quiz.question
 import androidx.core.content.ContextCompat
 import android.text.Html
 import android.view.View
+import androidx.core.text.htmlEncode
+import androidx.core.text.parseAsHtml
 import kotlinx.android.synthetic.main.answer_item.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
@@ -12,7 +14,7 @@ class AnswerViewHolder(view: View) : TriviaBaseViewHolder<Answer>(view), View.On
     private val context = itemView.context
 
     override fun bindItem(item: Answer) {
-        itemView.answerTv.text = Html.fromHtml(item.display)
+        itemView.answerTv.text = item.display.parseAsHtml()
         if (item.selected || item.showCorrect) {
             itemView.answerTv.setTextColor(ContextCompat.getColor(context, R.color.text_color_inverse))
             itemView.setBackgroundColor(ContextCompat.getColor(context, if (item.correct)

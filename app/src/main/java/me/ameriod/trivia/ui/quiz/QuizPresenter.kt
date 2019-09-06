@@ -20,7 +20,7 @@ class QuizPresenter(private var quiz: Quiz,
 
     override fun restoreState(savedState: Bundle) {
         super.restoreState(savedState)
-        quiz = savedState.getParcelable(OUT_STATE)
+        quiz = savedState.getParcelable(OUT_STATE) ?: throw IllegalStateException("Error restoring the quiz")
     }
 
     override fun saveState(outState: Bundle) {
@@ -76,13 +76,5 @@ class QuizPresenter(private var quiz: Quiz,
 
     companion object {
         private const val OUT_STATE = "out_quiz"
-
-        fun newInstance(context: Context, quiz: Quiz) = QuizPresenter(quiz, QuizInteractor((context as TriviaApplication).repository), IObservableSchedulerRx2.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN,
-                object : Mvp.ErrorHandler {
-                    override fun onError(e: Throwable): String {
-                        Timber.e(e, "Error with quiz")
-                        return ""
-                    }
-                })
     }
 }

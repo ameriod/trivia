@@ -2,11 +2,13 @@ package me.ameriod.trivia.ui.quiz
 
 import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import me.ameriod.trivia.api.db.Result
 import me.ameriod.trivia.ui.quiz.question.Answer
 import me.ameriod.trivia.ui.quiz.question.Question
 import me.ameriod.trivia.ui.result.ResultItem
 
+@Parcelize
 data class Quiz(private val questions: List<Question>,
                 private val answers: MutableList<Answer> = mutableListOf(),
                 private var position: Int = 0,
@@ -55,27 +57,4 @@ data class Quiz(private val questions: List<Question>,
         return Result(null, Result.gson.toJson(results, Result.type), total, correct, incorrect, totalTime, date)
     }
 
-    constructor(source: Parcel) : this(
-            source.createTypedArrayList(Question.CREATOR),
-            source.createTypedArrayList(Answer.CREATOR),
-            source.readInt(),
-            source.readLong()
-    )
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeTypedList(questions)
-        writeTypedList(answers)
-        writeInt(position)
-        writeLong(startTime)
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<Quiz> = object : Parcelable.Creator<Quiz> {
-            override fun createFromParcel(source: Parcel): Quiz = Quiz(source)
-            override fun newArray(size: Int): Array<Quiz?> = arrayOfNulls(size)
-        }
-    }
 }

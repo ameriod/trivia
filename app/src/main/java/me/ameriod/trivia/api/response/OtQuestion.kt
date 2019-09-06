@@ -1,12 +1,13 @@
 package me.ameriod.trivia.api.response
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 import me.ameriod.trivia.ui.quiz.question.Answer
 import me.ameriod.trivia.ui.quiz.question.Question
 
+@Parcelize
 data class OtQuestion(@Expose
                       @SerializedName("category")
                       val category: String,
@@ -37,35 +38,7 @@ data class OtQuestion(@Expose
         return Question(question, answers)
     }
 
-    constructor(source: Parcel) : this(
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.createStringArrayList()
-    )
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeString(category)
-        writeString(apiType)
-        writeString(difficulty)
-        writeString(question)
-        writeString(correctAnswer)
-        writeStringList(incorrectAnswers)
-    }
-
     enum class Type {
         MULTIPLE, BOOLEAN
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<OtQuestion> = object : Parcelable.Creator<OtQuestion> {
-            override fun createFromParcel(source: Parcel): OtQuestion = OtQuestion(source)
-            override fun newArray(size: Int): Array<OtQuestion?> = arrayOfNulls(size)
-        }
     }
 }

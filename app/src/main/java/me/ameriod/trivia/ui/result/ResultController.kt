@@ -1,14 +1,15 @@
 package me.ameriod.trivia.ui.result
 
 import android.os.Bundle
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.controller_result.view.*
 import me.ameriod.lib.mvp.view.MvpController
 import me.ameriod.trivia.R
+import me.ameriod.trivia.di.get
 import me.ameriod.trivia.ui.adapter.TriviaAdapterItem
 import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 
@@ -22,9 +23,9 @@ class ResultController(args: Bundle) : MvpController<ResultContract.View, Result
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_result, container, false)
         v.resultBtnDone.setOnClickListener { _ -> activity?.finish() }
-        v.resultRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(v.context)
+        v.resultRecycler.layoutManager = LinearLayoutManager(v.context)
         v.resultRecycler.adapter = adapter
-        v.resultRecycler.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(v.context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
+        v.resultRecycler.addItemDecoration(DividerItemDecoration(v.context, DividerItemDecoration.VERTICAL))
 
         v.resultBtnDone.visibility = if (showDone) View.VISIBLE else View.GONE
         v.resultRecycler.setPadding(0, 0, 0, if (showDone) v.context.resources.getDimensionPixelOffset(R.dimen.recycler_button_bottom_padding) else 0)
@@ -33,14 +34,14 @@ class ResultController(args: Bundle) : MvpController<ResultContract.View, Result
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        getPresenter().getResult()
+        getPresenter().getResult(args.getLong(RESULT_ID))
     }
 
     override fun setResult(items: List<TriviaAdapterItem>) {
         adapter.setItems(items)
     }
 
-    override fun createPresenter() = ResultPresenter.newInstance(applicationContext!!, args.getLong(RESULT_ID))
+    override fun createPresenter(): ResultContract.Presenter = get()
 
     override fun displayError(error: String) {
         // no op
