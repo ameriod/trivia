@@ -15,7 +15,10 @@ class HistoryViewModel(
 ) : ViewModel() {
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+    // input is how the view can interact with the view model
     val inputSubject: BehaviorSubject<Any> = BehaviorSubject.create()
+    // state can only be changed in the view model
+    private val stateSubject: BehaviorSubject<State> = BehaviorSubject.create()
 
     init {
         compositeDisposable.add(inputSubject
@@ -27,14 +30,19 @@ class HistoryViewModel(
     }
 
 
-    fun getHistory(): Observable<State> = repository.getHistory()
-            .map { results ->
-                if (results.isEmpty()) State.Empty("No history") else State.Loaded(results)
+    fun getHistory(): Observable<State> = stateSubject
+            .doOnSubscribe {
+                compositeDisposable.add(repository.getHistory()
+                        .map { results ->
+                            if (results.isEmpty()) State.Empty("No history") else State.Loaded(results)
+                        }
+                        .distinctUntilChanged()
+                        .doOnNext { stateSubject.onNext(State.Loading(false)) }
+                        .doOnSubscribe { stateSubject.onNext(State.Loading(true)) }
+                        .subscribe {
+                            stateSubject.onNext(it)
+                        })
             }
-            .distinctUntilChanged()
-            .doOnNext { inputSubject.onNext(State.Loading(false)) }
-            .doOnSubscribe { inputSubject.onNext(State.Loading(true)) }
-
 
     override fun onCleared() {
         super.onCleared()
