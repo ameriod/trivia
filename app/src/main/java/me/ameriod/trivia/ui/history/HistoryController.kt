@@ -7,51 +7,55 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bluelinelabs.conductor.RouterTransaction
+import io.sellmair.disposer.Disposer
+import io.sellmair.disposer.disposeBy
 import kotlinx.android.synthetic.main.history_controller.view.*
-import me.ameriod.lib.mvp.view.MvpController
+import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.db.Result
-import me.ameriod.trivia.di.get
+import me.ameriod.trivia.di.inject
+import me.ameriod.trivia.di.viewModel
 import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.result.ResultController
+import timber.log.Timber
+import me.ameriod.trivia.di.MvvmController
 
-class HistoryController(args: Bundle) : MvpController<HistoryContract.View, HistoryContract.Presenter>(args), HistoryContract.View, TriviaBaseAdapter.OnItemClickListener {
+class HistoryController(args: Bundle) : MvvmController(args),
+        TriviaBaseAdapter.OnItemClickListener {
+
+    private val viewModel: HistoryViewModel by viewModel()
+    private val disposer: Disposer = Disposer.create()
+    private val scheduler: IObservableSchedulerRx2 by inject()
 
     private val adapter by lazy(LazyThreadSafetyMode.NONE) {
         TriviaBaseAdapter<Result>(activity!!, this)
     }
 
-    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        val v = inflater.inflate(R.layout.history_controller, container, false)
-        v.historyRecycler.layoutManager = LinearLayoutManager(v.context)
-        v.historyRecycler.adapter = adapter
-        v.historyRecycler.addItemDecoration(DividerItemDecoration(v.context, DividerItemDecoration.VERTICAL))
-        return v
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View =
+            inflater.inflate(R.layout.history_controller, container, false)
+                    .apply {
+                        historyRecycler.layoutManager = LinearLayoutManager(context)
+                        historyRecycler.adapter = adapter
+                        historyRecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+                    }
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        getPresenter().getHistory()
+         viewModel.getHistory()
+                .compose(scheduler.schedule())
+                .subscribe({ items ->
+                    adapter.setItems(items)
+                }, { throwable ->
+                    Timber.e(throwable, "Error")
+                })
+                .disposeBy(disposer)
     }
 
-    override fun setHistory(items: List<Result>) {
-        adapter.setItems(items)
-    }
 
     override fun onItemClicked(vh: TriviaBaseViewHolder<*>, position: Int) {
         val result = adapter.getItem(position)
         router.pushController(RouterTransaction.with(ResultController.newInstance(result.id!!, false)))
-    }
-
-    override fun createPresenter(): HistoryContract.Presenter = get()
-
-    override fun displayError(error: String) {
-        // no op
-    }
-
-    override fun showProgress(show: Boolean) {
-        // no op
     }
 
     companion object {

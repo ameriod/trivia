@@ -12,9 +12,7 @@ import me.ameriod.trivia.ui.filter.Filter
 import me.ameriod.trivia.ui.filter.FilterContract
 import me.ameriod.trivia.ui.filter.FilterInteractor
 import me.ameriod.trivia.ui.filter.FilterPresenter
-import me.ameriod.trivia.ui.history.HistoryContract
-import me.ameriod.trivia.ui.history.HistoryInteractor
-import me.ameriod.trivia.ui.history.HistoryPresenter
+import me.ameriod.trivia.ui.history.HistoryViewModel
 import me.ameriod.trivia.ui.quiz.Quiz
 import me.ameriod.trivia.ui.quiz.QuizContract
 import me.ameriod.trivia.ui.quiz.QuizInteractor
@@ -25,6 +23,7 @@ import me.ameriod.trivia.ui.result.ResultPresenter
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -103,12 +102,8 @@ val appModule = module {
         FilterPresenter(defaultFilter, get(), get(), get())
     }
 
-    single<HistoryContract.Interactor> {
-        HistoryInteractor(get())
-    }
-
-    single<HistoryContract.Presenter> {
-        HistoryPresenter(get(), get(), get())
+    viewModel<HistoryViewModel> {
+        HistoryViewModel(get())
     }
 
     single<QuizContract.Interactor> {
