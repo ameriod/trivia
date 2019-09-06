@@ -2,6 +2,7 @@ package me.ameriod.trivia.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStoreOwner
+import me.ameriod.trivia.ui.MvvmController
 import org.koin.android.viewmodel.ViewModelParameters
 import org.koin.android.viewmodel.ViewModelStoreOwnerDefinition
 import org.koin.android.viewmodel.getViewModel

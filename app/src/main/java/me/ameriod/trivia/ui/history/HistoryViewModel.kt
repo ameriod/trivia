@@ -9,6 +9,7 @@ class HistoryViewModel(
         private val repository: OpenTriviaRepository
 ) : ViewModel() {
 
-    fun getHistory() : Observable<List<Result>> = repository.getHistory()
+    fun getHistory(): Observable<List<Result>> = repository.getHistory()
+            .distinctUntilChanged()
 
 }
