@@ -10,11 +10,12 @@ import com.bluelinelabs.conductor.RouterTransaction
 import kotlinx.android.synthetic.main.history_controller.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.db.Result
-import me.ameriod.trivia.ui.MvvmController
 import me.ameriod.trivia.di.viewModel
+import me.ameriod.trivia.ui.MvvmController
 import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.result.ResultController
+import timber.log.Timber
 
 class HistoryController(args: Bundle) : MvvmController(args),
         TriviaBaseAdapter.OnItemClickListener {
@@ -40,8 +41,19 @@ class HistoryController(args: Bundle) : MvvmController(args),
         subscribeIo(viewModel.getHistory(), ::setItems)
     }
 
-    private fun setItems(items : List<Result>) {
-        adapter.setItems(items)
+    private fun setItems(state: HistoryViewModel.State) {
+        Timber.d("state: $state")
+        when (state) {
+            is HistoryViewModel.State.Loading -> {
+            }
+            is HistoryViewModel.State.Empty -> {
+            }
+            is HistoryViewModel.State.Error -> {
+            }
+            is HistoryViewModel.State.Loaded -> {
+                adapter.setItems(state.items)
+            }
+        }
     }
 
     override fun onItemClicked(vh: TriviaBaseViewHolder<*>, position: Int) {

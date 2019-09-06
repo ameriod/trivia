@@ -1,5 +1,6 @@
 package me.ameriod.trivia.api.db
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -8,12 +9,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.parcel.Parcelize
 import me.ameriod.trivia.R
 import me.ameriod.trivia.ui.adapter.TriviaAdapterItem
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.history.HistoryViewHolder
 import me.ameriod.trivia.ui.result.ResultItem
 
+@Parcelize
 @Entity(tableName = "results")
 data class Result(@PrimaryKey(autoGenerate = true)
                   @ColumnInfo(name = "id")
@@ -29,7 +32,7 @@ data class Result(@PrimaryKey(autoGenerate = true)
                   @ColumnInfo(name = "total_time")
                   var totalTime: Long,
                   @ColumnInfo(name = "date")
-                  var date: Long) : TriviaAdapterItem {
+                  var date: Long) : TriviaAdapterItem, Parcelable {
 
     constructor() : this(null, "[]", 0, 0, 0, 0, 0)
 
