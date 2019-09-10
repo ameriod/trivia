@@ -1,8 +1,8 @@
-package me.ameriod.trivia.di
+package me.ameriod.trivia.mvvm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStoreOwner
-import me.ameriod.trivia.ui.MvvmController
+import me.ameriod.trivia.di.getKoin
 import org.koin.android.viewmodel.ViewModelParameters
 import org.koin.android.viewmodel.ViewModelStoreOwnerDefinition
 import org.koin.android.viewmodel.getViewModel

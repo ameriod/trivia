@@ -1,4 +1,4 @@
-package me.ameriod.trivia.ui
+package me.ameriod.trivia.mvvm
 
 import android.os.Bundle
 import android.view.View

@@ -108,7 +108,7 @@ val appModule = module {
     }
 
     viewModel<HistoryViewModel> {
-        HistoryViewModel(get())
+        HistoryViewModel(androidContext(), get())
     }
 
     single<QuizContract.Interactor> {

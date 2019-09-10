@@ -4,14 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bluelinelabs.conductor.RouterTransaction
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.history_controller.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.db.Result
-import me.ameriod.trivia.di.viewModel
-import me.ameriod.trivia.ui.MvvmController
+import me.ameriod.trivia.mvvm.viewModel
+import me.ameriod.trivia.mvvm.MvvmController
 import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.result.ResultController
@@ -38,20 +40,34 @@ class HistoryController(args: Bundle) : MvvmController(args),
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        subscribeIo(viewModel.getHistory(), ::setItems)
+        subscribeIo(viewModel.stateSubject, ::setItems)
+        viewModel.getHistory()
     }
 
     private fun setItems(state: HistoryViewModel.State) {
         Timber.d("state: $state")
-        when (state) {
-            is HistoryViewModel.State.Loading -> {
-            }
-            is HistoryViewModel.State.Empty -> {
-            }
-            is HistoryViewModel.State.Error -> {
-            }
-            is HistoryViewModel.State.Loaded -> {
-                adapter.setItems(state.items)
+        view?.apply {
+            when (state) {
+                is HistoryViewModel.State.Loading -> {
+                    historyLoading.isVisible = state.show
+                    historyEmpty.isVisible = false
+                }
+                is HistoryViewModel.State.Empty -> {
+                    historyEmpty.text = state.message
+                    historyEmpty.isVisible = true
+                }
+                is HistoryViewModel.State.Error -> {
+                    Snackbar.make(this, state.message, Snackbar.LENGTH_LONG)
+                            .setAction(state.actionText) {
+                                viewModel.getHistory()
+                            }
+                            .show()
+                    historyEmpty.isVisible = false
+                }
+                is HistoryViewModel.State.Loaded -> {
+                    adapter.setItems(state.items)
+                    historyEmpty.isVisible = false
+                }
             }
         }
     }

@@ -38,5 +38,8 @@
     <string name="home_menu_title_history">History</string>
 
     <string name="history_result">%1$d/%2$d</string>
+    <string name="history_empty">No Quiz History\nTake a Quiz to get Started</string>
+    <string name="history_error">Error loading History</string>
+    <string name="history_error_action">Retry</string>
 
 </resources>
