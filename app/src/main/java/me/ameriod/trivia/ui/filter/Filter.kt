@@ -1,16 +1,17 @@
 package me.ameriod.trivia.ui.filter
 
 import android.content.Context
-import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import me.ameriod.trivia.api.response.OtCategory
 import me.ameriod.trivia.api.response.OtDifficulty
 
 @Parcelize
-data class Filter(var count: Int = 10,
-                  var difficulty: OtDifficulty,
-                  var category: OtCategory) : Parcelable {
+data class Filter(
+        var count: Int = 10,
+        var difficulty: OtDifficulty,
+        var category: OtCategory
+) : Parcelable {
 
     companion object {
 

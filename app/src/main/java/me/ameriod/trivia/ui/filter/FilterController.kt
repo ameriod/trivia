@@ -11,22 +11,24 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.SeekBar
+import androidx.core.view.isVisible
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.controller_filter.view.*
-import me.ameriod.lib.mvp.view.MvpController
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.OtCategory
 import me.ameriod.trivia.api.response.OtDifficulty
-import me.ameriod.trivia.di.get
+import me.ameriod.trivia.mvvm.MvvmController
+import me.ameriod.trivia.mvvm.viewModel
 import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.quiz.Quiz
 import me.ameriod.trivia.ui.quiz.QuizActivity
 
 
-class FilterController(args: Bundle) : MvpController<FilterContract.View, FilterContract.Presenter>(args), View.OnClickListener,
-        AdapterView.OnItemSelectedListener, FilterContract.View, TriviaBaseAdapter.OnItemClickListener {
+class FilterController(args: Bundle) : MvvmController(args), View.OnClickListener,
+        AdapterView.OnItemSelectedListener, TriviaBaseAdapter.OnItemClickListener {
 
+    private val viewModel: FilterViewModel by viewModel()
     private var snackbar: Snackbar? = null
 
     private val difficultyAdapter: DifficultyAdapter by lazy {
@@ -37,7 +39,7 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
         TriviaBaseAdapter<OtCategory>(activity!!, this)
     }
 
-    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.controller_filter, container, false)
         v.filterBtnStart.setOnClickListener(this)
         v.filterDifficultySpinner.adapter = difficultyAdapter
@@ -48,19 +50,14 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
                 androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
         v.filterCategoriesRecycler.adapter = categoryAdapter
 
-        return v
-    }
-
-    override fun onPostCreateView(view: View, container: ViewGroup) {
-        super.onPostCreateView(view, container)
         // Setup the seek bar
-        view.filterCount.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        v.filterCount.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 // un-zero index
                 if (fromUser) {
                     val display = (progress + 1).toString()
-                    view.filterCountEt.setText(display)
-                    view.filterCountEt.setSelection(display.length)
+                    v.filterCountEt.setText(display)
+                    v.filterCountEt.setSelection(display.length)
                 }
             }
 
@@ -73,7 +70,7 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
             }
         })
 
-        view.filterCountEt.addTextChangedListener(object : TextWatcher {
+        v.filterCountEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 // no op
             }
@@ -93,27 +90,27 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
                     input = 50
                 }
                 // set the progress
-                view.filterCount.postDelayed({
-                    view.filterCount.progress = input - 1
+                v.filterCount.postDelayed({
+                    v.filterCount.progress = input - 1
                 }, 0)
 
-                getPresenter().setCount(input)
+                // getPresenter().setCount(input)
             }
         })
+        return v
     }
 
-
-    override fun setCategories(categories: List<OtCategory>, selectedItem: OtCategory) {
+    private fun setCategories(categories: List<OtCategory>, selectedItem: OtCategory) {
         categoryAdapter.setItems(categories)
         categoryAdapter.setSingleSelected(selectedItem)
     }
 
-    override fun setDifficulties(difficulties: List<OtDifficulty>, selectedItem: OtDifficulty) {
+    private fun setDifficulties(difficulties: List<OtDifficulty>, selectedItem: OtDifficulty) {
         difficultyAdapter.setItems(difficulties)
         view!!.filterDifficultySpinner.setSelection(difficultyAdapter.getPositionForItem(selectedItem))
     }
 
-    override fun setQuestionCount(count: String) {
+    private fun setQuestionCount(count: String) {
         val v = view!!
         // the edit text will set the seek bar
         v.filterCountEt.setText(count)
@@ -122,7 +119,34 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        getPresenter().getFilter()
+        subscribeIo(viewModel.stateSubject, ::setState)
+        viewModel.getFilters()
+    }
+
+    private fun setState(state: FilterViewModel.State) {
+        view?.apply {
+            when (state) {
+                is FilterViewModel.State.Loading -> {
+                    filterLoading.isVisible = state.show
+                }
+                is FilterViewModel.State.Error -> {
+                    snackbar = Snackbar.make(this, state.message, Snackbar.LENGTH_INDEFINITE)
+                            .setAction(state.actionText) {
+                                state.action
+                            }
+                    snackbar?.show()
+                }
+                is FilterViewModel.State.Loaded -> {
+                    setCategories(state.categories, state.selectedFilter.category)
+                    setDifficulties(state.difficulties, state.selectedFilter.difficulty)
+                    setQuestionCount(state.selectedFilter.count.toString())
+                }
+                is FilterViewModel.State.QuizLoaded -> {
+                    setQuiz(state.quiz)
+                }
+            }
+        }
+
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -130,54 +154,37 @@ class FilterController(args: Bundle) : MvpController<FilterContract.View, Filter
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        getPresenter().setDifficulty(difficultyAdapter.getItem(position))
+        //  getPresenter().setDifficulty(difficultyAdapter.getItem(position))
         dropKeyboard()
     }
 
     override fun onClick(v: View) {
-        val view = view!!
         when (v) {
-            view.filterBtnStart -> getPresenter().getQuestions()
+            view?.filterBtnStart -> viewModel.getQuiz()
         }
     }
 
     override fun onItemClicked(vh: TriviaBaseViewHolder<*>, position: Int) {
         val category = categoryAdapter.getItem(position)
         categoryAdapter.setSingleSelected(category)
-        getPresenter().setCategory(category)
+        //  getPresenter().setCategory(category)
         dropKeyboard()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE) {
-            getPresenter().resetFilter()
+            viewModel.resetFilter()
             dropKeyboard()
         }
     }
 
-    override fun setQuiz(quiz: Quiz) {
+    private fun setQuiz(quiz: Quiz) {
         if (quiz.isQuizDone()) {
             Snackbar.make(view!!, R.string.filter_no_more, Snackbar.LENGTH_SHORT).show()
         } else {
             startActivityForResult(QuizActivity.getLaunchIntent(activity!!, quiz), REQUEST_CODE)
         }
-    }
-
-    override fun createPresenter(): FilterContract.Presenter = get()
-
-    override fun displayError(error: String) {
-        snackbar = Snackbar.make(view!!, error, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.filter_retry) { _ ->
-                    if (difficultyAdapter.isEmpty) getPresenter().getFilter() else getPresenter().getQuestions()
-                }
-        snackbar!!.show()
-    }
-
-    override fun showProgress(show: Boolean) {
-        view?.filterLoading?.visibility = if (show) View.VISIBLE else View.GONE
-        snackbar?.dismiss()
-        snackbar = null
     }
 
     private fun dropKeyboard() {

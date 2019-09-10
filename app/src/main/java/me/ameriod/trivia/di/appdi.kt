@@ -8,10 +8,7 @@ import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
 import me.ameriod.trivia.api.OpenTriviaRepository
 import me.ameriod.trivia.api.OpenTriviaService
 import me.ameriod.trivia.api.db.TriviaDatabase
-import me.ameriod.trivia.ui.filter.Filter
-import me.ameriod.trivia.ui.filter.FilterContract
-import me.ameriod.trivia.ui.filter.FilterInteractor
-import me.ameriod.trivia.ui.filter.FilterPresenter
+import me.ameriod.trivia.ui.filter.FilterViewModel
 import me.ameriod.trivia.ui.history.HistoryViewModel
 import me.ameriod.trivia.ui.quiz.Quiz
 import me.ameriod.trivia.ui.quiz.QuizContract
@@ -98,17 +95,21 @@ val appModule = module {
         IObservableSchedulerRx2.SUBSCRIBE_COMPUTATION_OBSERVE_ANDROID_MAIN
     }
 
-    single<FilterContract.Interactor> {
-        FilterInteractor(get())
+    viewModel {
+        FilterViewModel(androidContext(), get(), get())
     }
 
-    single<FilterContract.Presenter> {
-        val defaultFilter = Filter.createDefault(androidContext())
-        FilterPresenter(defaultFilter, get(), get(), get())
-    }
+//    single<FilterContract.Interactor> {
+//        FilterInteractor(get())
+//    }
+//
+//    single<FilterContract.Presenter> {
+//        val defaultFilter = Filter.createDefault(androidContext())
+//        FilterPresenter(defaultFilter, get(), get(), get())
+//    }
 
-    viewModel<HistoryViewModel> {
-        HistoryViewModel(androidContext(), get())
+    viewModel {
+        HistoryViewModel(androidContext(), get(), get())
     }
 
     single<QuizContract.Interactor> {

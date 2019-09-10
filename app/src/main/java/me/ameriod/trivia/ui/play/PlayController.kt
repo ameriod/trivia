@@ -11,34 +11,34 @@ import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.OtCategory
 import me.ameriod.trivia.api.response.OtDifficulty
 import me.ameriod.trivia.di.get
+import me.ameriod.trivia.mvvm.MvvmController
 import me.ameriod.trivia.ui.filter.FilterContract
 import me.ameriod.trivia.ui.quiz.Quiz
 import me.ameriod.trivia.ui.quiz.QuizActivity
 
-class PlayController(args: Bundle) : MvpController<FilterContract.View, FilterContract.Presenter>(args),
-        FilterContract.View, View.OnClickListener {
-
-
-    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
+class PlayController(args: Bundle) : MvvmController(args), View.OnClickListener {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.play_controller, container, false)
         v.setOnClickListener(this)
         return v
     }
 
-    override fun createPresenter(): FilterContract.Presenter = get()
-    override fun displayError(error: String) {
+
+    //override fun createPresenter(): FilterContract.Presenter = get()
+
+     fun displayError(error: String) {
         Snackbar.make(view!!, error, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.filter_retry) { _ ->
-                    getPresenter().getQuestions()
+                  //  getPresenter().getQuestions()
                 }.show()
     }
 
-    override fun showProgress(show: Boolean) {
+     fun showProgress(show: Boolean) {
         view?.isEnabled = !show
         view?.playLoading?.visibility = if (show) View.VISIBLE else View.GONE
     }
 
-    override fun setQuiz(quiz: Quiz) {
+     fun setQuiz(quiz: Quiz) {
         if (quiz.isQuizDone()) {
             Snackbar.make(view!!, R.string.filter_no_more, Snackbar.LENGTH_SHORT).show()
         } else {
@@ -47,20 +47,20 @@ class PlayController(args: Bundle) : MvpController<FilterContract.View, FilterCo
     }
 
     override fun onClick(v: View?) {
-        getPresenter().getQuestions()
+      //  getPresenter().getQuestions()
     }
 
-    override fun setQuestionCount(count: String) {
-        // no op
-    }
-
-    override fun setCategories(categories: List<OtCategory>, selectedItem: OtCategory) {
-        // no op
-    }
-
-    override fun setDifficulties(difficulties: List<OtDifficulty>, selectedItem: OtDifficulty) {
-        // no op
-    }
+//    override fun setQuestionCount(count: String) {
+//        // no op
+//    }
+//
+//    override fun setCategories(categories: List<OtCategory>, selectedItem: OtCategory) {
+//        // no op
+//    }
+//
+//    override fun setDifficulties(difficulties: List<OtDifficulty>, selectedItem: OtDifficulty) {
+//        // no op
+//    }
 
     companion object {
 

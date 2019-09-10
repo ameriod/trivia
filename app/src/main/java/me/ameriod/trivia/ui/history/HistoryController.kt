@@ -12,8 +12,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.history_controller.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.db.Result
-import me.ameriod.trivia.mvvm.viewModel
 import me.ameriod.trivia.mvvm.MvvmController
+import me.ameriod.trivia.mvvm.viewModel
 import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.result.ResultController
@@ -23,6 +23,7 @@ class HistoryController(args: Bundle) : MvvmController(args),
         TriviaBaseAdapter.OnItemClickListener {
 
     private val viewModel: HistoryViewModel by viewModel()
+    private var snackbar: Snackbar? = null
 
     private val adapter by lazy(LazyThreadSafetyMode.NONE) {
         TriviaBaseAdapter<Result>(activity!!, this)
@@ -45,31 +46,31 @@ class HistoryController(args: Bundle) : MvvmController(args),
     }
 
     private fun setItems(state: HistoryViewModel.State) {
-        Timber.d("state: $state")
         view?.apply {
             when (state) {
                 is HistoryViewModel.State.Loading -> {
                     historyLoading.isVisible = state.show
-                    historyEmpty.isVisible = false
                 }
                 is HistoryViewModel.State.Empty -> {
-                    historyEmpty.text = state.message
-                    historyEmpty.isVisible = true
+                    historyEmpty.isVisible = state.show
                 }
                 is HistoryViewModel.State.Error -> {
-                    Snackbar.make(this, state.message, Snackbar.LENGTH_LONG)
+                    snackbar = Snackbar.make(this, state.message, Snackbar.LENGTH_INDEFINITE)
                             .setAction(state.actionText) {
-                                viewModel.getHistory()
+                                state.action
                             }
-                            .show()
-                    historyEmpty.isVisible = false
+                    snackbar?.show()
                 }
                 is HistoryViewModel.State.Loaded -> {
                     adapter.setItems(state.items)
-                    historyEmpty.isVisible = false
                 }
             }
         }
+    }
+
+    override fun onDetach(view: View) {
+        super.onDetach(view)
+        snackbar?.show()
     }
 
     override fun onItemClicked(vh: TriviaBaseViewHolder<*>, position: Int) {
