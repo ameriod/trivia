@@ -41,7 +41,7 @@ class HistoryController(args: Bundle) : MvvmController(args),
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        subscribeIo(viewModel.stateSubject, ::setItems)
+        subscribeIo(viewModel.getStateObservable(), ::setItems)
         viewModel.getHistory()
     }
 

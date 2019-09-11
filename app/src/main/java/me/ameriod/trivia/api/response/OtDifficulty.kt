@@ -7,8 +7,10 @@ import kotlinx.android.parcel.Parcelize
 import me.ameriod.trivia.R
 
 @Parcelize
-data class OtDifficulty(val display: String,
-                        val value: String?) : Parcelable {
+data class OtDifficulty(
+        val display: String,
+        val value: String?
+) : Parcelable {
 
     companion object {
         @JvmStatic

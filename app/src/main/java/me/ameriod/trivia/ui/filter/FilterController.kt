@@ -53,48 +53,24 @@ class FilterController(args: Bundle) : MvvmController(args), View.OnClickListene
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        subscribeIo(viewModel.stateSubject
+        subscribeIo(viewModel.getStateObservable()
                 .distinctUntilChanged(), ::setState)
+
         viewModel.getFilters()
 
         subscribe(RxTextView.afterTextChangeEvents(view.filterCountEt)
                 .skipInitialValue()
-                .map { it.editable()?.toString() ?: "" }
-                .map { value ->
-                    var input = 1
-                    if (value.isNotEmpty()) {
-                        input = value.toInt()
-                    }
-                    if (input <= 0) {
-                        input = 1
-                    } else if (input > 50) {
-                        input = 50
-                    }
-                    input
-                }) { count ->
-            // Set the progress bar
-            view.filterCountSeekBar.postDelayed({
-                view.filterCountSeekBar.progress = count - 1
-            }, 0)
-
-            // update the view model
-            viewModel.setQuestionCount(count)
-        }
+                .map {
+                    it.editable()?.toString()?.toIntOrNull() ?: 0
+                }, viewModel.takeQuestionCount())
 
         subscribe(RxSeekBar.userChanges(view.filterCountSeekBar)
-                .map { it + 1 }) { count ->
-            val display = count.toString()
-            view.filterCountEt.setText(display)
-            view.filterCountEt.setSelection(display.length)
-            viewModel.setQuestionCount(count)
-        }
+                // Seek bar is zero indexed
+                .map { it + 1 }, viewModel.takeQuestionCount())
 
         subscribe(RxAdapterView.itemSelections(view.filterDifficultySpinner)
-                .skipInitialValue()) { position ->
-            viewModel.setDifficulty(difficultyAdapter.getItem(position))
-            dropKeyboard()
-        }
-
+                .skipInitialValue()
+                .map { difficultyAdapter.getItem(it) }, viewModel.takeDifficulty())
 
     }
 
@@ -138,6 +114,10 @@ class FilterController(args: Bundle) : MvvmController(args), View.OnClickListene
             // the edit text will set the seek bar
             filterCountEt.setText(count)
             filterCountEt.setSelection(count.length)
+            // Set the seekbar
+            filterCountSeekBar.postDelayed({
+                filterCountSeekBar.progress = count.toInt() - 1
+            }, 0)
         }
     }
 

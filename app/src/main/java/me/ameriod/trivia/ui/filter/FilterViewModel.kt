@@ -2,7 +2,11 @@ package me.ameriod.trivia.ui.filter
 
 import android.content.Context
 import io.reactivex.Observable
+import io.reactivex.functions.Action
 import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Consumer
+import io.reactivex.functions.Function
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.parcel.Parcelize
 import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
 import me.ameriod.trivia.R
@@ -13,6 +17,8 @@ import me.ameriod.trivia.mvvm.BaseViewModel
 import me.ameriod.trivia.mvvm.BaseViewState
 import me.ameriod.trivia.ui.quiz.Quiz
 import timber.log.Timber
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
 
 class FilterViewModel(
         private val context: Context,
@@ -23,6 +29,51 @@ class FilterViewModel(
     private var filter: Filter = Filter.createDefault(context)
     private var difficulties: List<OtDifficulty> = emptyList()
     private var categories: List<OtCategory> = emptyList()
+
+    private val questionCountSubject: BehaviorSubject<Int> = BehaviorSubject.create()
+    private val categorySubject: BehaviorSubject<OtCategory> = BehaviorSubject.create()
+    private val difficultySubject: BehaviorSubject<OtDifficulty> = BehaviorSubject.create()
+
+    init {
+        addToDisposable(questionCountSubject
+                .map { value ->
+                    // Can only be 1 to 50
+                    var input = value
+                    if (input <= 0) {
+                        input = 1
+                    } else if (input > 50) {
+                        input = 50
+                    }
+                    input
+                }
+                .distinctUntilChanged()
+                .compose(scheduler.schedule())
+                .subscribe({
+                    filter = filter.copy(count = it)
+                    getFilters()
+                }, {
+                    Timber.e(it, "Error observing question count")
+                }))
+
+        addToDisposable(categorySubject
+                .distinctUntilChanged()
+                .subscribe({ newCategory ->
+                    categories.forEach { it.selected = it == newCategory }
+                    filter = filter.copy(category = newCategory)
+                    getFilters()
+                }, {
+                    Timber.e(it, "Error observing selected category")
+                }))
+
+        addToDisposable(difficultySubject
+                .distinctUntilChanged()
+                .subscribe({
+                    filter = filter.copy(difficulty = it)
+                    getFilters()
+                }, {
+                    Timber.e(it, "Error observing selected category")
+                }))
+    }
 
     fun getFilters() {
         if (difficulties.isEmpty() || categories.isEmpty()) {
@@ -63,13 +114,10 @@ class FilterViewModel(
         repository.getQuiz(filter)
         stateSubject.onNext(State.Loading(true))
         addToDisposable(repository.getQuiz(filter)
-                .map {
-                    State.QuizLoaded(it)
-                }
                 .compose(scheduler.schedule())
                 .subscribe({
                     stateSubject.onNext(State.Loading(false))
-                    stateSubject.onNext(it)
+                    stateSubject.onNext(State.QuizLoaded(it))
                 }, {
                     stateSubject.onNext(State.Loading(false))
                     Timber.e(it, "Error loading the quiz")
@@ -82,18 +130,18 @@ class FilterViewModel(
 
     }
 
-    fun setQuestionCount(count: Int) {
-        filter = filter.copy(count = count)
-    }
+    /**
+     * Can also be a RxJava [Consumer]
+     */
+    fun takeQuestionCount(): (Int) -> Unit = { questionCountSubject.onNext(it) }
 
-    fun setDifficulty(difficulty: OtDifficulty) {
-        filter = filter.copy(difficulty = difficulty)
-    }
+    /**
+     * Can also be a RxJava [Consumer]
+     */
+    fun takeDifficulty(): (OtDifficulty) -> Unit = { difficultySubject.onNext(it) }
 
     fun setCategories(category: OtCategory) {
-        categories.forEach { it.selected = it == category }
-        filter = filter.copy(category = category)
-        getFilters()
+        categorySubject.onNext(category)
     }
 
     fun resetFilter() {

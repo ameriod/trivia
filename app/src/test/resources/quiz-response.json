@@ -1,0 +1,121 @@
+{
+  "response_code": 0,
+  "results": [
+    {
+      "category": "Science: Computers",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "In web design, what does CSS stand for?",
+      "correct_answer": "Cascading Style Sheet",
+      "incorrect_answers": [
+        "Counter Strike: Source",
+        "Corrective Style Sheet",
+        "Computer Style Sheet"
+      ]
+    },
+    {
+      "category": "Entertainment: Books",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What is the name of the protagonist of J.D. Salinger&#039;s novel Catcher in the Rye?",
+      "correct_answer": "Holden Caulfield",
+      "incorrect_answers": [
+        "Fletcher Christian",
+        "Jay Gatsby",
+        "Randall Flagg"
+      ]
+    },
+    {
+      "category": "Entertainment: Video Games",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "In Overwatch, how old is Reinhardt Wilhelm?",
+      "correct_answer": "61",
+      "incorrect_answers": [
+        "59",
+        "65",
+        "62"
+      ]
+    },
+    {
+      "category": "Entertainment: Television",
+      "type": "boolean",
+      "difficulty": "medium",
+      "question": "Like his character in &quot;Parks and Recreation&quot;, Aziz Ansari was born in South Carolina.",
+      "correct_answer": "True",
+      "incorrect_answers": [
+        "False"
+      ]
+    },
+    {
+      "category": "Entertainment: Video Games",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "In the Zombies mode of &quot;Call of Duty: Black Ops&quot;, what is the &quot;Pack-A-Punched&quot; version of the &quot;Galil&quot; called?",
+      "correct_answer": "Lamentation",
+      "incorrect_answers": [
+        "Galvanized Atomic Lead Insertion Liquidator",
+        "Gabig",
+        "Predictive Death Wish"
+      ]
+    },
+    {
+      "category": "Entertainment: Television",
+      "type": "boolean",
+      "difficulty": "easy",
+      "question": "In &quot;Doctor Who&quot;, the Doctor gets his TARDIS by stealing it.",
+      "correct_answer": "True",
+      "incorrect_answers": [
+        "False"
+      ]
+    },
+    {
+      "category": "Entertainment: Books",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "What is the make and model of the tour vehicles in &quot;Jurassic Park&quot;?",
+      "correct_answer": "1992 Toyota Land Cruiser",
+      "incorrect_answers": [
+        "1992 Jeep Wrangler YJ Sahar",
+        "1992 Ford Explorer XLT",
+        "Mercedes M-Class"
+      ]
+    },
+    {
+      "category": "Entertainment: Japanese Anime & Manga",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "In Haikyuu!!, who is not a member of Karasuno VBC?",
+      "correct_answer": "Shigeru Yahaba",
+      "incorrect_answers": [
+        "Tadashi Yamaguchi",
+        "Hisashi Kinoshita",
+        "Kazuhito Narita"
+      ]
+    },
+    {
+      "category": "Entertainment: Music",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Pamina and Papageno are characters in what Mozart opera?",
+      "correct_answer": "The Magic Flute",
+      "incorrect_answers": [
+        "The Marriage of Figaro",
+        "The Impresario",
+        "The Goose of Cairo"
+      ]
+    },
+    {
+      "category": "Entertainment: Music",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "According to the RIAA: Which artist has sold the most albums by the million?",
+      "correct_answer": "The Beatles",
+      "incorrect_answers": [
+        "Elvis Presley",
+        "Michael Jackson",
+        "Pink Floyd"
+      ]
+    }
+  ]
+}
