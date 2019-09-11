@@ -3,16 +3,17 @@ package me.ameriod.trivia.ui.filter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.SeekBar
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.jakewharton.rxbinding2.widget.RxAdapterView
+import com.jakewharton.rxbinding2.widget.RxSeekBar
+import com.jakewharton.rxbinding2.widget.RxTextView
 import kotlinx.android.synthetic.main.controller_filter.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.OtCategory
@@ -26,7 +27,7 @@ import me.ameriod.trivia.ui.quiz.QuizActivity
 
 
 class FilterController(args: Bundle) : MvvmController(args), View.OnClickListener,
-        AdapterView.OnItemSelectedListener, TriviaBaseAdapter.OnItemClickListener {
+        TriviaBaseAdapter.OnItemClickListener {
 
     private val viewModel: FilterViewModel by viewModel()
     private var snackbar: Snackbar? = null
@@ -39,88 +40,62 @@ class FilterController(args: Bundle) : MvvmController(args), View.OnClickListene
         TriviaBaseAdapter<OtCategory>(activity!!, this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
-        val v = inflater.inflate(R.layout.controller_filter, container, false)
-        v.filterBtnStart.setOnClickListener(this)
-        v.filterDifficultySpinner.adapter = difficultyAdapter
-        v.filterDifficultySpinner.onItemSelectedListener = this
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View =
+            inflater.inflate(R.layout.controller_filter, container, false).apply {
+                filterBtnStart.setOnClickListener(this@FilterController)
+                filterDifficultySpinner.adapter = difficultyAdapter
 
-        v.filterCategoriesRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(v.context)
-        v.filterCategoriesRecycler.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(v.context,
-                androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
-        v.filterCategoriesRecycler.adapter = categoryAdapter
-
-        // Setup the seek bar
-        v.filterCount.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                // un-zero index
-                if (fromUser) {
-                    val display = (progress + 1).toString()
-                    v.filterCountEt.setText(display)
-                    v.filterCountEt.setSelection(display.length)
-                }
+                filterCategoriesRecycler.layoutManager = LinearLayoutManager(context)
+                filterCategoriesRecycler.addItemDecoration(DividerItemDecoration(context,
+                        DividerItemDecoration.VERTICAL))
+                filterCategoriesRecycler.adapter = categoryAdapter
             }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                // no op
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                // no op
-            }
-        })
-
-        v.filterCountEt.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                // no op
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // no op
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                var input = 1
-                if (s.isNotEmpty()) {
-                    input = s.toString().toInt()
-                }
-                if (input <= 0) {
-                    input = 1
-                } else if (input > 50) {
-                    input = 50
-                }
-                // set the progress
-                v.filterCount.postDelayed({
-                    v.filterCount.progress = input - 1
-                }, 0)
-
-                // getPresenter().setCount(input)
-            }
-        })
-        return v
-    }
-
-    private fun setCategories(categories: List<OtCategory>, selectedItem: OtCategory) {
-        categoryAdapter.setItems(categories)
-        categoryAdapter.setSingleSelected(selectedItem)
-    }
-
-    private fun setDifficulties(difficulties: List<OtDifficulty>, selectedItem: OtDifficulty) {
-        difficultyAdapter.setItems(difficulties)
-        view!!.filterDifficultySpinner.setSelection(difficultyAdapter.getPositionForItem(selectedItem))
-    }
-
-    private fun setQuestionCount(count: String) {
-        val v = view!!
-        // the edit text will set the seek bar
-        v.filterCountEt.setText(count)
-        v.filterCountEt.setSelection(count.length)
-    }
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        subscribeIo(viewModel.stateSubject, ::setState)
+        subscribeIo(viewModel.stateSubject
+                .distinctUntilChanged(), ::setState)
         viewModel.getFilters()
+
+        subscribe(RxTextView.afterTextChangeEvents(view.filterCountEt)
+                .skipInitialValue()
+                .map { it.editable()?.toString() ?: "" }
+                .map { value ->
+                    var input = 1
+                    if (value.isNotEmpty()) {
+                        input = value.toInt()
+                    }
+                    if (input <= 0) {
+                        input = 1
+                    } else if (input > 50) {
+                        input = 50
+                    }
+                    input
+                }) { count ->
+            // Set the progress bar
+            view.filterCountSeekBar.postDelayed({
+                view.filterCountSeekBar.progress = count - 1
+            }, 0)
+
+            // update the view model
+            viewModel.setQuestionCount(count)
+        }
+
+        subscribe(RxSeekBar.userChanges(view.filterCountSeekBar)
+                .map { it + 1 }) { count ->
+            val display = count.toString()
+            view.filterCountEt.setText(display)
+            view.filterCountEt.setSelection(display.length)
+            viewModel.setQuestionCount(count)
+        }
+
+        subscribe(RxAdapterView.itemSelections(view.filterDifficultySpinner)
+                .skipInitialValue()) { position ->
+            viewModel.setDifficulty(difficultyAdapter.getItem(position))
+            dropKeyboard()
+        }
+
+
     }
 
     private fun setState(state: FilterViewModel.State) {
@@ -146,16 +121,24 @@ class FilterController(args: Bundle) : MvvmController(args), View.OnClickListene
                 }
             }
         }
-
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        // no op
+    private fun setCategories(categories: List<OtCategory>, selectedItem: OtCategory) {
+        categoryAdapter.setItems(categories)
+        categoryAdapter.setSingleSelected(selectedItem)
     }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        //  getPresenter().setDifficulty(difficultyAdapter.getItem(position))
-        dropKeyboard()
+    private fun setDifficulties(difficulties: List<OtDifficulty>, selectedItem: OtDifficulty) {
+        difficultyAdapter.setItems(difficulties)
+        view?.filterDifficultySpinner?.setSelection(difficultyAdapter.getPositionForItem(selectedItem))
+    }
+
+    private fun setQuestionCount(count: String) {
+        view?.apply {
+            // the edit text will set the seek bar
+            filterCountEt.setText(count)
+            filterCountEt.setSelection(count.length)
+        }
     }
 
     override fun onClick(v: View) {
@@ -167,7 +150,7 @@ class FilterController(args: Bundle) : MvvmController(args), View.OnClickListene
     override fun onItemClicked(vh: TriviaBaseViewHolder<*>, position: Int) {
         val category = categoryAdapter.getItem(position)
         categoryAdapter.setSingleSelected(category)
-        //  getPresenter().setCategory(category)
+        viewModel.setCategories(category)
         dropKeyboard()
     }
 

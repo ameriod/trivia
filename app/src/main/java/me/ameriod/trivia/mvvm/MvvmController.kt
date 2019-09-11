@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
@@ -47,6 +48,21 @@ abstract class MvvmController : LifecycleController, ViewModelStoreOwner {
     override fun onDetach(view: View) {
         super.onDetach(view)
         compositeDisposable?.dispose()
+    }
+
+    protected fun <T> subscribe(observable: Observable<T>,
+                                onNext: (result: T) -> Unit,
+                                onError: (throwable: Throwable) -> Unit) {
+        addToDisposable(observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onNext, onError))
+    }
+
+    protected fun <T> subscribe(observable: Observable<T>,
+                                onNext: (result: T) -> Unit) {
+        subscribe(observable = observable,
+                onNext = onNext,
+                onError = { Timber.e(it, "Error") })
     }
 
     protected fun <T> subscribeIo(observable: Observable<T>,

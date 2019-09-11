@@ -21,29 +21,42 @@ class FilterViewModel(
 ) : BaseViewModel<FilterViewModel.State>(scheduler) {
 
     private var filter: Filter = Filter.createDefault(context)
+    private var difficulties: List<OtDifficulty> = emptyList()
+    private var categories: List<OtCategory> = emptyList()
 
     fun getFilters() {
-        stateSubject.onNext(State.Loading(true))
-        addToDisposable(Observable.zip(repository.getDifficulties(), repository.getCategories(),
-                BiFunction { difficulty: List<OtDifficulty>, category: List<OtCategory> ->
-                    State.Loaded(
-                            difficulties = difficulty,
-                            categories = category,
-                            selectedFilter = filter
-                    )
-                })
-                .compose(scheduler.schedule())
-                .subscribe({
-                    stateSubject.onNext(it)
-                    stateSubject.onNext(State.Loading(false))
-                }, {
-                    Timber.e(it, "Error loading the filters")
-                    stateSubject.onNext(State.Error(
-                            message = context.getString(R.string.filter_api_error),
-                            actionText = context.getString(R.string.filter_retry),
-                            action = getFilters()
-                    ))
-                }))
+        if (difficulties.isEmpty() || categories.isEmpty()) {
+            stateSubject.onNext(State.Loading(true))
+            addToDisposable(Observable.zip(repository.getDifficulties(), repository.getCategories(),
+                    BiFunction { difficulty: List<OtDifficulty>, category: List<OtCategory> ->
+                        State.Loaded(
+                                difficulties = difficulty,
+                                categories = category,
+                                selectedFilter = filter
+                        )
+                    })
+                    .compose(scheduler.schedule())
+                    .subscribe({
+                        difficulties = it.difficulties
+                        categories = it.categories
+                        stateSubject.onNext(it)
+                        stateSubject.onNext(State.Loading(false))
+                    }, {
+                        Timber.e(it, "Error loading the filters")
+                        stateSubject.onNext(State.Error(
+                                message = context.getString(R.string.filter_api_error),
+                                actionText = context.getString(R.string.filter_retry),
+                                action = getFilters()
+                        ))
+                    }))
+        } else {
+            stateSubject.onNext(State.Loaded(
+                    difficulties = difficulties,
+                    categories = categories,
+                    selectedFilter = filter
+            ))
+        }
+
     }
 
     fun getQuiz() {
@@ -58,6 +71,7 @@ class FilterViewModel(
                     stateSubject.onNext(State.Loading(false))
                     stateSubject.onNext(it)
                 }, {
+                    stateSubject.onNext(State.Loading(false))
                     Timber.e(it, "Error loading the quiz")
                     stateSubject.onNext(State.Error(
                             message = context.getString(R.string.filter_api_error),
@@ -66,6 +80,20 @@ class FilterViewModel(
                     ))
                 }))
 
+    }
+
+    fun setQuestionCount(count: Int) {
+        filter = filter.copy(count = count)
+    }
+
+    fun setDifficulty(difficulty: OtDifficulty) {
+        filter = filter.copy(difficulty = difficulty)
+    }
+
+    fun setCategories(category: OtCategory) {
+        categories.forEach { it.selected = it == category }
+        filter = filter.copy(category = category)
+        getFilters()
     }
 
     fun resetFilter() {
@@ -91,7 +119,7 @@ class FilterViewModel(
         data class Error(
                 val message: String,
                 val actionText: String,
-                val action : (Unit)
+                val action: (Unit)
         ) : State()
 
         @Parcelize

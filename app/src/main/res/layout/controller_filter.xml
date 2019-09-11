@@ -35,7 +35,7 @@
                     android:paddingBottom="@dimen/filter_padding_vert">
 
                     <SeekBar
-                        android:id="@+id/filterCount"
+                        android:id="@+id/filterCountSeekBar"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -83,6 +83,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        tools:listitem="@layout/category_item"
         android:id="@+id/filterCategoriesRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

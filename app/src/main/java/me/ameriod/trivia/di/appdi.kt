@@ -99,15 +99,6 @@ val appModule = module {
         FilterViewModel(androidContext(), get(), get())
     }
 
-//    single<FilterContract.Interactor> {
-//        FilterInteractor(get())
-//    }
-//
-//    single<FilterContract.Presenter> {
-//        val defaultFilter = Filter.createDefault(androidContext())
-//        FilterPresenter(defaultFilter, get(), get(), get())
-//    }
-
     viewModel {
         HistoryViewModel(androidContext(), get(), get())
     }

@@ -6,13 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.play_controller.view.*
-import me.ameriod.lib.mvp.view.MvpController
 import me.ameriod.trivia.R
-import me.ameriod.trivia.api.response.OtCategory
-import me.ameriod.trivia.api.response.OtDifficulty
-import me.ameriod.trivia.di.get
 import me.ameriod.trivia.mvvm.MvvmController
-import me.ameriod.trivia.ui.filter.FilterContract
 import me.ameriod.trivia.ui.quiz.Quiz
 import me.ameriod.trivia.ui.quiz.QuizActivity
 
@@ -26,19 +21,19 @@ class PlayController(args: Bundle) : MvvmController(args), View.OnClickListener 
 
     //override fun createPresenter(): FilterContract.Presenter = get()
 
-     fun displayError(error: String) {
+    fun displayError(error: String) {
         Snackbar.make(view!!, error, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.filter_retry) { _ ->
-                  //  getPresenter().getQuestions()
+                    //  getPresenter().getQuestions()
                 }.show()
     }
 
-     fun showProgress(show: Boolean) {
+    fun showProgress(show: Boolean) {
         view?.isEnabled = !show
         view?.playLoading?.visibility = if (show) View.VISIBLE else View.GONE
     }
 
-     fun setQuiz(quiz: Quiz) {
+    fun setQuiz(quiz: Quiz) {
         if (quiz.isQuizDone()) {
             Snackbar.make(view!!, R.string.filter_no_more, Snackbar.LENGTH_SHORT).show()
         } else {
@@ -47,7 +42,7 @@ class PlayController(args: Bundle) : MvvmController(args), View.OnClickListener 
     }
 
     override fun onClick(v: View?) {
-      //  getPresenter().getQuestions()
+        //  getPresenter().getQuestions()
     }
 
 //    override fun setQuestionCount(count: String) {
