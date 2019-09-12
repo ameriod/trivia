@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.snackbar.Snackbar
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.history_controller.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.db.Result
@@ -41,7 +42,7 @@ class HistoryController(args: Bundle) : MvvmController(args),
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        subscribeIo(viewModel.getStateObservable(), ::setItems)
+        subscribeIo(viewModel.getStateObservable(), Consumer { setItems((it)) })
         viewModel.getHistory()
     }
 

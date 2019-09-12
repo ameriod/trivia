@@ -11,6 +11,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
 import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
 import me.ameriod.trivia.di.RxSchedulerName
 import me.ameriod.trivia.di.inject
@@ -51,48 +52,48 @@ abstract class MvvmController : LifecycleController, ViewModelStoreOwner {
     }
 
     protected fun <T> subscribe(observable: Observable<T>,
-                                onNext: (result: T) -> Unit,
-                                onError: (throwable: Throwable) -> Unit) {
+                                onNext: Consumer<T>,
+                                onError: Consumer<Throwable>) {
         addToDisposable(observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onNext, onError))
     }
 
     protected fun <T> subscribe(observable: Observable<T>,
-                                onNext: (result: T) -> Unit) {
+                                onNext: Consumer<T>) {
         subscribe(observable = observable,
                 onNext = onNext,
-                onError = { Timber.e(it, "Error") })
+                onError = Consumer { Timber.e(it, "Error") })
     }
 
     protected fun <T> subscribeIo(observable: Observable<T>,
-                                  onNext: (result: T) -> Unit) {
+                                  onNext: Consumer<T>) {
         subscribeIo(observable = observable,
                 onNext = onNext,
-                onError = { Timber.e(it, "Error") })
+                onError = Consumer { Timber.e(it, "Error") })
     }
 
     protected fun <T> subscribeIo(observable: Observable<T>,
-                                  onNext: (result: T) -> Unit,
-                                  onError: (throwable: Throwable) -> Unit) {
+                                  onNext: Consumer<T>,
+                                  onError: Consumer<Throwable>) {
         addToDisposable(observable
                 .compose(schedulerIo.schedule())
                 .subscribe(onNext, onError))
     }
 
     protected fun <T> subscribeComp(observable: Observable<T>,
-                                    onNext: (result: T) -> Unit,
-                                    onError: (throwable: Throwable) -> Unit) {
+                                    onNext: Consumer<T>,
+                                    onError: Consumer<Throwable>) {
         addToDisposable(observable
                 .compose(schedulerComp.schedule())
                 .subscribe(onNext, onError))
     }
 
     protected fun <T> subscribeComp(observable: Observable<T>,
-                                    onNext: (result: T) -> Unit) {
+                                    onNext: Consumer<T>) {
         subscribeComp(observable = observable,
                 onNext = onNext,
-                onError = { Timber.e(it, "Error") })
+                onError = Consumer { Timber.e(it, "Error") })
     }
 
     protected fun addToDisposable(disposable: Disposable) {

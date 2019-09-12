@@ -133,12 +133,12 @@ class FilterViewModel(
     /**
      * Can also be a RxJava [Consumer]
      */
-    fun takeQuestionCount(): (Int) -> Unit = { questionCountSubject.onNext(it) }
+    fun takeQuestionCount(): Consumer<Int> = Consumer { questionCountSubject.onNext(it) }
 
     /**
      * Can also be a RxJava [Consumer]
      */
-    fun takeDifficulty(): (OtDifficulty) -> Unit = { difficultySubject.onNext(it) }
+    fun takeDifficulty(): Consumer<OtDifficulty> = Consumer { difficultySubject.onNext(it) }
 
     fun setCategories(category: OtCategory) {
         categorySubject.onNext(category)

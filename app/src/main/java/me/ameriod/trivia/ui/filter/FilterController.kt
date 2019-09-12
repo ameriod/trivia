@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.widget.RxAdapterView
 import com.jakewharton.rxbinding2.widget.RxSeekBar
 import com.jakewharton.rxbinding2.widget.RxTextView
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.controller_filter.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.OtCategory
@@ -54,7 +55,7 @@ class FilterController(args: Bundle) : MvvmController(args), View.OnClickListene
     override fun onAttach(view: View) {
         super.onAttach(view)
         subscribeIo(viewModel.getStateObservable()
-                .distinctUntilChanged(), ::setState)
+                .distinctUntilChanged(), Consumer { setState(it) })
 
         viewModel.getFilters()
 
