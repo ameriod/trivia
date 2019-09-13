@@ -1,6 +1,5 @@
 package me.ameriod.trivia.ui.quiz
 
-import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import me.ameriod.trivia.api.db.Result

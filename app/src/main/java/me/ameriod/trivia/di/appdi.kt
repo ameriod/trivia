@@ -11,9 +11,7 @@ import me.ameriod.trivia.api.db.TriviaDatabase
 import me.ameriod.trivia.ui.filter.FilterViewModel
 import me.ameriod.trivia.ui.history.HistoryViewModel
 import me.ameriod.trivia.ui.quiz.Quiz
-import me.ameriod.trivia.ui.quiz.QuizContract
-import me.ameriod.trivia.ui.quiz.QuizInteractor
-import me.ameriod.trivia.ui.quiz.QuizPresenter
+import me.ameriod.trivia.ui.quiz.QuizViewModel
 import me.ameriod.trivia.ui.result.ResultContract
 import me.ameriod.trivia.ui.result.ResultInteractor
 import me.ameriod.trivia.ui.result.ResultPresenter
@@ -103,13 +101,9 @@ val appModule = module {
         HistoryViewModel(androidContext(), get(), get())
     }
 
-    single<QuizContract.Interactor> {
-        QuizInteractor(get())
-    }
-
-    factory<QuizContract.Presenter> {
+    viewModel {
         val quiz: Quiz = it.get<Quiz>() as Quiz
-        QuizPresenter(quiz, get(), get(), get())
+        QuizViewModel(get(), quiz)
     }
 
     single<ResultContract.Interactor> {
