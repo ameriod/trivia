@@ -2,10 +2,8 @@ package me.ameriod.trivia.ui.filter
 
 import android.content.Context
 import io.reactivex.Observable
-import io.reactivex.functions.Action
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Consumer
-import io.reactivex.functions.Function
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.parcel.Parcelize
 import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
@@ -17,7 +15,6 @@ import me.ameriod.trivia.mvvm.BaseViewModel
 import me.ameriod.trivia.mvvm.BaseViewState
 import me.ameriod.trivia.ui.quiz.Quiz
 import timber.log.Timber
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 
 
 class FilterViewModel(

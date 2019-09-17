@@ -103,7 +103,7 @@ val appModule = module {
 
     viewModel {
         val quiz: Quiz = it.get<Quiz>() as Quiz
-        QuizViewModel(get(), quiz)
+        QuizViewModel(quiz, get(), get())
     }
 
     single<ResultContract.Interactor> {
