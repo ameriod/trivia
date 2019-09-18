@@ -25,6 +25,7 @@ import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.quiz.Quiz
 import me.ameriod.trivia.ui.quiz.QuizActivity
+import java.util.concurrent.TimeUnit
 
 
 class FilterController(args: Bundle) : MvvmController(args), View.OnClickListener,
@@ -61,11 +62,14 @@ class FilterController(args: Bundle) : MvvmController(args), View.OnClickListene
 
         subscribe(RxTextView.afterTextChangeEvents(view.filterCountEt)
                 .skipInitialValue()
+                .debounce(400, TimeUnit.MILLISECONDS)
                 .map {
                     it.editable()?.toString()?.toIntOrNull() ?: 0
                 }, viewModel.takeQuestionCount())
 
         subscribe(RxSeekBar.userChanges(view.filterCountSeekBar)
+                .skipInitialValue()
+                .debounce(400, TimeUnit.MILLISECONDS)
                 // Seek bar is zero indexed
                 .map { it + 1 }, viewModel.takeQuestionCount())
 

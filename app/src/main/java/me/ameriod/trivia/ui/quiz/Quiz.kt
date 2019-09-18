@@ -8,10 +8,13 @@ import me.ameriod.trivia.ui.quiz.question.Question
 import me.ameriod.trivia.ui.result.ResultItem
 
 @Parcelize
-data class Quiz(private val questions: List<Question>,
-                private val answers: MutableList<Answer> = mutableListOf(),
-                private var position: Int = 0,
-                val startTime: Long = System.currentTimeMillis()) : Parcelable {
+data class Quiz(
+        private val questions: List<Question>,
+        private val answers: MutableList<Answer> = mutableListOf(),
+        private var position: Int = 0,
+        val startTime: Long = System.currentTimeMillis()
+) : Parcelable {
+
     fun getCurrentQuestion(): Question = questions[position]
 
     fun isLastQuestion(): Boolean = answers.size == questions.size - 1

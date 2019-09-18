@@ -9,15 +9,17 @@ import me.ameriod.trivia.ui.adapter.TriviaAdapterItem
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 
 @Parcelize
-data class Answer(val display: String,
-                  val correct: Boolean,
-                  var selected: Boolean,
-                  var showCorrect: Boolean = false) : Parcelable, TriviaAdapterItem {
+data class Answer(
+        val display: String,
+        val correct: Boolean,
+        var selected: Boolean,
+        var showCorrect: Boolean = false
+) : Parcelable, TriviaAdapterItem {
 
 
     companion object {
 
-        val EMPTY = Answer("", false, false)
+        val EMPTY = Answer("", correct = false, selected = false)
 
     }
 

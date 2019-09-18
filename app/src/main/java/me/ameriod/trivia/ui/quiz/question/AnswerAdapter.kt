@@ -3,9 +3,10 @@ package me.ameriod.trivia.ui.quiz.question
 import android.content.Context
 import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 
-class AnswerAdapter(context: Context,
-                    listener: TriviaBaseAdapter.OnItemClickListener) :
-        TriviaBaseAdapter<Answer>(context, listener) {
+class AnswerAdapter(
+        context: Context,
+        listener: TriviaBaseAdapter.OnItemClickListener
+) : TriviaBaseAdapter<Answer>(context, listener) {
 
     fun showCorrectAnswer() {
         val items = getItems()

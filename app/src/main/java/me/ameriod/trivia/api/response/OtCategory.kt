@@ -13,13 +13,15 @@ import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.filter.CategoryViewHolder
 
 @Parcelize
-data class OtCategory(@Expose
-                      @SerializedName("name")
-                      val name: String,
-                      @Expose
-                      @SerializedName("id")
-                      val id: String? = null,
-                      var selected: Boolean = false) : Parcelable, TriviaAdapterItem {
+data class OtCategory(
+        @Expose
+        @SerializedName("name")
+        val name: String = "",
+        @Expose
+        @SerializedName("id")
+        val id: String? = null,
+        var selected: Boolean = false
+) : Parcelable, TriviaAdapterItem {
 
     override fun createViewHolder(inflater: LayoutInflater, parent: ViewGroup?, attachToRoot: Boolean): TriviaBaseViewHolder<*> {
         return CategoryViewHolder(inflater.inflate(R.layout.category_item, parent, attachToRoot))

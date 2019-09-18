@@ -12,18 +12,20 @@ import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.result.recycler.ResultItemViewHolder
 
 @Parcelize
-data class ResultItem(@Expose
-                      @SerializedName("question")
-                      val questionText: String,
-                      @Expose
-                      @SerializedName("answer")
-                      val selectedAnswer: String,
-                      @Expose
-                      @SerializedName("correctAnswers")
-                      private val correctAnswersList: List<String>,
-                      @Expose
-                      @SerializedName("correct")
-                      val isCorrect: Boolean) : Parcelable, TriviaAdapterItem {
+data class ResultItem(
+        @Expose
+        @SerializedName("question")
+        val questionText: String = "",
+        @Expose
+        @SerializedName("answer")
+        val selectedAnswer: String = "",
+        @Expose
+        @SerializedName("correctAnswers")
+        private val correctAnswersList: List<String> = emptyList(),
+        @Expose
+        @SerializedName("correct")
+        val isCorrect: Boolean = false
+) : Parcelable, TriviaAdapterItem {
 
     val correctAnswers: String
         get() {

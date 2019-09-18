@@ -1,12 +1,12 @@
 package me.ameriod.trivia.api.db
 
 import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.parcel.Parcelize
@@ -18,21 +18,23 @@ import me.ameriod.trivia.ui.result.ResultItem
 
 @Parcelize
 @Entity(tableName = "results")
-data class Result(@PrimaryKey(autoGenerate = true)
-                  @ColumnInfo(name = "id")
-                  var id: Long?,
-                  @ColumnInfo(name = "items")
-                  var jsonItems: String,
-                  @ColumnInfo(name = "total_questions")
-                  var totalQuestions: Int,
-                  @ColumnInfo(name = "correct_questions")
-                  var correctQuestions: Int,
-                  @ColumnInfo(name = "incorrect_questions")
-                  var incorrectQuestions: Int,
-                  @ColumnInfo(name = "total_time")
-                  var totalTime: Long,
-                  @ColumnInfo(name = "date")
-                  var date: Long) : TriviaAdapterItem, Parcelable {
+data class Result(
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = "id")
+        var id: Long?,
+        @ColumnInfo(name = "items")
+        var jsonItems: String,
+        @ColumnInfo(name = "total_questions")
+        var totalQuestions: Int,
+        @ColumnInfo(name = "correct_questions")
+        var correctQuestions: Int,
+        @ColumnInfo(name = "incorrect_questions")
+        var incorrectQuestions: Int,
+        @ColumnInfo(name = "total_time")
+        var totalTime: Long,
+        @ColumnInfo(name = "date")
+        var date: Long
+) : TriviaAdapterItem, Parcelable {
 
     constructor() : this(null, "[]", 0, 0, 0, 0, 0)
 
