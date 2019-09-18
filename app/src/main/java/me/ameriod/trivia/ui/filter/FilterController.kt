@@ -8,13 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.widget.RxAdapterView
 import com.jakewharton.rxbinding2.widget.RxSeekBar
 import com.jakewharton.rxbinding2.widget.RxTextView
-import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.controller_filter.view.*
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.response.OtCategory
@@ -55,8 +55,9 @@ class FilterController(args: Bundle) : MvvmController(args), View.OnClickListene
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        subscribeIo(viewModel.getStateObservable()
-                .distinctUntilChanged(), Consumer { setState(it) })
+        viewModel.stateLiveData.observe(this, Observer {
+            setState(it)
+        })
 
         viewModel.getFilters()
 

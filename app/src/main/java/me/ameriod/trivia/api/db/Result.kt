@@ -9,6 +9,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import me.ameriod.trivia.R
 import me.ameriod.trivia.ui.adapter.TriviaAdapterItem
@@ -39,6 +40,7 @@ data class Result(
     constructor() : this(null, "[]", 0, 0, 0, 0, 0)
 
     @Ignore
+    @IgnoredOnParcel
     private var items: List<ResultItem>? = null
 
     fun getItems(): List<ResultItem> = if (items == null) {

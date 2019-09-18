@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.controller_result.view.*
 import me.ameriod.trivia.R
-import me.ameriod.trivia.di.get
 import me.ameriod.trivia.mvvm.MvvmController
 import me.ameriod.trivia.mvvm.viewModel
 import me.ameriod.trivia.ui.adapter.TriviaAdapterItem
@@ -22,9 +21,9 @@ class ResultController(args: Bundle) : MvvmController(args) {
         TriviaBaseAdapter<TriviaAdapterItem>(activity!!)
     }
     private val showDone = args.getBoolean(SHOW_DONE, true)
-    private val viewModel : ResultViewModel by viewModel()
+    private val viewModel: ResultViewModel by viewModel()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View=
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View =
             inflater.inflate(R.layout.controller_result, container, false)
                     .apply {
                         resultBtnDone.setOnClickListener { _ -> activity?.finish() }
@@ -38,13 +37,14 @@ class ResultController(args: Bundle) : MvvmController(args) {
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        subscribeIo(viewModel.getStateObservable(), Consumer {
+        viewModel.stateLiveData.observe(this, Observer {
             setState(it)
         })
+
         viewModel.getResult(args.getLong(RESULT_ID))
     }
 
-    private fun setState(state : ResultViewModel.State) {
+    private fun setState(state: ResultViewModel.State) {
         when (state) {
             is ResultViewModel.State.Loading -> {
                 view?.apply {
@@ -55,8 +55,7 @@ class ResultController(args: Bundle) : MvvmController(args) {
             is ResultViewModel.State.Result -> adapter.setItems(state.items)
         }
     }
-
-
+    
     companion object {
         private const val RESULT_ID = "result_id"
         private const val SHOW_DONE = "show_done"

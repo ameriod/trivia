@@ -15,7 +15,7 @@ class ResultViewModel(
 ) : BaseViewModel<ResultViewModel.State>(schedulerRx2) {
 
     fun getResult(resultId: Long) {
-        stateSubject.onNext(State.Loading(true))
+        stateLiveData.value = State.Loading(true)
         addToDisposable(repository.getResult(resultId)
                 .compose(scheduler.schedule())
                 .subscribe({
@@ -24,8 +24,8 @@ class ResultViewModel(
                                 add(ResultGraphItem(it.totalQuestions, it.correctQuestions, it.incorrectQuestions))
                                 addAll(it.getItems())
                             }
-                    stateSubject.onNext(State.Result(items))
-                    stateSubject.onNext(State.Loading(false))
+                    stateLiveData.value = State.Result(items)
+                    stateLiveData.value = State.Loading(false)
                 }, {
                     Timber.e(it, "Error loading results")
                 }))

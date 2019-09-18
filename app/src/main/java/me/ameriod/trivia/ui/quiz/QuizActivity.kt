@@ -7,34 +7,29 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_quiz.*
 import me.ameriod.trivia.R
-import me.ameriod.trivia.mvvm.IObservableSchedulerRx2
 import me.ameriod.trivia.ui.quiz.question.Answer
 import me.ameriod.trivia.ui.quiz.question.Question
 import me.ameriod.trivia.ui.quiz.question.QuestionController
 import me.ameriod.trivia.ui.result.ResultActivity
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import timber.log.Timber
 
 class QuizActivity : AppCompatActivity(),
         QuestionController.OnQuestionAnsweredListener {
 
-    private lateinit var disposable: CompositeDisposable
     private lateinit var router: Router
     private val viewModel: QuizViewModel by viewModel {
         val quiz = intent.getParcelableExtra<Quiz>(QUIZ)
                 ?: throw IllegalArgumentException("Error need to pass in a quiz")
         parametersOf(quiz)
     }
-    private val schedulerRx2: IObservableSchedulerRx2 by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,24 +38,13 @@ class QuizActivity : AppCompatActivity(),
         title = null
         router = Conductor.attachRouter(this, changeHandler, savedInstanceState)
 
-        disposable = CompositeDisposable()
-
-        disposable.add(viewModel.getStateObservable()
-                .compose(schedulerRx2.schedule())
-                .subscribe({
-                    setState(it)
-                }, {
-                    Timber.e(it, "Error with quiz flow")
-                }))
+        viewModel.stateLiveData.observe(this, Observer {
+            setState(it)
+        })
 
         viewModel.getInitialQuestion()
         viewModel.startQuizTimer()
 
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable.dispose()
     }
 
     private fun setState(state: QuizViewModel.State) {

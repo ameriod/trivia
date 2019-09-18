@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bluelinelabs.conductor.RouterTransaction
@@ -19,6 +20,7 @@ import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 import me.ameriod.trivia.ui.adapter.TriviaBaseViewHolder
 import me.ameriod.trivia.ui.result.ResultController
 import timber.log.Timber
+import java.util.*
 
 class HistoryController(args: Bundle) : MvvmController(args),
         TriviaBaseAdapter.OnItemClickListener {
@@ -42,7 +44,10 @@ class HistoryController(args: Bundle) : MvvmController(args),
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        subscribeIo(viewModel.getStateObservable(), Consumer { setItems((it)) })
+        viewModel.stateLiveData.observe(this, Observer {
+            setItems(it)
+        })
+
         viewModel.getHistory()
     }
 

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.play_controller.view.*
@@ -29,7 +30,9 @@ class PlayController(args: Bundle) : MvvmController(args), View.OnClickListener 
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        subscribeIo(viewModel.getStateObservable(), Consumer { setState(it) })
+        viewModel.stateLiveData.observe(this, Observer {
+            setState(it)
+        })
     }
 
     override fun onDetach(view: View) {

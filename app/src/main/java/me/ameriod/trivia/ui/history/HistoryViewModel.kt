@@ -17,8 +17,8 @@ class HistoryViewModel(
 ) : BaseViewModel<HistoryViewModel.State>(scheduler) {
 
     fun getHistory() {
-        stateSubject.onNext(State.Empty(false))
-        stateSubject.onNext(State.Loading(true))
+        stateLiveData.value = State.Empty(false)
+        stateLiveData.value = State.Loading(true)
         addToDisposable(repository.getHistory()
                 .map { results ->
                     if (results.isEmpty())
@@ -29,16 +29,16 @@ class HistoryViewModel(
                 .distinctUntilChanged()
                 .compose(scheduler.schedule())
                 .subscribe({
-                    stateSubject.onNext(it)
-                    stateSubject.onNext(State.Loading(false))
+                    stateLiveData.value = it
+                    stateLiveData.value = State.Loading(false)
                 }) {
                     Timber.e(it, "Error loading history")
-                    stateSubject.onNext(State.Error(
+                    stateLiveData.value = State.Error(
                             message = context.getString(R.string.history_error),
                             actionText = context.getString(R.string.history_error_action),
                             action = getHistory()
-                    ))
-                    stateSubject.onNext(State.Loading(false))
+                    )
+                    stateLiveData.value = State.Loading(false)
                 })
     }
 

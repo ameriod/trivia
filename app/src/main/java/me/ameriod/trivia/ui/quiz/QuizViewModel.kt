@@ -31,23 +31,23 @@ class QuizViewModel(
             addToDisposable(repository.saveQuizAsResult(quiz)
                     .compose(scheduler.schedule())
                     .subscribe({ resultId ->
-                        stateSubject.onNext(State.OnQuizFinished(resultId))
+                        stateLiveData.value = State.OnQuizFinished(resultId)
                     }, { throwable ->
                         Timber.e(throwable, "Error with saving quiz results")
                     }))
         } else {
             val question = if (isInitial) quiz.getCurrentQuestion() else quiz.getNextQuestion()
-            stateSubject.onNext(State.DisplayQuestion(
+            stateLiveData.value = State.DisplayQuestion(
                     currentPosition = quiz.getCurrentPosition(),
                     totalQuestions = quiz.getNumberOfQuestions(),
                     isLastQuestion = quiz.isLastQuestion(),
                     question = question
-            ))
+            )
         }
     }
 
     fun startQuizTimer() {
-        stateSubject.onNext(getFormattedTime())
+        stateLiveData.value = getFormattedTime()
         addToDisposable(Observable.interval(1, TimeUnit.SECONDS)
                 .compose(scheduler.schedule())
                 .map { _ ->
@@ -55,7 +55,7 @@ class QuizViewModel(
                     getFormattedTime()
                 }
                 .subscribe({ formatted ->
-                    stateSubject.onNext(formatted)
+                    stateLiveData.value = formatted
                 }, { throwable ->
                     Timber.e(throwable, "Error with quiz timer")
                 }))

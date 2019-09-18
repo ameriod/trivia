@@ -74,7 +74,7 @@ class FilterViewModel(
 
     fun getFilters() {
         if (difficulties.isEmpty() || categories.isEmpty()) {
-            stateSubject.onNext(State.Loading(true))
+            stateLiveData.value = State.Loading(true)
             addToDisposable(Observable.zip(repository.getDifficulties(), repository.getCategories(),
                     BiFunction { difficulty: List<OtDifficulty>, category: List<OtCategory> ->
                         State.Loaded(
@@ -87,42 +87,42 @@ class FilterViewModel(
                     .subscribe({
                         difficulties = it.difficulties
                         categories = it.categories
-                        stateSubject.onNext(it)
-                        stateSubject.onNext(State.Loading(false))
+                        stateLiveData.value = it
+                        stateLiveData.value = State.Loading(false)
                     }, {
                         Timber.e(it, "Error loading the filters")
-                        stateSubject.onNext(State.Error(
+                        stateLiveData.value = State.Error(
                                 message = context.getString(R.string.filter_api_error),
                                 actionText = context.getString(R.string.filter_retry),
                                 action = getFilters()
-                        ))
+                        )
                     }))
         } else {
-            stateSubject.onNext(State.Loaded(
+            stateLiveData.value = State.Loaded(
                     difficulties = difficulties,
                     categories = categories,
                     selectedFilter = filter
-            ))
+            )
         }
 
     }
 
     fun getQuiz() {
         repository.getQuiz(filter)
-        stateSubject.onNext(State.Loading(true))
+        stateLiveData.value = State.Loading(true)
         addToDisposable(repository.getQuiz(filter)
                 .compose(scheduler.schedule())
                 .subscribe({
-                    stateSubject.onNext(State.Loading(false))
-                    stateSubject.onNext(State.QuizLoaded(it))
+                    stateLiveData.value = State.Loading(false)
+                    stateLiveData.value = State.QuizLoaded(it)
                 }, {
-                    stateSubject.onNext(State.Loading(false))
+                    stateLiveData.value = State.Loading(false)
                     Timber.e(it, "Error loading the quiz")
-                    stateSubject.onNext(State.Error(
+                    stateLiveData.value = State.Error(
                             message = context.getString(R.string.filter_api_error),
                             actionText = context.getString(R.string.filter_retry),
                             action = getQuiz()
-                    ))
+                    )
                 }))
 
     }
