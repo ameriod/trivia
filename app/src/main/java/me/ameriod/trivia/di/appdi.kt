@@ -3,18 +3,15 @@ package me.ameriod.trivia.di
 import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import me.ameriod.lib.mvp.Mvp
-import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
 import me.ameriod.trivia.api.OpenTriviaRepository
 import me.ameriod.trivia.api.OpenTriviaService
 import me.ameriod.trivia.api.db.TriviaDatabase
+import me.ameriod.trivia.mvvm.IObservableSchedulerRx2
 import me.ameriod.trivia.ui.filter.FilterViewModel
 import me.ameriod.trivia.ui.history.HistoryViewModel
 import me.ameriod.trivia.ui.quiz.Quiz
 import me.ameriod.trivia.ui.quiz.QuizViewModel
-import me.ameriod.trivia.ui.result.ResultContract
-import me.ameriod.trivia.ui.result.ResultInteractor
-import me.ameriod.trivia.ui.result.ResultPresenter
+import me.ameriod.trivia.ui.result.ResultViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -40,6 +37,7 @@ val appModule = module {
                 .addInterceptor(logging)
                 .build()
     }
+
     single<Gson> {
         GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
@@ -75,22 +73,28 @@ val appModule = module {
         )
     }
 
-    single<Mvp.ErrorHandler> {
-        object : Mvp.ErrorHandler {
-            override fun onError(e: Throwable): String {
-                Timber.e(e, "Error in MVP")
-                return ""
-            }
-        }
-    }
-
-
     single<IObservableSchedulerRx2> {
         IObservableSchedulerRx2.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN
     }
 
     single<IObservableSchedulerRx2>(named(name = RxSchedulerName.SUBSCRIBE_COMPUTATION_OBSERVE_ANDROID_MAIN.name)) {
         IObservableSchedulerRx2.SUBSCRIBE_COMPUTATION_OBSERVE_ANDROID_MAIN
+    }
+
+    single<IObservableSchedulerRx2>(named(name = RxSchedulerName.COMPUTATION.name)) {
+        IObservableSchedulerRx2.COMPUTATION
+    }
+
+    single<IObservableSchedulerRx2>(named(name = RxSchedulerName.IO.name)) {
+        IObservableSchedulerRx2.IO
+    }
+
+    single<IObservableSchedulerRx2>(named(name = RxSchedulerName.TRAMPOLINE.name)) {
+        IObservableSchedulerRx2.TRAMPOLINE
+    }
+
+    single<IObservableSchedulerRx2>(named(name = RxSchedulerName.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN.name)) {
+        IObservableSchedulerRx2.SUBSCRIBE_IO_OBSERVE_ANDROID_MAIN
     }
 
     viewModel {
@@ -106,12 +110,8 @@ val appModule = module {
         QuizViewModel(quiz, get(), get())
     }
 
-    single<ResultContract.Interactor> {
-        ResultInteractor(get())
-    }
-
-    single<ResultContract.Presenter> {
-        ResultPresenter(get(), get(), get())
+    viewModel {
+        ResultViewModel(get(), get())
     }
 
 }

@@ -13,8 +13,8 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_quiz.*
-import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
 import me.ameriod.trivia.R
+import me.ameriod.trivia.mvvm.IObservableSchedulerRx2
 import me.ameriod.trivia.ui.quiz.question.Answer
 import me.ameriod.trivia.ui.quiz.question.Question
 import me.ameriod.trivia.ui.quiz.question.QuestionController

@@ -2,12 +2,12 @@ package me.ameriod.trivia.ui.history
 
 import android.content.Context
 import kotlinx.android.parcel.Parcelize
-import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.OpenTriviaRepository
 import me.ameriod.trivia.api.db.Result
 import me.ameriod.trivia.mvvm.BaseViewModel
 import me.ameriod.trivia.mvvm.BaseViewState
+import me.ameriod.trivia.mvvm.IObservableSchedulerRx2
 import timber.log.Timber
 
 class HistoryViewModel(

@@ -6,13 +6,13 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Consumer
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.parcel.Parcelize
-import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
 import me.ameriod.trivia.R
 import me.ameriod.trivia.api.OpenTriviaRepository
 import me.ameriod.trivia.api.response.OtCategory
 import me.ameriod.trivia.api.response.OtDifficulty
 import me.ameriod.trivia.mvvm.BaseViewModel
 import me.ameriod.trivia.mvvm.BaseViewState
+import me.ameriod.trivia.mvvm.IObservableSchedulerRx2
 import me.ameriod.trivia.ui.quiz.Quiz
 import timber.log.Timber
 

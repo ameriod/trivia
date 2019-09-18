@@ -16,9 +16,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/result_padding_vert"
-        android:layout_marginEnd="@dimen/result_padding_hor"
         android:layout_marginStart="@dimen/result_padding_hor"
         android:layout_marginTop="@dimen/result_padding_vert"
+        android:layout_marginEnd="@dimen/result_padding_hor"
+        android:layout_marginBottom="@dimen/result_padding_vert"
         android:text="@string/result_btn_done" />
+
+    <ProgressBar
+        android:id="@+id/resultLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
 </FrameLayout>

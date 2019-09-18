@@ -2,10 +2,10 @@ package me.ameriod.trivia.ui.quiz
 
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
-import me.ameriod.lib.mvp.presenter.rx2.IObservableSchedulerRx2
 import me.ameriod.trivia.api.OpenTriviaRepository
 import me.ameriod.trivia.mvvm.BaseViewModel
 import me.ameriod.trivia.mvvm.BaseViewState
+import me.ameriod.trivia.mvvm.IObservableSchedulerRx2
 import me.ameriod.trivia.ui.quiz.question.Answer
 import me.ameriod.trivia.ui.quiz.question.Question
 import timber.log.Timber

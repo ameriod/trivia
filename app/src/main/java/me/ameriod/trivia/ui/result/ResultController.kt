@@ -4,52 +4,58 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.controller_result.view.*
-import me.ameriod.lib.mvp.view.MvpController
 import me.ameriod.trivia.R
 import me.ameriod.trivia.di.get
+import me.ameriod.trivia.mvvm.MvvmController
+import me.ameriod.trivia.mvvm.viewModel
 import me.ameriod.trivia.ui.adapter.TriviaAdapterItem
 import me.ameriod.trivia.ui.adapter.TriviaBaseAdapter
 
-class ResultController(args: Bundle) : MvpController<ResultContract.View, ResultContract.Presenter>(args), ResultContract.View {
+class ResultController(args: Bundle) : MvvmController(args) {
 
-    val adapter by lazy(LazyThreadSafetyMode.NONE) {
+    private val adapter by lazy(LazyThreadSafetyMode.NONE) {
         TriviaBaseAdapter<TriviaAdapterItem>(activity!!)
     }
-    val showDone = args.getBoolean(SHOW_DONE, true)
+    private val showDone = args.getBoolean(SHOW_DONE, true)
+    private val viewModel : ResultViewModel by viewModel()
 
-    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        val v = inflater.inflate(R.layout.controller_result, container, false)
-        v.resultBtnDone.setOnClickListener { _ -> activity?.finish() }
-        v.resultRecycler.layoutManager = LinearLayoutManager(v.context)
-        v.resultRecycler.adapter = adapter
-        v.resultRecycler.addItemDecoration(DividerItemDecoration(v.context, DividerItemDecoration.VERTICAL))
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View=
+            inflater.inflate(R.layout.controller_result, container, false)
+                    .apply {
+                        resultBtnDone.setOnClickListener { _ -> activity?.finish() }
+                        resultRecycler.layoutManager = LinearLayoutManager(context)
+                        resultRecycler.adapter = adapter
+                        resultRecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
-        v.resultBtnDone.visibility = if (showDone) View.VISIBLE else View.GONE
-        v.resultRecycler.setPadding(0, 0, 0, if (showDone) v.context.resources.getDimensionPixelOffset(R.dimen.recycler_button_bottom_padding) else 0)
-        return v
-    }
+                        resultBtnDone.visibility = if (showDone) View.VISIBLE else View.GONE
+                        resultRecycler.setPadding(0, 0, 0, if (showDone) context.resources.getDimensionPixelOffset(R.dimen.recycler_button_bottom_padding) else 0)
+                    }
 
     override fun onAttach(view: View) {
         super.onAttach(view)
-        getPresenter().getResult(args.getLong(RESULT_ID))
+        subscribeIo(viewModel.getStateObservable(), Consumer {
+            setState(it)
+        })
+        viewModel.getResult(args.getLong(RESULT_ID))
     }
 
-    override fun setResult(items: List<TriviaAdapterItem>) {
-        adapter.setItems(items)
+    private fun setState(state : ResultViewModel.State) {
+        when (state) {
+            is ResultViewModel.State.Loading -> {
+                view?.apply {
+                    resultLoading.isVisible = state.show
+                    resultRecycler.isVisible = !state.show
+                }
+            }
+            is ResultViewModel.State.Result -> adapter.setItems(state.items)
+        }
     }
 
-    override fun createPresenter(): ResultContract.Presenter = get()
-
-    override fun displayError(error: String) {
-        // no op
-    }
-
-    override fun showProgress(show: Boolean) {
-        // no op
-    }
 
     companion object {
         private const val RESULT_ID = "result_id"

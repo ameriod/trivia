@@ -1,6 +1,5 @@
 package me.ameriod.trivia.ui.result
 
-import android.os.Parcel
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
